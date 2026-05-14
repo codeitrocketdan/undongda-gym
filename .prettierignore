@@ -1,0 +1,7 @@
+/* root / .prettierignore */
+node_modules
+.next
+out
+build
+coverage
+pnpm-lock.yaml
