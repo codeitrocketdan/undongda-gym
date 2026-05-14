@@ -4,10 +4,12 @@
   --color-background: #f6f7f9;
   --color-foreground: #333333;
 }
+@theme {
+   --font-sans :var(--font-pretendard);
+}
 
 @layer base {
   body {
-    font-family: var(--font-pretendard);
     background-color: var(--color-background);
     color: var(--color-foreground);
   }
@@ -189,9 +191,9 @@
     ====================== */
   --color-blue-100: #edfff5;
   --color-blue-200: #dffaeb;
-  --color-blue-500: #00bb86;
-  --color-blue-200: #aaebff;
+  --color-blue-300: #aaebff;
   --color-blue-400: #46d3ff;
+  --color-blue-500: #00bb86;
   --color-blue-600: #0065da;
   --color-blue-700: #0f4c8a;
 
