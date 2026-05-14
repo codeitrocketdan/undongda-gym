@@ -1,26 +1,209 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-background: #f6f7f9;
+  --color-foreground: #333333;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  body {
+    font-family: var(--font-pretendard);
+    background-color: var(--color-background);
+    color: var(--color-foreground);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@theme {
+  /* ======================
+     DISPLAY (40px ~ 56px)
+  ====================== */
+
+  --text-display-xl-bold: 56px;
+  --text-display-xl-bold--line-height: 68px;
+  --text-display-xl-bold--font-weight: 700;
+
+  --text-display-lg-bold: 48px;
+  --text-display-lg-bold--line-height: 60px;
+  --text-display-lg-bold--font-weight: 700;
+
+  --text-display-md-bold: 40px;
+  --text-display-md-bold--line-height: 56px;
+  --text-display-md-bold--font-weight: 700;
+
+  /* ======================
+     XS (12px / 16px)
+  ====================== */
+
+  --text-xs-regular: 12px;
+  --text-xs-regular--line-height: 16px;
+  --text-xs-regular--font-weight: 400;
+
+  --text-xs-medium: 12px;
+  --text-xs-medium--line-height: 16px;
+  --text-xs-medium--font-weight: 500;
+
+  --text-xs-semibold: 12px;
+  --text-xs-semibold--line-height: 16px;
+  --text-xs-semibold--font-weight: 600;
+
+  --text-xs-bold: 12px;
+  --text-xs-bold--line-height: 16px;
+  --text-xs-bold--font-weight: 700;
+
+  /* ======================
+     SM (14px / 20px)
+  ====================== */
+
+  --text-sm-regular: 14px;
+  --text-sm-regular--line-height: 20px;
+  --text-sm-regular--font-weight: 400;
+
+  --text-sm-medium: 14px;
+  --text-sm-medium--line-height: 20px;
+  --text-sm-medium--font-weight: 500;
+
+  --text-sm-semibold: 14px;
+  --text-sm-semibold--line-height: 20px;
+  --text-sm-semibold--font-weight: 600;
+
+  --text-sm-bold: 14px;
+  --text-sm-bold--line-height: 20px;
+  --text-sm-bold--font-weight: 700;
+
+  /* ======================
+     BASE (16px / 24px)
+  ====================== */
+
+  --text-base-regular: 16px;
+  --text-base-regular--line-height: 24px;
+  --text-base-regular--font-weight: 400;
+
+  --text-base-medium: 16px;
+  --text-base-medium--line-height: 24px;
+  --text-base-medium--font-weight: 500;
+
+  --text-base-semibold: 16px;
+  --text-base-semibold--line-height: 24px;
+  --text-base-semibold--font-weight: 600;
+
+  --text-base-bold: 16px;
+  --text-base-bold--line-height: 24px;
+  --text-base-bold--font-weight: 700;
+
+  /* ======================
+     LG (18px / 28px)
+  ====================== */
+
+  --text-lg-regular: 18px;
+  --text-lg-regular--line-height: 28px;
+  --text-lg-regular--font-weight: 400;
+
+  --text-lg-medium: 18px;
+  --text-lg-medium--line-height: 28px;
+  --text-lg-medium--font-weight: 500;
+
+  --text-lg-semibold: 18px;
+  --text-lg-semibold--line-height: 28px;
+  --text-lg-semibold--font-weight: 600;
+
+  --text-lg-bold: 18px;
+  --text-lg-bold--line-height: 28px;
+  --text-lg-bold--font-weight: 700;
+
+  /* ======================
+     XL (20px / 30px)
+  ====================== */
+
+  --text-xl-regular: 20px;
+  --text-xl-regular--line-height: 30px;
+  --text-xl-regular--font-weight: 400;
+
+  --text-xl-medium: 20px;
+  --text-xl-medium--line-height: 30px;
+  --text-xl-medium--font-weight: 500;
+
+  --text-xl-semibold: 20px;
+  --text-xl-semibold--line-height: 30px;
+  --text-xl-semibold--font-weight: 600;
+
+  --text-xl-bold: 20px;
+  --text-xl-bold--line-height: 30px;
+  --text-xl-bold--font-weight: 700;
+
+  /* ======================
+     2XL (24px / 32px)
+  ====================== */
+
+  --text-2xl-regular: 24px;
+  --text-2xl-regular--line-height: 32px;
+  --text-2xl-regular--font-weight: 400;
+
+  --text-2xl-medium: 24px;
+  --text-2xl-medium--line-height: 32px;
+  --text-2xl-medium--font-weight: 500;
+
+  --text-2xl-semibold: 24px;
+  --text-2xl-semibold--line-height: 32px;
+  --text-2xl-semibold--font-weight: 600;
+
+  --text-2xl-bold: 24px;
+  --text-2xl-bold--line-height: 32px;
+  --text-2xl-bold--font-weight: 700;
+
+  /* ======================
+     3XL (30px / 36px)
+  ====================== */
+
+  --text-3xl-regular: 30px;
+  --text-3xl-regular--line-height: 36px;
+  --text-3xl-regular--font-weight: 400;
+
+  --text-3xl-medium: 30px;
+  --text-3xl-medium--line-height: 36px;
+  --text-3xl-medium--font-weight: 500;
+
+  --text-3xl-semibold: 30px;
+  --text-3xl-semibold--line-height: 36px;
+  --text-3xl-semibold--font-weight: 600;
+
+  --text-3xl-bold: 30px;
+  --text-3xl-bold--line-height: 36px;
+  --text-3xl-bold--font-weight: 700;
+
+  /* ======================
+       GRAY 계열
+   ====================== */
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #edeff1;
+  --color-gray-200: #dddddd;
+  --color-gray-300: #cccccc;
+  --color-gray-400: #bbbbbb;
+  --color-gray-500: #a4a4a4;
+  --color-gray-600: #737373;
+  --color-gray-700: #4a4a4a;
+  --color-gray-800: #333333;
+  --color-gray-900: #191919;
+
+  /* ======================
+          BLUE 계열
+    ====================== */
+  --color-blue-100: #edfff5;
+  --color-blue-200: #dffaeb;
+  --color-blue-500: #00bb86;
+  --color-blue-200: #aaebff;
+  --color-blue-400: #46d3ff;
+  --color-blue-600: #0065da;
+  --color-blue-700: #0f4c8a;
+
+  /* ======================
+            GREEN 계열
+      ====================== */
+  --color-green-100: #d6f9ff;
+  --color-green-500: #9bf78f;
+  --color-green-600: #00edc1;
+
+  /* ======================
+                RED 계열
+          ====================== */
+  --color-error-100: #e91616;
 }
