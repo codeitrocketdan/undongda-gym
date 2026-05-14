@@ -1,2 +1,37 @@
 {
+  // 저장 시 자동 포맷
+  "editor.formatOnSave": true,
+  // 기본 포맷터를 Prettier로 지정
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  // 파일마다 들여쓰기 자동 감지 끔 (tabSize 고정)
+  "editor.detectIndentation": false,
+  // 저장 시 ESLint 오류 자동 수정 + import 자동 정렬
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "always",
+    "source.organizeImports": "explicit"
+  },
+  // TS/TSX/JS 파일 붙여넣기 및 저장 시 Prettier 포맷 적용
+  "[typescript]": {
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  // 파일 이동 시 import 경로 자동 수정
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  // 저장 시 끝에 붙는 불필요한 공백 제거
+  "files.trimTrailingWhitespace": true,
+  // 파일 끝 빈 줄 자동 추가 (Git diff 깔끔)
+  "files.insertFinalNewline": true,
+  // Tailwind 클래스 자동완성 활성화
+  "tailwindCSS.emmetCompletions": true
 }
