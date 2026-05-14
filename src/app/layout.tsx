@@ -4,6 +4,7 @@ import "./globals.css";
 
 const Pretendard = localFont({
   src: "../shared/fonts/PretendardVariable.woff2",
+  variable: "--font-pretendard",
   display: "swap",
   preload: true,
 });
@@ -19,7 +20,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${Pretendard.className} h-full antialiased`}>
+    <html lang="en" className={`${Pretendard.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col">{children}</body>
     </html>
   );
