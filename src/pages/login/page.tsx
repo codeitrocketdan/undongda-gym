@@ -1,5 +1,6 @@
 "use client";
-import IconButton from "@/shared/ui/IconButton";
+import CreateButton from "@/shared/ui/button/CreateButton";
+import IconButton from "@/shared/ui/button/IconButton";
 import { Camera, Heart, Pencil } from "lucide-react";
 
 const LoginPage = () => {
@@ -15,6 +16,7 @@ const LoginPage = () => {
       <IconButton size="lg" onClick={() => console.log("test")}>
         <Heart />
       </IconButton>
+      <CreateButton>모임 만들기</CreateButton>
     </div>
   );
 };

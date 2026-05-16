@@ -75,6 +75,7 @@ interface PropsType {
   resposive: ResposiveType;
   isDisabled?: boolean;
   onClick: () => void;
+  className?: string;
 }
 
 const Button = ({
@@ -84,10 +85,11 @@ const Button = ({
   resposive = "md-md",
   isDisabled = false,
   onClick,
+  className,
 }: PropsType) => {
   // 버튼 클래스 병합
   const buttonClasses = twMerge(
-    clsx(buttonVariants({ variant, size, resposive, disabled: isDisabled }))
+    clsx(buttonVariants({ variant, size, resposive, disabled: isDisabled }), className)
   );
 
   return (
