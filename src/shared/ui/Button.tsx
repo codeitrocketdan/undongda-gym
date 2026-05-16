@@ -40,7 +40,7 @@ const resposiveClasses: Record<ResposiveType, string> = {
 };
 
 // 버튼 variant 관리
-const buttonVariants = cva("flex items-center justify-center", {
+const buttonVariants = cva("flex items-center justify-center cursor-pointer", {
   variants: {
     // 버튼 디자인
     variant: {
