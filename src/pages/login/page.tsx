@@ -46,6 +46,9 @@ const LoginPage = () => {
           })}
         />
       </InputField>
+      <InputField>
+        <textarea className="custom-scrollbar resize-none rounded-xl bg-gray-50 p-3 outline-none" />
+      </InputField>
       <button type="submit" disabled={disabled} className={disabled ? "bg-red-50" : ""}>
         버튼
       </button>
