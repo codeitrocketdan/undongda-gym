@@ -21,7 +21,9 @@ export function useFocusTrap<T extends HTMLElement>() {
       "embed",
       "[contenteditable]",
       '[tabindex]:not([tabindex="-1"])',
-    ].join(",");
+    ]
+      // .map((selector) => `${selector}:not([data-autofocus-ignore])`)
+      .join(",");
 
     let firstElement: HTMLElement | null = null;
     let lastElement: HTMLElement | null = null;
@@ -33,7 +35,13 @@ export function useFocusTrap<T extends HTMLElement>() {
         lastElement = focusableElements[focusableElements.length - 1];
 
         if (!element.contains(document.activeElement)) {
-          firstElement.focus();
+          // 모달 내부에 'autofocus' 속성이 지정된 요소가 있다면 먼저 포커스
+          const autoFocusElement = element.querySelector<HTMLElement>("[autofocus]");
+          if (autoFocusElement) {
+            autoFocusElement.focus();
+          } else {
+            firstElement.focus();
+          }
         }
       }
     };
@@ -64,11 +72,11 @@ export function useFocusTrap<T extends HTMLElement>() {
       }
     };
 
-    window.addEventListener("keydown", handleKeyDown);
+    element.addEventListener("keydown", handleKeyDown);
 
     return () => {
       observer.disconnect();
-      window.removeEventListener("keydown", handleKeyDown);
+      element.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
 
