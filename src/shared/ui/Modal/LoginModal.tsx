@@ -1,5 +1,5 @@
 "use client";
-import Modal from "./_Modal";
+import Modal from "./Modal";
 
 export default function LoginModal() {
   const modal = Modal.useModal();
@@ -10,7 +10,7 @@ export default function LoginModal() {
       </button>
       {modal.isOpen && (
         <>
-          <Modal isOpen={modal.isOpen} onClose={modal.close}>
+          <Modal isOpen={modal.isOpen} onClose={modal.close} isClickToClose={true}>
             <Modal.Header>
               <Modal.CloseButton />
               <p className="mt-5 text-center">로그인이 필요한 서비스입니다.</p>

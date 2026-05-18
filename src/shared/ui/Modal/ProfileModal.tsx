@@ -1,6 +1,6 @@
 "use client";
 
-import Modal from "./_Modal";
+import Modal from "./Modal";
 import { useModal } from "./useModal";
 
 export default function ProfileModal() {

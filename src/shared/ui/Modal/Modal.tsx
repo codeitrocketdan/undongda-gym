@@ -1,15 +1,14 @@
 import { createContext, ReactNode, useContext } from "react";
-import ModalBackground from "./_Background";
-import CloseButton from "./_CloseButton";
-import ModalFooter from "./_Footer";
-import ModalHeader from "./_Header";
-import { useFocusTrap } from "./useFocusTrap";
+import { useFocusTrap } from "../../lib/useFocusTrap";
+import ModalBackground from "./Background";
+import CloseButton from "./CloseButton";
+import ModalFooter from "./Footer";
+import ModalHeader from "./Header";
 
 interface ModalComponent extends React.FC<ModalProps> {
   Header: typeof ModalHeader;
   Footer: typeof ModalFooter;
   CloseButton: typeof CloseButton;
-  Background: typeof ModalBackground;
   useModal: typeof import("./useModal").useModal;
 }
 
@@ -27,20 +26,25 @@ interface ModalProps {
   children: ReactNode;
   isOpen: boolean;
   onClose: () => void;
+  isClickToClose?: boolean;
 }
 
-const Modal = ({ children, isOpen, onClose }: ModalProps) => {
+const Modal = ({ children, isOpen, onClose, isClickToClose }: ModalProps) => {
   const trapRef = useFocusTrap<HTMLDivElement>();
 
   if (!isOpen) return null;
 
   return (
     <ModalContext.Provider value={{ onClose }}>
-      <div className="fixed top-0 left-0 flex h-screen w-full items-center justify-center bg-black/50">
-        <div ref={trapRef} className="max-w-140 min-w-85 bg-white p-10">
+      <ModalBackground isClickToClose={isClickToClose}>
+        <div
+          ref={trapRef}
+          className="max-w-140 min-w-85 bg-white p-10"
+          onClick={(e) => e.stopPropagation()}
+        >
           {children}
         </div>
-      </div>
+      </ModalBackground>
     </ModalContext.Provider>
   );
 };
@@ -48,7 +52,6 @@ const Modal = ({ children, isOpen, onClose }: ModalProps) => {
 (Modal as ModalComponent).Header = ModalHeader;
 (Modal as ModalComponent).Footer = ModalFooter;
 (Modal as ModalComponent).CloseButton = CloseButton;
-(Modal as ModalComponent).Background = ModalBackground;
 (Modal as ModalComponent).useModal = require("./useModal").useModal;
 
 export default Modal as ModalComponent;

@@ -1,4 +1,4 @@
-import { useModalContext } from "./_Modal";
+import { useModalContext } from "./Modal";
 
 interface Props {
   className?: string;
@@ -9,8 +9,7 @@ export default function CloseButton({ className }: Props) {
   const { onClose } = useModalContext();
   return (
     <button className={`${className} self-end`} onClick={onClose}>
-      {" "}
-      X{" "}
+      X
     </button>
   );
 }
