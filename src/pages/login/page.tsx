@@ -1,27 +1,58 @@
 "use client";
-import Button, { sizes } from "@/shared/ui/button/Button";
-import CreateButton from "@/shared/ui/button/CreateButton";
-import IconButton from "@/shared/ui/button/IconButton";
-import { Camera, Heart, Pencil } from "lucide-react";
+import Input from "@/shared/ui/input/Input";
+import InputField from "@/shared/ui/input/InputFiled";
+import { SubmitHandler, useForm } from "react-hook-form";
+
+type Inputs = {
+  email: string;
+  password: string;
+};
 
 const LoginPage = () => {
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors, disabled },
+  } = useForm<Inputs>();
+  console.log(errors);
+  const onSubmit: SubmitHandler<Inputs> = (data) => {
+    console.log(data);
+    setTimeout(() => {
+      console.log("로그인");
+    }, 3000);
+  };
   return (
-    <div>
-      <div></div>
-      <IconButton size="sm" className="bg-blue-500 text-white" onClick={() => console.log("test")}>
-        <Camera size={50} />
-      </IconButton>
-      <IconButton size="md" onClick={() => console.log("test")} iconClassName="w-10 h-10">
-        <Pencil />
-      </IconButton>
-      <IconButton size="lg" onClick={() => console.log("test")}>
-        <Heart />
-      </IconButton>
-      <Button onClick={() => console.log("test")} className={`sm:${sizes.md} md:${sizes.lg}`}>
-        반응형 버튼 테스트
-      </Button>
-      <CreateButton>모임 만들기</CreateButton>
-    </div>
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <InputField label="이메일" htmlFor="email" error={errors.email?.message} required>
+        <Input
+          type="email"
+          id="email"
+          error={!!errors.email}
+          placeholder="아이디를 입력해주세요."
+          {...register("email", {
+            required: "아이디를 입력해주세요.",
+          })}
+        />
+      </InputField>
+      <InputField label="비밀번호" htmlFor="password" error={errors.password?.message}>
+        <Input
+          type="password"
+          id="password"
+          error={!!errors.password}
+          placeholder="비밀번호를 입력해주세요."
+          {...register("password", {
+            required: "비밀번호를 입력해주세요.",
+          })}
+        />
+      </InputField>
+      <InputField>
+        <textarea className="custom-scrollbar resize-none rounded-xl bg-gray-50 p-3 outline-none" />
+      </InputField>
+      <button type="submit" disabled={disabled} className={disabled ? "bg-red-50" : ""}>
+        버튼
+      </button>
+    </form>
   );
 };
 
