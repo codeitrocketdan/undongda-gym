@@ -37,6 +37,10 @@ const Modal = ({ children, onClose, isClickToClose }: ModalProps) => {
       <ModalBackground isClickToClose={isClickToClose}>
         <div
           ref={trapRef}
+          tabIndex={-1}
+          onKeyDown={(e) => {
+            if (e.key === "Escape") onClose();
+          }}
           className="max-w-140 min-w-85 bg-white p-10"
           onClick={(e) => e.stopPropagation()}
         >

@@ -1,3 +1,4 @@
+import { X } from "lucide-react";
 import { useModalContext } from "./Modal";
 
 interface Props {
@@ -9,7 +10,7 @@ export default function CloseButton({ className }: Props) {
   const { onClose } = useModalContext();
   return (
     <button className={`${className} self-end`} onClick={onClose}>
-      X
+      <X />
     </button>
   );
 }

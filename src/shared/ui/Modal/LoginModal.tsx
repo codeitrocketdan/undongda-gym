@@ -13,6 +13,12 @@ export default function LoginModal() {
           <Modal.Header>
             <Modal.CloseButton />
             <p className="mt-5 text-center">로그인이 필요한 서비스입니다.</p>
+            <input
+              type="text"
+              placeholder="인풋에 포커스 먼저 가는지 확인"
+              className="border-1 border-gray-800"
+              autoFocus
+            />
           </Modal.Header>
           <Modal.Footer>
             {/* 버튼 공통 컴포넌트로 교체 */}
