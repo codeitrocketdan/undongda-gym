@@ -28,9 +28,9 @@ const iconVariants = cva(
       isDisabled: {
         true: "cursor-not-allowed",
       },
-      defaultVariants: {
-        size: "md",
-      },
+    },
+    defaultVariants: {
+      size: "md",
     },
   }
 );

@@ -27,7 +27,7 @@ const buttonVariants = cva("flex items-center justify-center cursor-pointer", {
   variants: {
     // 버튼 디자인
     variant: {
-      primary: "bg-blue-500 text-white hover:bg-blue-700",
+      primary: "bg-blue-500 text-white",
       secondary: "border border-blue-600 bg-white text-blue-600",
       tertiary: "border border-gray-600 bg-white text-gray-600",
     },
@@ -41,6 +41,7 @@ const buttonVariants = cva("flex items-center justify-center cursor-pointer", {
       false: "cursor-pointer",
     },
   },
+  compoundVariants: [{ variant: "primary", disabled: false, className: "hover:bg-blue-700" }],
   // 기본 값
   defaultVariants: {
     variant: "primary",
@@ -59,7 +60,7 @@ interface PropsType {
 
 const Button = ({
   children,
-  variant,
+  variant = "primary",
   size = "md",
   isDisabled = false,
   onClick,
@@ -71,7 +72,7 @@ const Button = ({
   );
 
   return (
-    <button className={buttonClasses} onClick={onClick}>
+    <button className={buttonClasses} onClick={onClick} disabled={isDisabled}>
       {children}
     </button>
   );
