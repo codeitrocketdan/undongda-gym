@@ -1,9 +1,14 @@
 import { InputHTMLAttributes } from "react";
 import { twMerge } from "tailwind-merge";
 
+// InputHTMLAttributes<HTMLInputElement>를 사용해서 input의 속성을 받습니다.
 interface PropsType extends InputHTMLAttributes<HTMLInputElement> {
   error?: boolean;
 }
+
+// interface PropsType {
+
+// }
 
 const Input = ({ className, error, ...props }: PropsType) => {
   return (
