@@ -11,7 +11,7 @@ export default function MoimModal() {
         모임 만들기
       </button>
       {modal.isOpen && (
-        <Modal isOpen={modal.isOpen} onClose={modal.close}>
+        <Modal onClose={modal.close}>
           <Modal.Header className="flex-row justify-between">
             <p className="text-lg-bold">
               모임 만들기 <span className="text-gray-800">1</span>

@@ -4,12 +4,13 @@ import ModalBackground from "./Background";
 import CloseButton from "./CloseButton";
 import ModalFooter from "./Footer";
 import ModalHeader from "./Header";
+import { useModal } from "./useModal";
 
 interface ModalComponent extends React.FC<ModalProps> {
   Header: typeof ModalHeader;
   Footer: typeof ModalFooter;
   CloseButton: typeof CloseButton;
-  useModal: typeof import("./useModal").useModal;
+  useModal: typeof useModal;
 }
 
 // 1. 모달의 기능을 공유할 컨텍스트 생성
@@ -24,15 +25,12 @@ export const useModalContext = () => {
 
 interface ModalProps {
   children: ReactNode;
-  isOpen: boolean;
   onClose: () => void;
   isClickToClose?: boolean;
 }
 
-const Modal = ({ children, isOpen, onClose, isClickToClose }: ModalProps) => {
+const Modal = ({ children, onClose, isClickToClose }: ModalProps) => {
   const trapRef = useFocusTrap<HTMLDivElement>();
-
-  if (!isOpen) return null;
 
   return (
     <ModalContext.Provider value={{ onClose }}>
@@ -52,6 +50,6 @@ const Modal = ({ children, isOpen, onClose, isClickToClose }: ModalProps) => {
 (Modal as ModalComponent).Header = ModalHeader;
 (Modal as ModalComponent).Footer = ModalFooter;
 (Modal as ModalComponent).CloseButton = CloseButton;
-(Modal as ModalComponent).useModal = require("./useModal").useModal;
+(Modal as ModalComponent).useModal = useModal;
 
 export default Modal as ModalComponent;

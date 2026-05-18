@@ -11,7 +11,7 @@ export default function ProfileModal() {
         프로필 보기
       </button>
       {modal.isOpen && (
-        <Modal isOpen={modal.isOpen} onClose={modal.close}>
+        <Modal onClose={modal.close}>
           <Modal.Header>
             <Modal.CloseButton />
             <img

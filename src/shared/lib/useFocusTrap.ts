@@ -43,10 +43,9 @@ export function useFocusTrap<T extends HTMLElement>() {
       updateFocusableElements();
     });
 
-    observer.observe(element, { childList: true, subtree: true });
-
-    // 초기 실행
+    // 초기 실행 후 감지
     updateFocusableElements();
+    observer.observe(element, { childList: true, subtree: true });
 
     // 키보드 이벤트 핸들러
     const handleKeyDown = (e: KeyboardEvent) => {

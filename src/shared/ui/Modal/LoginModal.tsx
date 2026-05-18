@@ -9,19 +9,17 @@ export default function LoginModal() {
         모달 열기
       </button>
       {modal.isOpen && (
-        <>
-          <Modal isOpen={modal.isOpen} onClose={modal.close} isClickToClose={true}>
-            <Modal.Header>
-              <Modal.CloseButton />
-              <p className="mt-5 text-center">로그인이 필요한 서비스입니다.</p>
-            </Modal.Header>
-            <Modal.Footer>
-              {/* 버튼 공통 컴포넌트로 교체 */}
-              <button onClick={modal.close}>취소</button>
-              <button onClick={() => {}}>확인</button>
-            </Modal.Footer>
-          </Modal>
-        </>
+        <Modal onClose={modal.close} isClickToClose={true}>
+          <Modal.Header>
+            <Modal.CloseButton />
+            <p className="mt-5 text-center">로그인이 필요한 서비스입니다.</p>
+          </Modal.Header>
+          <Modal.Footer>
+            {/* 버튼 공통 컴포넌트로 교체 */}
+            <button onClick={modal.close}>취소</button>
+            <button onClick={() => {}}>확인</button>
+          </Modal.Footer>
+        </Modal>
       )}
     </>
   );
