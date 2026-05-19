@@ -1,17 +1,39 @@
 "use client";
+import { signupSchema } from "@/features/signup/model/schema";
 import Button from "@/shared/ui/button/Button";
 import Input from "@/shared/ui/input/Input";
 import InputField from "@/shared/ui/input/InputFiled";
+import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { SubmitHandler, useForm } from "react-hook-form";
 
-const fields = [
-  { label: "이름", type: "text" },
-  { label: "아이디", type: "text" },
-  { label: "비밀번호", type: "password" },
-  { label: "비밀번호 확인", type: "password" },
-];
+interface SignupForm {
+  nickname: string;
+  email: string;
+  password: string;
+  passwordConfirm: string;
+}
 
 const SignupPage = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SignupForm>({
+    defaultValues: {
+      nickname: "",
+      email: "",
+      password: "",
+      passwordConfirm: "",
+    },
+    resolver: zodResolver(signupSchema),
+    shouldFocusError: true,
+  });
+
+  const onSignup: SubmitHandler<SignupForm> = (data) => {
+    console.log(data);
+  };
+
   return (
     <main className="flex min-h-screen w-full items-center justify-center">
       <section
@@ -19,19 +41,62 @@ const SignupPage = () => {
         className="mx-4 w-142 max-w-142 rounded-[40px] bg-white px-14 py-10"
       >
         <h1 className="text-base-semibold md:text-2xl-semibold mb-10 text-center">회원가입</h1>
-        <form className="mb-8 md:mb-10">
+        <form onSubmit={handleSubmit(onSignup)} className="mb-8 md:mb-10">
           <div className="mb-6">
-            <InputField label="이름" htmlFor="name" required className="mb-6 md:mb-4">
-              <Input id="name" placeholder="이름을 입력해주세요" />
+            <InputField
+              label="이름"
+              htmlFor="nickname"
+              error={errors.nickname?.message}
+              required
+              className="mb-6 md:mb-4"
+            >
+              <Input
+                type="text"
+                id="nickname"
+                {...register("nickname")}
+                placeholder="이름을 입력해주세요"
+              />
             </InputField>
-            <InputField label="아이디" htmlFor="id" required className="mb-6 md:mb-4">
-              <Input id="id" placeholder="이름을 입력해주세요" />
+            <InputField
+              label="아이디"
+              htmlFor="email"
+              error={errors.email?.message}
+              required
+              className="mb-6 md:mb-4"
+            >
+              <Input
+                type="text"
+                id="email"
+                {...register("email")}
+                placeholder="이름을 입력해주세요"
+              />
             </InputField>
-            <InputField label="비밀번호" htmlFor="password" required className="mb-6 md:mb-4">
-              <Input id="password" placeholder="이름을 입력해주세요" />
+            <InputField
+              label="비밀번호"
+              htmlFor="password"
+              error={errors.password?.message}
+              required
+              className="mb-6 md:mb-4"
+            >
+              <Input
+                type="password"
+                id="password"
+                {...register("password")}
+                placeholder="이름을 입력해주세요"
+              />
             </InputField>
-            <InputField label="비밀번호 확인" htmlFor="passwordConfirm" required>
-              <Input id="passwordConfirm" placeholder="이름을 입력해주세요" />
+            <InputField
+              label="비밀번호 확인"
+              htmlFor="passwordConfirm"
+              error={errors.passwordConfirm?.message}
+              required
+            >
+              <Input
+                type="password"
+                id="passwordConfirm"
+                {...register("passwordConfirm")}
+                placeholder="이름을 입력해주세요"
+              />
             </InputField>
           </div>
           <Button type="submit" variant="primary" onClick={() => console.log("test")}>

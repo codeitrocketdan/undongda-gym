@@ -30,9 +30,7 @@ const LoginPage = () => {
           id="email"
           error={!!errors.email}
           placeholder="아이디를 입력해주세요."
-          {...register("email", {
-            required: "아이디를 입력해주세요.",
-          })}
+          {...register("email")}
         />
       </InputField>
       <InputField label="비밀번호" htmlFor="password" error={errors.password?.message}>
