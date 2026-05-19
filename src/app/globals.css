@@ -5,7 +5,7 @@
   --color-foreground: #333333;
 }
 @theme {
-   --font-sans :var(--font-pretendard);
+  --font-sans: var(--font-pretendard);
 }
 
 @layer base {
@@ -193,7 +193,7 @@
   --color-blue-200: #dffaeb;
   --color-blue-300: #aaebff;
   --color-blue-400: #46d3ff;
-  --color-blue-500: #00bb86;
+  --color-blue-500: #00c3ff;
   --color-blue-600: #0065da;
   --color-blue-700: #0f4c8a;
 
