@@ -1,5 +1,6 @@
 import { formatRelativeDate } from "@/shared/lib/formatDate";
 import { MessageCircle, ThumbsUp } from "lucide-react";
+import { twMerge } from "tailwind-merge";
 
 interface PostStatsProps {
   likeCount: number;
@@ -16,7 +17,10 @@ export default function PostStats({
 }: PostStatsProps) {
   return (
     <div
-      className={`flex items-center gap-2 text-xs text-slate-500 md:gap-3 md:text-sm ${className ?? ""}`}
+      className={twMerge(
+        "flex items-center gap-2 text-xs text-slate-500 md:gap-3 md:text-sm",
+        className
+      )}
     >
       <span>{formatRelativeDate(createdAt)}</span>
       <div className="flex items-center gap-0.5">

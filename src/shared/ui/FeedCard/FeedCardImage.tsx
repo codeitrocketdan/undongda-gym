@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { twMerge } from "tailwind-merge";
 
 interface FeedCardImageProps {
   src: string | null;
@@ -9,7 +10,10 @@ interface FeedCardImageProps {
 export default function FeedCardImage({ src, alt = "", className }: FeedCardImageProps) {
   return (
     <div
-      className={`relative h-36 w-full overflow-hidden rounded-xl bg-slate-200 md:h-50 md:w-50 md:shrink-0 md:rounded-3xl ${className ?? ""}`}
+      className={twMerge(
+        "relative h-36 w-full overflow-hidden rounded-xl bg-slate-200 md:h-50 md:w-50 md:shrink-0 md:rounded-3xl",
+        className
+      )}
     >
       {src && (
         <Image

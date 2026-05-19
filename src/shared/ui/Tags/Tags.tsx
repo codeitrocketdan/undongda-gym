@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { twMerge } from "tailwind-merge";
 
 interface TagsProps {
   tags: string[];
@@ -8,7 +9,9 @@ interface TagsProps {
 
 export default function Tags({ tags, icon, className }: TagsProps) {
   return (
-    <div className={`${className ?? ""} text-xs text-slate-500 md:text-sm`}>
+    <div
+      className={twMerge("flex items-center gap-1 text-xs text-slate-500 md:text-sm", className)}
+    >
       {icon && icon}
       {tags.map((tag, index) => (
         <span key={tag}>

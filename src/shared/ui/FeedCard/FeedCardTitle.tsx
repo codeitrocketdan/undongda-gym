@@ -1,8 +1,10 @@
+import { twMerge } from "tailwind-merge";
+
 interface FeedCardTitleProps {
   title: string;
   className?: string;
 }
 
 export default function FeedCardTitle({ title, className }: FeedCardTitleProps) {
-  return <p className={`text-base-bold md:text-xl-bold ${className ?? ""}`}>{title}</p>;
+  return <p className={twMerge("text-base-bold md:text-xl-bold", className)}>{title}</p>;
 }

@@ -1,3 +1,5 @@
+import { twMerge } from "tailwind-merge";
+
 interface FeedCardContentProps {
   content: string;
   className?: string;
@@ -5,7 +7,7 @@ interface FeedCardContentProps {
 
 export default function FeedCardContent({ content, className }: FeedCardContentProps) {
   return (
-    <div className={`text-sm md:text-lg ${className ?? ""}`}>
+    <div className={twMerge("text-sm md:text-lg", className)}>
       <span>{content}</span>
     </div>
   );
