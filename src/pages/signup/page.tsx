@@ -54,6 +54,7 @@ const SignupPage = () => {
                 type="text"
                 id="nickname"
                 {...register("nickname")}
+                error={!!errors.nickname?.message}
                 placeholder="이름을 입력해주세요"
               />
             </InputField>

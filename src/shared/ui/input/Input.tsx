@@ -3,16 +3,19 @@ import { twMerge } from "tailwind-merge";
 
 // InputHTMLAttributes<HTMLInputElement>를 사용해서 input의 속성을 받습니다.
 interface PropsType extends InputHTMLAttributes<HTMLInputElement> {
+  type: "text" | "password" | "submit" | "reset";
+  id: string;
+  className?: string;
   error?: boolean;
 }
 
-// interface PropsType {
-
-// }
-
-const Input = ({ className, error, ...props }: PropsType) => {
+const Input = ({ type, id, className, error, ...props }: PropsType) => {
   return (
     <input
+      type={type}
+      id={id}
+      aria-describedby={error ? `${id}-error` : undefined}
+      aria-invalid={error}
       className={twMerge(
         "w-full rounded-xl border border-gray-200 bg-gray-50 p-3 outline-none",
         "placeholder:text-gray-400",
