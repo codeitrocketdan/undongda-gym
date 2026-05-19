@@ -23,7 +23,7 @@ export const sizes: Record<SizeType, string> = {
 };
 
 // 버튼 variant 관리
-const buttonVariants = cva("flex items-center justify-center cursor-pointer", {
+const buttonVariants = cva("flex w-full items-center justify-center cursor-pointer", {
   variants: {
     // 버튼 디자인
     variant: {
@@ -50,6 +50,7 @@ const buttonVariants = cva("flex items-center justify-center cursor-pointer", {
 });
 
 interface PropsType {
+  type?: "button" | "submit" | "reset";
   children: React.ReactNode;
   variant?: VariantType;
   size?: SizeType;
@@ -59,6 +60,7 @@ interface PropsType {
 }
 
 const Button = ({
+  type = "button",
   children,
   variant = "primary",
   size = "md",
@@ -72,7 +74,7 @@ const Button = ({
   );
 
   return (
-    <button className={buttonClasses} onClick={onClick} disabled={isDisabled}>
+    <button type={type} className={buttonClasses} onClick={onClick} disabled={isDisabled}>
       {children}
     </button>
   );
