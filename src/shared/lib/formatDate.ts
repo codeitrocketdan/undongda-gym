@@ -24,6 +24,7 @@ export function formatRelativeDate(date: string | null) {
   const diffMin = Math.floor(diffMs / 1000 / 60);
   const diffHour = Math.floor(diffMin / 60);
 
+  if (diffMin < 5) return "방금 전";
   if (diffMin < 60) return `${diffMin}분 전`;
   if (diffHour < 24) return `${diffHour}시간 전`;
   return formatDate(date);
