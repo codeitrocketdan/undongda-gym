@@ -1,9 +1,11 @@
 "use client";
 
+import { loginSchema } from "@/features/login/model/chema";
 import Button from "@/shared/ui/button/Button";
 import Input from "@/shared/ui/input/Input";
 import InputField from "@/shared/ui/input/InputFiled";
 import PasswordInput from "@/shared/ui/input/PasswordInput";
+import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { SubmitHandler, useForm } from "react-hook-form";
 
@@ -37,6 +39,8 @@ const LoginPage = () => {
       email: "",
       password: "",
     },
+    resolver: zodResolver(loginSchema),
+    shouldFocusError: true,
   });
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
