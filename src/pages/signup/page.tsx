@@ -14,6 +14,33 @@ interface SignupForm {
   passwordConfirm: string;
 }
 
+const FORM_FIELDS = [
+  {
+    name: "nickname" as const,
+    label: "이름",
+    type: "text",
+    placeholder: "이름을 입력해주세요",
+  },
+  {
+    name: "email" as const,
+    label: "아이디",
+    type: "text",
+    placeholder: "아이디를 입력해주세요",
+  },
+  {
+    name: "password" as const,
+    label: "비밀번호",
+    type: "password",
+    placeholder: "비밀번호를 입력해주세요",
+  },
+  {
+    name: "passwordConfirm" as const,
+    label: "비밀번호 확인",
+    type: "password",
+    placeholder: "비밀번호를 다시 입력해주세요",
+  },
+] as const;
+
 const SignupPage = () => {
   const {
     register,
@@ -42,65 +69,26 @@ const SignupPage = () => {
       >
         <h1 className="text-base-semibold md:text-2xl-semibold mb-10 text-center">회원가입</h1>
         <form onSubmit={handleSubmit(onSignup)} className="mb-8 md:mb-10">
-          <div className="mb-6">
-            <InputField
-              label="이름"
-              htmlFor="nickname"
-              error={errors.nickname?.message}
-              required
-              className="mb-6 md:mb-4"
-            >
-              <Input
-                type="text"
-                id="nickname"
-                {...register("nickname")}
-                error={!!errors.nickname?.message}
-                placeholder="이름을 입력해주세요"
-              />
-            </InputField>
-            <InputField
-              label="아이디"
-              htmlFor="email"
-              error={errors.email?.message}
-              required
-              className="mb-6 md:mb-4"
-            >
-              <Input
-                type="text"
-                id="email"
-                {...register("email")}
-                placeholder="이름을 입력해주세요"
-              />
-            </InputField>
-            <InputField
-              label="비밀번호"
-              htmlFor="password"
-              error={errors.password?.message}
-              required
-              className="mb-6 md:mb-4"
-            >
-              <Input
-                type="password"
-                id="password"
-                {...register("password")}
-                placeholder="이름을 입력해주세요"
-              />
-            </InputField>
-            <InputField
-              label="비밀번호 확인"
-              htmlFor="passwordConfirm"
-              error={errors.passwordConfirm?.message}
-              required
-            >
-              <Input
-                type="password"
-                id="passwordConfirm"
-                {...register("passwordConfirm")}
-                placeholder="이름을 입력해주세요"
-              />
-            </InputField>
+          <div className="mb-6 space-y-6 md:space-y-4">
+            {FORM_FIELDS.map((field) => (
+              <InputField
+                key={field.name}
+                label={field.label}
+                htmlFor={field.name}
+                error={errors[field.name]?.message}
+                required
+              >
+                <Input
+                  id={field.name}
+                  type={field.type}
+                  placeholder={field.placeholder}
+                  {...register(field.name)}
+                  error={!!errors[field.name]}
+                />
+              </InputField>
+            ))}
           </div>
-          <Button type="submit" variant="primary" onClick={() => console.log("test")}>
+          <Button type="submit" variant="primary">
             회원가입
           </Button>
         </form>

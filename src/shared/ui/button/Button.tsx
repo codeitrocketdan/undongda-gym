@@ -55,7 +55,7 @@ interface PropsType {
   variant?: VariantType;
   size?: SizeType;
   isDisabled?: boolean;
-  onClick: () => void;
+  onClick?: () => void;
   className?: string;
 }
 
