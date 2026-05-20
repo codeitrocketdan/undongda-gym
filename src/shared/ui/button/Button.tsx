@@ -55,7 +55,7 @@ interface PropsType {
   variant?: VariantType;
   size?: SizeType;
   isDisabled?: boolean;
-  onClick?: () => void;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
   className?: string;
 }
 

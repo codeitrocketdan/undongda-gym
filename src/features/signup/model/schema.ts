@@ -6,7 +6,7 @@ export const signupSchema = z
       .string()
       .trim()
       .min(2, "이름은 2자 이상 입력해주세요.")
-      .max(8, "이름은 12자 이하로 입력해주세요.")
+      .max(8, "이름은 8자 이하로 입력해주세요.")
       .regex(/^[a-zA-Z0-9가-힣]+$/, "닉네임은 한글, 영문, 숫자만 가능합니다."),
     email: z
       .email("이메일 형식이 아닙니다.")
