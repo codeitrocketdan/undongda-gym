@@ -2,16 +2,17 @@ import React from "react";
 import { twMerge } from "tailwind-merge";
 
 interface PropsType {
-  label?: string;
-  htmlFor?: string;
+  label: string;
+  htmlFor: string;
   error?: string;
   children: React.ReactNode;
   required?: boolean;
+  className?: string;
 }
 
-const InputField = ({ label, htmlFor, error, children, required }: PropsType) => {
+const InputField = ({ label, htmlFor, error, children, required = true, className }: PropsType) => {
   return (
-    <div className="m-4 flex flex-col gap-1">
+    <div className={twMerge("flex flex-col gap-1", className)}>
       {label && (
         <label
           htmlFor={htmlFor}
