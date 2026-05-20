@@ -17,9 +17,11 @@ const Input = ({ type, id, className, error, ...props }: PropsType) => {
       aria-describedby={error ? `${id}-error` : undefined}
       aria-invalid={error}
       className={twMerge(
-        "w-full rounded-xl border border-gray-200 bg-gray-50 p-3 outline-none",
+        "w-full rounded-xl bg-gray-50 p-3 outline-none",
+        "border border-transparent",
+        "focus:border-blue-500",
+        error && "border-error-100",
         "placeholder:text-gray-400",
-        error ? "border-error-100" : "focus:border-blue-500",
         className
       )}
       {...props}

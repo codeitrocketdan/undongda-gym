@@ -3,6 +3,7 @@ import { signupSchema } from "@/features/signup/model/schema";
 import Button from "@/shared/ui/button/Button";
 import Input from "@/shared/ui/input/Input";
 import InputField from "@/shared/ui/input/InputFiled";
+import PasswordInput from "@/shared/ui/input/PasswordInput";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -78,13 +79,22 @@ const SignupPage = () => {
                 error={errors[field.name]?.message}
                 required
               >
-                <Input
-                  id={field.name}
-                  type={field.type}
-                  placeholder={field.placeholder}
-                  {...register(field.name)}
-                  error={!!errors[field.name]}
-                />
+                {field.type === "password" ? (
+                  <PasswordInput
+                    id={field.name}
+                    placeholder={field.placeholder}
+                    error={!!errors[field.name]}
+                    register={register(field.name)}
+                  />
+                ) : (
+                  <Input
+                    id={field.name}
+                    type={field.type}
+                    placeholder={field.placeholder}
+                    {...register(field.name)}
+                    error={!!errors[field.name]}
+                  />
+                )}
               </InputField>
             ))}
           </div>
