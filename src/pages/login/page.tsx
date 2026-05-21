@@ -1,9 +1,8 @@
 "use client";
 
-import { useGoogleLogin } from "@/features/auth/model/useGoogleLogin";
+import { SocialLoginButtons } from "@/features/auth/components/SocialLoginButtons";
 import { loginSchema } from "@/features/login/model/chema";
 import Button from "@/shared/ui/button/Button";
-import SocialLoginButton from "@/shared/ui/button/SocialLoginButton";
 import Input from "@/shared/ui/input/Input";
 import InputField from "@/shared/ui/input/InputFiled";
 import PasswordInput from "@/shared/ui/input/PasswordInput";
@@ -48,8 +47,6 @@ const LoginPage = () => {
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     console.log(data);
   };
-
-  const { loginWithGoogle } = useGoogleLogin();
 
   return (
     <main className="flex min-h-screen w-full items-center justify-center">
@@ -101,17 +98,7 @@ const LoginPage = () => {
           <p className="text-sm-medium text-gray-500">SNS 계정으로 로그인</p>
           <span aria-hidden="true" className="h-px flex-1 bg-gray-300" />
         </div>
-
-        {/* 소셜 회원가입으로 수정 */}
-        <div className="mb-8 flex flex-col gap-3 md:mb-10 md:flex-row">
-          <SocialLoginButton variant="google" onClick={loginWithGoogle}>
-            구글로 계속하기
-          </SocialLoginButton>
-          <SocialLoginButton variant="kakao" onClick={() => console.log("test")}>
-            카카오로 계속하기
-          </SocialLoginButton>
-        </div>
-
+        <SocialLoginButtons />
         <div className="text-center">
           <p className="text-[15px] font-medium text-gray-800">
             운동다짐이 처음이신가요?
