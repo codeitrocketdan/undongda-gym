@@ -1,5 +1,6 @@
 "use client";
 
+import { useGoogleLogin } from "@/features/auth/model/useGoogleLogin";
 import { loginSchema } from "@/features/login/model/chema";
 import Button from "@/shared/ui/button/Button";
 import SocialLoginButton from "@/shared/ui/button/SocialLoginButton";
@@ -47,6 +48,8 @@ const LoginPage = () => {
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     console.log(data);
   };
+
+  const { loginWithGoogle } = useGoogleLogin();
 
   return (
     <main className="flex min-h-screen w-full items-center justify-center">
@@ -101,7 +104,7 @@ const LoginPage = () => {
 
         {/* 소셜 회원가입으로 수정 */}
         <div className="mb-8 flex flex-col gap-3 md:mb-10 md:flex-row">
-          <SocialLoginButton variant="google" onClick={() => console.log("test")}>
+          <SocialLoginButton variant="google" onClick={loginWithGoogle}>
             구글로 계속하기
           </SocialLoginButton>
           <SocialLoginButton variant="kakao" onClick={() => console.log("test")}>
