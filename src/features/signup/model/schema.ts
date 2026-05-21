@@ -2,7 +2,7 @@ import z from "zod";
 
 export const signupSchema = z
   .object({
-    nickname: z
+    name: z
       .string()
       .trim()
       .min(2, "이름은 2자 이상 입력해주세요.")

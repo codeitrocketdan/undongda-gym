@@ -9,7 +9,7 @@ import Link from "next/link";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 interface SignupForm {
-  nickname: string;
+  name: string;
   email: string;
   password: string;
   passwordConfirm: string;
@@ -17,7 +17,7 @@ interface SignupForm {
 
 const FORM_FIELDS = [
   {
-    name: "nickname" as const,
+    name: "name" as const,
     label: "이름",
     type: "text",
     placeholder: "이름을 입력해주세요",
@@ -49,17 +49,27 @@ const SignupPage = () => {
     formState: { errors },
   } = useForm<SignupForm>({
     defaultValues: {
-      nickname: "",
+      name: "",
       email: "",
       password: "",
       passwordConfirm: "",
     },
     resolver: zodResolver(signupSchema),
     shouldFocusError: true,
+    mode: "onBlur",
+    reValidateMode: "onChange",
   });
 
-  const onSignup: SubmitHandler<SignupForm> = (data) => {
-    console.log(data);
+  const onSignup: SubmitHandler<SignupForm> = async (signupData) => {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/signup`, {
+      method: "POST",
+      body: JSON.stringify(signupData),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await res.json();
+    console.log("회원가입 데이터 =>", data);
   };
 
   return (
