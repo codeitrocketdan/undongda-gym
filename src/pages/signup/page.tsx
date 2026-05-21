@@ -1,5 +1,6 @@
 "use client";
 import { signupSchema } from "@/features/signup/model/schema";
+import { apiClient, ApiError } from "@/shared/api/apiClient";
 import Button from "@/shared/ui/button/Button";
 import Input from "@/shared/ui/input/Input";
 import InputField from "@/shared/ui/input/InputFiled";
@@ -61,15 +62,21 @@ const SignupPage = () => {
   });
 
   const onSignup: SubmitHandler<SignupForm> = async (signupData) => {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/signup`, {
-      method: "POST",
-      body: JSON.stringify(signupData),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    const data = await res.json();
-    console.log("회원가입 데이터 =>", data);
+    try {
+      await apiClient("/auth/signup", {
+        method: "POST",
+        body: signupData,
+      });
+
+      alert("회원가입이 완료되었습니다.");
+    } catch (error) {
+      if (error instanceof ApiError) {
+        console.dir(error);
+        if (error.status === 409) {
+          alert(error.message);
+        }
+      }
+    }
   };
 
   return (
