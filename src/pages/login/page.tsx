@@ -2,6 +2,7 @@
 
 import { loginSchema } from "@/features/login/model/chema";
 import Button from "@/shared/ui/button/Button";
+import SocialLoginButton from "@/shared/ui/button/SocialLoginButton";
 import Input from "@/shared/ui/input/Input";
 import InputField from "@/shared/ui/input/InputFiled";
 import PasswordInput from "@/shared/ui/input/PasswordInput";
@@ -100,12 +101,12 @@ const LoginPage = () => {
 
         {/* 소셜 회원가입으로 수정 */}
         <div className="mb-8 flex flex-col gap-3 md:mb-10 md:flex-row">
-          <Button variant="secondary" onClick={() => console.log("test")}>
+          <SocialLoginButton variant="google" onClick={() => console.log("test")}>
             구글로 계속하기
-          </Button>
-          <Button variant="secondary" onClick={() => console.log("test")}>
+          </SocialLoginButton>
+          <SocialLoginButton variant="kakao" onClick={() => console.log("test")}>
             카카오로 계속하기
-          </Button>
+          </SocialLoginButton>
         </div>
 
         <div className="text-center">
