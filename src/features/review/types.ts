@@ -21,6 +21,7 @@ export interface Review {
  * ReviewCard 컴포넌트 props 타입
  */
 export interface ReviewCardProps {
+  id: number;
   score: number;
   comment: string;
   image: string | null;
