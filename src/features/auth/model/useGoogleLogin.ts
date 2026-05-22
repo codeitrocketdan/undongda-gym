@@ -32,11 +32,14 @@ export const useGoogleLogin = () => {
       client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!,
       scope: "email profile",
       callback: async (response) => {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/rocket/oauth/google`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/oauth/google`, {
+          headers: {
+            "Content-Type": "application/json",
+          },
           method: "POST",
           body: JSON.stringify({ token: response.access_token }),
         });
-
+        console.log(res);
         const data = await res.json();
         console.log(data);
         // 저장 후 로그인 완료
