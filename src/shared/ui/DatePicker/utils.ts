@@ -1,5 +1,8 @@
 import { format } from "date-fns";
 
+export const HOURS = Array.from({ length: 24 }, (_, i) => i);
+export const MINUTES = Array.from({ length: 12 }, (_, i) => i * 5);
+
 export const formatDate = (date?: Date) => {
   if (!date) return "";
   return format(date, "yyyy-MM-dd");
@@ -7,6 +10,15 @@ export const formatDate = (date?: Date) => {
 
 export const formatTime = (hour: number, minute: number) => {
   return `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
+};
+
+// api 호출 시 형태
+export const toISOStringFromLocal = (date: Date, time: string) => {
+  const dateStr = formatDate(date);
+  const timeStr = time;
+
+  const combinedDate = new Date(`${dateStr}T${timeStr}:00`);
+  return combinedDate.toISOString();
 };
 
 export const isPastHour = (selectedDate?: Date, hour?: number) => {
@@ -43,7 +55,7 @@ export const isPastMinute = (
     return false;
   }
 
-  // 이전 hour는 어차피 막힘
+  // 이전 hour는 막힘
   if (hour < now.getHours()) {
     return true;
   }

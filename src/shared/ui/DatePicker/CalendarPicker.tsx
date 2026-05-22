@@ -26,7 +26,7 @@ export default function CalendarPicker({
     closeModal,
     handleReset,
   } = useDatePicker<Date>({
-    initialValue: value,
+    initialValue: currentValue,
   });
 
   // 선택한 날짜 적용

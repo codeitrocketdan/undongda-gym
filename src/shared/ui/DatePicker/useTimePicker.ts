@@ -7,21 +7,21 @@ interface Props {
 }
 
 export const useTimePicker = ({ initialValue }: Props) => {
-  const [selectedHour, setSelectedHour] = useState<number | null>(() => {
-    if (!initialValue) return null;
+  const [selectedHour, setSelectedHour] = useState<number | null>(null);
+  const [selectedMinute, setSelectedMinute] = useState<number | null>(null);
 
-    return Number(initialValue.split(":")[0]);
-  });
+  const applyTime = (hour: number, minute: number) => {
+    setSelectedHour(hour);
+    setSelectedMinute(minute);
+  };
 
-  const [selectedMinute, setSelectedMinute] = useState<number | null>(() => {
-    if (!initialValue) return null;
-
-    return Number(initialValue.split(":")[1]);
-  });
+  const resetTime = () => {
+    setSelectedHour(null);
+    setSelectedMinute(null);
+  };
 
   const formattedTime = useMemo(() => {
     if (selectedHour === null || selectedMinute === null) return "";
-
     return `${String(selectedHour).padStart(2, "0")}:${String(selectedMinute).padStart(2, "0")}`;
   }, [selectedHour, selectedMinute]);
 
@@ -30,6 +30,8 @@ export const useTimePicker = ({ initialValue }: Props) => {
     selectedMinute,
     setSelectedHour,
     setSelectedMinute,
+    applyTime,
+    resetTime,
     formattedTime,
   };
 };

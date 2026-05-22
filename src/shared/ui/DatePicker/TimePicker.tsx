@@ -1,14 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { TimePickerProps } from "./types";
 import { useDatePicker } from "./usePicker";
 import { useTimePicker } from "./useTimePicker";
-import { formatTime, isPastHour, isPastMinute } from "./utils";
-
-const HOURS = Array.from({ length: 24 }, (_, i) => i);
-const MINUTES = Array.from({ length: 12 }, (_, i) => i * 5);
+import { HOURS, MINUTES, formatTime, isPastHour, isPastMinute } from "./utils";
 
 export default function TimePicker({
   value,
@@ -26,16 +23,22 @@ export default function TimePicker({
     selectedMinute,
     setSelectedHour,
     setSelectedMinute,
+    applyTime,
+    resetTime,
     formattedTime,
   } = useTimePicker({
     initialValue: currentValue,
   });
 
+  // UX 개선 : 스크롤 위치 고정
+  const hourScrollRef = useRef<HTMLDivElement>(null);
+  const minuteScrollRef = useRef<HTMLDivElement>(null);
+
+  // '적용'버튼 클릭 시 값 넣고 모달 닫기
   const handleApply = () => {
     if (selectedHour === null || selectedMinute === null) return;
 
     const time = formatTime(selectedHour, selectedMinute);
-
     if (onChange) {
       onChange(time);
     } else {
@@ -49,17 +52,44 @@ export default function TimePicker({
   useEffect(() => {
     if (!isOpen) return;
 
-    if (!currentValue) return;
+    if (!currentValue) {
+      resetTime();
+      return;
+    }
+    const [hour, minute] = currentValue.split(":").map(Number);
+    applyTime(hour, minute);
+  }, [isOpen, currentValue]);
 
-    const [hour, minute] = currentValue.split(":");
+  // 기존에 선택한 시간/분 위치로 스크롤(모션x)
+  useEffect(() => {
+    if (!isOpen) return;
 
-    setSelectedHour(Number(hour));
-    setSelectedMinute(Number(minute));
-  }, [isOpen, currentValue, setSelectedHour, setSelectedMinute]);
+    const handleScroll = () => {
+      if (selectedHour !== null && hourScrollRef.current) {
+        const target = hourScrollRef.current.querySelector(
+          `[data-hour="${selectedHour}"]`
+        ) as HTMLElement;
+        if (target)
+          target.scrollIntoView({ block: "center", behavior: "instant" });
+      }
+      if (selectedMinute !== null && minuteScrollRef.current) {
+        const target = minuteScrollRef.current.querySelector(
+          `[data-minute="${selectedMinute}"]`
+        ) as HTMLElement;
+        if (target)
+          target.scrollIntoView({ block: "center", behavior: "instant" });
+      }
+    };
+
+    // 브라우저에게 "다음 프레임 그리기 전에 이 스크롤부터 옮겨줘"라고 요청
+    const frameId = requestAnimationFrame(handleScroll);
+
+    return () => cancelAnimationFrame(frameId);
+  }, [isOpen, selectedHour, selectedMinute]);
 
   return (
     <div className="relative w-48">
-      {/* 시간 입력 인풋 (클릭 시 팝오버 토글) */}
+      {/* 시간 입력 인풋 */}
       <div
         onClick={openModal}
         className="flex cursor-pointer items-center rounded-xl border border-teal-400 bg-white p-3 transition hover:border-teal-600"
@@ -78,10 +108,12 @@ export default function TimePicker({
           ref={ref}
           className="absolute z-50 mt-2 w-44 rounded-2xl border border-gray-100 bg-white p-4 shadow-xl"
         >
-          {/* 두 개의 열 (시 | 분) */}
           <div className="flex h-48 divide-x divide-gray-200">
             {/* '시' 스크롤 영역 */}
-            <div className="flex-1 scrollbar-thin overflow-y-auto pr-1">
+            <div
+              ref={hourScrollRef}
+              className="flex-1 scrollbar-none overflow-y-auto pr-1"
+            >
               <div className="flex flex-col gap-1 pb-1">
                 {HOURS.map((hour) => {
                   const disabled = isPastHour(selectedDate, hour);
@@ -90,8 +122,8 @@ export default function TimePicker({
                     <button
                       key={hour}
                       disabled={disabled}
-                      //   onClick={() => setSelectedTime((prev) => ({ ...prev, hour: h }))}
                       onClick={() => setSelectedHour(hour)}
+                      data-hour={hour}
                       className={`rounded-lg py-1.5 text-center text-sm font-semibold transition ${
                         selectedHour === hour
                           ? "bg-teal-50 font-bold text-teal-700"
@@ -106,7 +138,10 @@ export default function TimePicker({
             </div>
 
             {/* '분' 스크롤 영역 */}
-            <div className="flex-1 scrollbar-thin overflow-y-auto pl-2">
+            <div
+              ref={minuteScrollRef}
+              className="flex-1 scrollbar-none overflow-y-auto pl-2"
+            >
               <div className="flex flex-col gap-1 pb-1">
                 {MINUTES.map((minute) => {
                   const disabled =
@@ -119,6 +154,7 @@ export default function TimePicker({
                       key={minute}
                       disabled={disabled}
                       onClick={() => setSelectedMinute(minute)}
+                      data-minute={minute}
                       className={`rounded-lg py-1.5 text-center text-sm font-semibold transition ${
                         selectedMinute === minute
                           ? "bg-teal-50 font-bold text-teal-700"
