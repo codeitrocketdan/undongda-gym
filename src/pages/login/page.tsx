@@ -1,6 +1,5 @@
 "use client";
 
-import { SocialLoginButtons } from "@/features/auth/components/SocialLoginButtons";
 import { loginSchema } from "@/features/login/model/chema";
 import Button from "@/shared/ui/button/Button";
 import Input from "@/shared/ui/input/Input";
@@ -44,8 +43,17 @@ const LoginPage = () => {
     shouldFocusError: true,
   });
 
-  const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<Inputs> = async (loginData) => {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
+      method: "POST",
+      body: JSON.stringify(loginData),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const { accessToken, refreshToken } = await res.json();
+    // 여기서 바로 localstorage 저장?
+    console.log("로그인 데이터", accessToken, refreshToken);
   };
 
   return (
@@ -98,7 +106,7 @@ const LoginPage = () => {
           <p className="text-sm-medium text-gray-500">SNS 계정으로 로그인</p>
           <span aria-hidden="true" className="h-px flex-1 bg-gray-300" />
         </div>
-        <SocialLoginButtons />
+        {/* <SocialLoginButtons /> */}
         <div className="text-center">
           <p className="text-[15px] font-medium text-gray-800">
             운동다짐이 처음이신가요?
