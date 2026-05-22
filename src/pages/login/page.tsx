@@ -1,6 +1,6 @@
 "use client";
 
-import { loginSchema } from "@/features/login/model/chema";
+import { loginSchema } from "@/features/login/model/schema";
 import Button from "@/shared/ui/button/Button";
 import Input from "@/shared/ui/input/Input";
 import InputField from "@/shared/ui/input/InputFiled";
