@@ -1,24 +1,20 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
-interface Props {
-  initialValue?: string;
-}
-
-export const useTimePicker = ({ initialValue }: Props) => {
+export const useTimePicker = () => {
   const [selectedHour, setSelectedHour] = useState<number | null>(null);
   const [selectedMinute, setSelectedMinute] = useState<number | null>(null);
 
-  const applyTime = (hour: number, minute: number) => {
+  const applyTime = useCallback((hour: number, minute: number) => {
     setSelectedHour(hour);
     setSelectedMinute(minute);
-  };
+  }, []);
 
-  const resetTime = () => {
+  const resetTime = useCallback(() => {
     setSelectedHour(null);
     setSelectedMinute(null);
-  };
+  }, []);
 
   const formattedTime = useMemo(() => {
     if (selectedHour === null || selectedMinute === null) return "";

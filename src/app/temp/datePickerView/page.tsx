@@ -1,5 +1,5 @@
 "use client";
-import CalendarPicker from "@/shared/ui/DatePicker/CalendarPicker";
+import DatePicker from "@/shared/ui/DatePicker/DatePicker";
 import TimePicker from "@/shared/ui/DatePicker/TimePicker";
 import { toISOStringFromLocal } from "@/shared/ui/DatePicker/utils";
 import { subDays } from "date-fns";
@@ -27,22 +27,25 @@ const DatePickerView = () => {
   return (
     <div>
       {/* 달력과 시간을 연동해서 사용할 때 */}
-      <div>
-        <CalendarPicker
+      <div className="overflow-hidden bg-gray-300 p-5">
+        <DatePicker
           label="달력과 시간 연동 사용 *"
           onChange={setDate}
           value={date}
         />
         <TimePicker selectedDate={date} onChange={setTime} value={time} />
+
+        <button onClick={handleSubmit}>[다짐 생성하기]</button>
       </div>
-      <button onClick={handleSubmit}>다짐 생성하기</button>
 
       <br />
-      {/* 달력 컴포넌트만 단독으로 사용할 때 */}
-      <CalendarPicker label="단독 사용 *" />
-      <br />
-      {/* 시간 컴포넌트만 단독으로 사용할 때 */}
-      <TimePicker selectedDate={date} />
+
+      <div className="flex items-end">
+        {/* 달력 컴포넌트만 단독으로 사용할 때 */}
+        <DatePicker label="단독 사용 *" />
+        {/* 시간 컴포넌트만 단독으로 사용할 때 */}
+        <TimePicker label="시간 라벨 *" />
+      </div>
     </div>
   );
 };
