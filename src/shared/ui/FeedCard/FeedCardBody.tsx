@@ -8,12 +8,7 @@ interface FeedCardBodyProps {
 
 export default function FeedCardBody({ children, className }: FeedCardBodyProps) {
   return (
-    <div
-      className={twMerge(
-        "flex flex-1 flex-col border-b border-slate-200 pt-2 pb-6 md:pt-4",
-        className
-      )}
-    >
+    <div className={twMerge("flex flex-1 flex-col border-slate-200 pt-2 pb-6 md:pt-4", className)}>
       {children}
     </div>
   );
