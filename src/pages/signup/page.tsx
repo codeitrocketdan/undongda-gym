@@ -1,5 +1,6 @@
 "use client";
 import { signupSchema } from "@/features/signup/model/schema";
+import { apiClient, ApiError } from "@/shared/api/apiClient";
 import Button from "@/shared/ui/button/Button";
 import Input from "@/shared/ui/input/Input";
 import InputField from "@/shared/ui/input/InputFiled";
@@ -9,7 +10,7 @@ import Link from "next/link";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 interface SignupForm {
-  nickname: string;
+  name: string;
   email: string;
   password: string;
   passwordConfirm: string;
@@ -17,7 +18,7 @@ interface SignupForm {
 
 const FORM_FIELDS = [
   {
-    name: "nickname" as const,
+    name: "name" as const,
     label: "이름",
     type: "text",
     placeholder: "이름을 입력해주세요",
@@ -49,17 +50,33 @@ const SignupPage = () => {
     formState: { errors },
   } = useForm<SignupForm>({
     defaultValues: {
-      nickname: "",
+      name: "",
       email: "",
       password: "",
       passwordConfirm: "",
     },
     resolver: zodResolver(signupSchema),
     shouldFocusError: true,
+    mode: "onBlur",
+    reValidateMode: "onChange",
   });
 
-  const onSignup: SubmitHandler<SignupForm> = (data) => {
-    console.log(data);
+  const onSignup: SubmitHandler<SignupForm> = async (signupData) => {
+    try {
+      await apiClient("/auth/signup", {
+        method: "POST",
+        body: signupData,
+      });
+
+      alert("회원가입이 완료되었습니다.");
+    } catch (error) {
+      if (error instanceof ApiError) {
+        console.dir(error);
+        if (error.status === 409) {
+          alert(error.message);
+        }
+      }
+    }
   };
 
   return (
