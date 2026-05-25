@@ -1,5 +1,6 @@
 "use client";
 
+import { SocialLoginButtons } from "@/features/auth/components/SocialLoginButtons";
 import { loginSchema } from "@/features/login/model/chema";
 import Button from "@/shared/ui/button/Button";
 import Input from "@/shared/ui/input/Input";
@@ -7,6 +8,7 @@ import InputField from "@/shared/ui/input/InputFiled";
 import PasswordInput from "@/shared/ui/input/PasswordInput";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 type Inputs = {
@@ -30,6 +32,7 @@ const FORM_FIELDS = [
 ] as const;
 
 const LoginPage = () => {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -44,25 +47,30 @@ const LoginPage = () => {
   });
 
   const onSubmit: SubmitHandler<Inputs> = async (loginData) => {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
-      method: "POST",
-      body: JSON.stringify(loginData),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    const { accessToken, refreshToken } = await res.json();
-    // 여기서 바로 localstorage 저장?
-    console.log("로그인 데이터", accessToken, refreshToken);
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(loginData),
+      });
+      if (res.ok) {
+        alert("로그인에 성공했습니다.");
+        router.push("/");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
     <main className="flex min-h-screen w-full items-center justify-center">
       <section
         aria-labelledby="login-title"
-        className="w-142 max-w-142 mx-4 rounded-[40px] bg-white px-4 py-10 md:px-14"
+        className="mx-4 w-142 max-w-142 rounded-[40px] bg-white px-4 py-10 md:px-14"
       >
-        <h1 id="login-title" className="mb-10 text-center text-base-semibold md:text-2xl-semibold">
+        <h1 id="login-title" className="text-base-semibold md:text-2xl-semibold mb-10 text-center">
           로그인
         </h1>
 
@@ -96,17 +104,17 @@ const LoginPage = () => {
             ))}
           </div>
 
-          <Button variant="primary" isDisabled={disabled}>
+          <Button type="submit" variant="primary" isDisabled={disabled}>
             로그인
           </Button>
         </form>
 
-        <div className="mb-6 mt-8 flex items-center gap-2">
+        <div className="mt-8 mb-6 flex items-center gap-2">
           <span aria-hidden="true" className="h-px flex-1 bg-gray-300" />
           <p className="text-sm-medium text-gray-500">SNS 계정으로 로그인</p>
           <span aria-hidden="true" className="h-px flex-1 bg-gray-300" />
         </div>
-        {/* <SocialLoginButtons /> */}
+        <SocialLoginButtons />
         <div className="text-center">
           <p className="text-[15px] font-medium text-gray-800">
             운동다짐이 처음이신가요?

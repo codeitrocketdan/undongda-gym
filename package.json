@@ -11,16 +11,10 @@
     "test": "jest"
   },
   "dependencies": {
-<<<<<<< HEAD
-<<<<<<< feat/#21/signup-ui
     "@hookform/resolvers": "^5.2.2",
-=======
     "date-fns": "^4.1.0",
     "lucide-react": "^1.3.0",
->>>>>>> dev
-=======
     "@hookform/resolvers": "^5.2.2",
->>>>>>> 25eeb7d425a1507b2b471e69048bb737e6f3c603
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
