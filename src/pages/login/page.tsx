@@ -8,7 +8,7 @@ import InputField from "@/shared/ui/input/InputFiled";
 import PasswordInput from "@/shared/ui/input/PasswordInput";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 type Inputs = {
@@ -33,6 +33,8 @@ const FORM_FIELDS = [
 
 const LoginPage = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const nextRoute = searchParams?.get("next") || "/";
   const {
     register,
     handleSubmit,
@@ -57,7 +59,8 @@ const LoginPage = () => {
       });
       if (res.ok) {
         alert("로그인에 성공했습니다.");
-        router.push("/");
+        router.push(nextRoute);
+        router.refresh();
       }
     } catch (error) {
       console.log(error);
