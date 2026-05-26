@@ -227,3 +227,9 @@
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: var(--color-gray-500);
 }
+
+@layer utilities {
+  .bg-gradient-blue-500 {
+    background: linear-gradient(135deg, #2099fd, #08ddf0);
+  }
+}
