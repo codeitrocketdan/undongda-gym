@@ -38,7 +38,7 @@ const iconVariants = cva(
 interface PropsType {
   children: React.ReactElement<{ className?: string }>;
   size: SizeType;
-  onClick: () => void;
+  onClick: React.MouseEventHandler<HTMLButtonElement>;
   isDisabled?: boolean;
   className?: string;
   iconClassName?: string;
