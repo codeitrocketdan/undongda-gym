@@ -27,7 +27,7 @@ const buttonVariants = cva("flex w-full items-center justify-center cursor-point
   variants: {
     // 버튼 디자인
     variant: {
-      primary: "bg-blue-500 text-white",
+      primary: "bg-blue-600 text-white",
       secondary: "border border-blue-600 bg-white text-blue-600",
       tertiary: "border border-gray-600 bg-white text-gray-600",
     },
@@ -50,15 +50,17 @@ const buttonVariants = cva("flex w-full items-center justify-center cursor-point
 });
 
 interface PropsType {
+  type?: "button" | "submit" | "reset";
   children: React.ReactNode;
   variant?: VariantType;
   size?: SizeType;
   isDisabled?: boolean;
-  onClick?: () => void;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
   className?: string;
 }
 
 const Button = ({
+  type = "button",
   children,
   variant = "primary",
   size = "md",
@@ -72,7 +74,7 @@ const Button = ({
   );
 
   return (
-    <button className={buttonClasses} onClick={onClick} disabled={isDisabled}>
+    <button type={type} className={buttonClasses} onClick={onClick} disabled={isDisabled}>
       {children}
     </button>
   );
