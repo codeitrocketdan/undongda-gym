@@ -1,10 +1,10 @@
 "use client";
 import logo from "@/shared/assets/images/logo_dagym.png";
-import { AnimatePresence, motion } from "framer-motion";
-import { Bell, Menu, UserRound, X } from "lucide-react";
+import { Bell, UserRound } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import MobileMenu from "./MobileMenu";
 
 export default function Header() {
   //   const pathname = usePathname();
@@ -18,7 +18,7 @@ export default function Header() {
   ];
   return (
     <>
-      <header className="flex items-center justify-between bg-white px-4 py-2">
+      <header className="mb-7 flex items-center justify-between bg-white px-4 py-6">
         <div className="header-wrap flex items-center">
           <Link href="/" className="mr-4">
             <Image src={logo} alt="운동다짐 로고" width={100}></Image>
@@ -49,48 +49,12 @@ export default function Header() {
               <UserRound size={26} color="#fff" />
             </Link>
           </div>
-          <Menu className="cursor-pointer md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)} />
+          {/* <Menu className="cursor-pointer md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)} /> */}
+          <MobileMenu navItems={NAV_ITEMS} currentPath={currentPath} />
         </div>
       </header>
 
       {/* 모바일 햄버거 메뉴 + 모션 */}
-      <AnimatePresence>
-        {isMenuOpen && (
-          <motion.div
-            initial={{ x: "100%" }} // 시작 위치 (오른쪽 바깥)
-            animate={{ x: 0 }} // 나타날 위치
-            exit={{ x: "100%" }} // 사라질 위치
-            transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="fixed top-0 right-0 z-50 h-full w-[280px] bg-white p-6 shadow-xl md:hidden"
-          >
-            <div className="flex justify-end">
-              <button onClick={() => setIsMenuOpen(false)} className="cursor-pointer">
-                <X />
-              </button>
-            </div>
-            <ul className="mt-8 space-y-6 text-lg font-bold">
-              {NAV_ITEMS.map((item) => {
-                const isActive = currentPath === item.href;
-
-                return (
-                  <li key={item.href}>
-                    <Link
-                      href={item.href}
-                      className={`p-4 font-medium transition-colors ${
-                        isActive
-                          ? "font-semibold text-blue-600"
-                          : "text-gray-600 hover:text-gray-900"
-                      }`}
-                    >
-                      {item.label}
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </>
   );
 }

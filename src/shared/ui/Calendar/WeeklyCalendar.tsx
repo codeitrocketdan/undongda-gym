@@ -1,119 +1,61 @@
 "use client";
 
-import { addDays, format, isSameDay } from "date-fns";
-import { ko } from "date-fns/locale";
+import { format, isSameDay } from "date-fns";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useMemo, useRef } from "react";
+import { useRef, useState } from "react";
 import type { Swiper as SwiperType } from "swiper";
 import "swiper/css";
 import { Swiper, SwiperSlide } from "swiper/react";
+
 import DayItem from "./DayItem";
 import { useCalendar } from "./useCalendar";
 
-// 임시데이터
+const WEEKDAYS = ["일", "월", "화", "수", "목", "금", "토"];
+
 const MOCK_WORKOUT_DATA = {
-  completedDays: new Set(["2026-05-18", "2026-05-19", "2026-05-15", "2026-05-25"]),
+  completedDays: new Set(["2026-04-29", "2026-05-18", "2026-05-19", "2026-05-15", "2026-05-25"]),
   reservedDays: new Set(["2026-05-21", "2026-05-23", "2026-05-28"]),
 };
-// 재렌더링 방지 전역 상수
-const FIXED_TODAY = new Date();
 
 export default function WeeklyCalendar() {
   const swiperRef = useRef<SwiperType | null>(null);
+  const [today] = useState(() => new Date());
 
   const {
-    currentStart: currentWeekStart, // Week별칭
+    calendarSlides,
+    currentStart,
+    activeIndex,
+    setActiveIndex,
     selectedDate,
     setSelectedDate,
     canMovePrev,
     canMoveNext,
-    move: moveWeek,
-  } = useCalendar(FIXED_TODAY, "week");
-
-  // 이전 주
-  const prevWeek = useMemo(() => {
-    return Array.from({ length: 7 }, (_, index) => {
-      const date = addDays(currentWeekStart, index - 7);
-
-      return {
-        date, // Sun May 10 2026 00:00:00
-        dateKey: format(date, "yyyy-MM-dd"), // "2026-05-10"
-        weekday: format(date, "eee", { locale: ko }), // "일"
-        dayNumber: format(date, "d"), // "10"
-      };
-    });
-  }, [currentWeekStart]);
-
-  // 이번 주
-  const currentWeek = useMemo(() => {
-    return Array.from({ length: 7 }, (_, index) => {
-      const date = addDays(currentWeekStart, index);
-
-      return {
-        date,
-        dateKey: format(date, "yyyy-MM-dd"),
-        weekday: format(date, "eee", { locale: ko }),
-        dayNumber: format(date, "d"),
-      };
-    });
-  }, [currentWeekStart]);
-
-  // 다음 주
-  const nextWeek = useMemo(() => {
-    return Array.from({ length: 7 }, (_, index) => {
-      const date = addDays(currentWeekStart, index + 7);
-
-      return {
-        date,
-        dateKey: format(date, "yyyy-MM-dd"),
-        weekday: format(date, "eee", { locale: ko }),
-        dayNumber: format(date, "d"),
-      };
-    });
-  }, [currentWeekStart]);
-
-  const weeks = [prevWeek, currentWeek, nextWeek];
+  } = useCalendar(today, "week");
 
   return (
-    <div className="relative mx-auto w-full max-w-md overflow-hidden rounded-2xl bg-white p-5 shadow-sm">
+    <div className="mx-auto w-full max-w-md rounded-2xl bg-white p-5 shadow-sm">
       {/* 헤더 */}
-      <div className="mb-8 flex items-center justify-between">
-        <h2 className="text-xl font-bold text-gray-900">
-          {format(FIXED_TODAY, "M월 d일 eeee", {
-            locale: ko,
-          })}
-        </h2>
-
+      <div className="mb-6 flex items-center justify-between px-2">
+        <h2 className="text-xl font-bold text-gray-900">{format(currentStart, "yyyy년 M월")}</h2>
         <div className="flex items-center gap-2">
           <button
-            type="button"
+            onClick={() => swiperRef.current?.slidePrev()}
             disabled={!canMovePrev}
-            onClick={() => {
-              //   moveWeek("prev");
-
-              swiperRef.current?.slidePrev();
-            }}
             className={`rounded-full p-2 transition-colors ${
               canMovePrev
                 ? "text-gray-600 hover:bg-gray-100"
-                : "cursor-not-allowed text-gray-300 opacity-30"
+                : "cursor-not-allowed text-gray-200 opacity-30"
             }`}
           >
             <ChevronLeft size={20} />
           </button>
-
           <button
-            type="button"
+            onClick={() => swiperRef.current?.slideNext()}
             disabled={!canMoveNext}
-            onClick={() => {
-              //   moveWeek("next");
-
-              swiperRef.current?.slideNext();
-            }}
             className={`rounded-full p-2 transition-colors ${
               canMoveNext
                 ? "text-gray-600 hover:bg-gray-100"
-                : "cursor-not-allowed text-gray-300 opacity-30"
+                : "cursor-not-allowed text-gray-200 opacity-30"
             }`}
           >
             <ChevronRight size={20} />
@@ -121,69 +63,51 @@ export default function WeeklyCalendar() {
         </div>
       </div>
 
-      {/* 캘린더 */}
-      <div className="relative w-full">
-        <div className="pointer-events-none absolute top-0 bottom-0 left-0 z-10 w-8 bg-linear-to-r from-white to-transparent" />
-        <div className="pointer-events-none absolute top-0 right-0 bottom-0 z-10 w-8 bg-linear-to-l from-white to-transparent" />
-        <Swiper
-          onSwiper={(swiper) => {
-            swiperRef.current = swiper;
-          }}
-          initialSlide={1}
-          slidesPerView={1.2}
-          centeredSlides={true}
-          resistance
-          //resistanceRatio={0.45}
-          speed={450}
-          onTransitionEnd={(swiper) => {
-            const currentIndex = swiper.activeIndex;
-
-            if (currentIndex === 0) {
-              if (canMovePrev) {
-                moveWeek("prev"); // 1. 데이터를 지난주로 체인지
-                swiper.slideTo(1, 0, false); // 2. 애니메이션 없이 즉시 중앙 슬라이드로 워프!
-              } else {
-                swiper.slideTo(1); // 범위를 벗어나면 제자리 백
-              }
-            }
-            if (currentIndex === 2) {
-              if (canMoveNext) {
-                moveWeek("next"); // 1. 데이터를 다음주로 체인지
-                swiper.slideTo(1, 0, false); // 2. 애니메이션 없이 즉시 중앙 슬라이드로 워프!
-              } else {
-                swiper.slideTo(1); // 범위를 벗어나면 제자리 백
-              }
-            }
-          }}
-        >
-          {weeks.map((week, weekIndex) => {
-            return (
-              <SwiperSlide key={weekIndex}>
-                <div className="grid w-full grid-cols-7 pb-2">
-                  {week.map((day) => {
-                    const isDone = MOCK_WORKOUT_DATA.completedDays.has(day.dateKey);
-
-                    const isReserved = MOCK_WORKOUT_DATA.reservedDays.has(day.dateKey);
-
-                    const isSelected = isSameDay(day.date, selectedDate);
-
-                    return (
-                      <DayItem
-                        key={day.dateKey}
-                        day={day}
-                        isDone={isDone}
-                        isReserved={isReserved}
-                        isSelected={isSelected}
-                        onSelect={setSelectedDate}
-                      />
-                    );
-                  })}
-                </div>
-              </SwiperSlide>
-            );
-          })}
-        </Swiper>
+      {/* 요일 라벨 (Swiper 밖에서 고정) */}
+      <div className="mb-4 grid grid-cols-7 text-center">
+        {WEEKDAYS.map((day) => (
+          <span key={day} className="text-[12px] font-medium text-gray-400">
+            {day}
+          </span>
+        ))}
       </div>
+
+      {/* 날짜 그리드 (스와이프 전용) */}
+      <Swiper
+        onSwiper={(swiper) => (swiperRef.current = swiper)}
+        initialSlide={activeIndex}
+        slidesPerView={1}
+        onSlideChangeTransitionEnd={(s) => setActiveIndex(s.activeIndex)}
+        className="w-full"
+      >
+        {calendarSlides.map((slide) => (
+          <SwiperSlide key={slide.id}>
+            <div className="grid grid-cols-7 justify-items-center pb-4">
+              {slide.days.map((date) => {
+                const dateKey = format(date, "yyyy-MM-dd");
+                const isDone = MOCK_WORKOUT_DATA.completedDays.has(dateKey);
+                const isReserved = MOCK_WORKOUT_DATA.reservedDays.has(dateKey);
+
+                return (
+                  <div key={dateKey} className="w-full">
+                    <DayItem
+                      day={{
+                        date,
+                        dateKey,
+                        dayNumber: format(date, "d"),
+                      }}
+                      isSelected={isSameDay(date, selectedDate)}
+                      onSelect={setSelectedDate}
+                      isDone={isDone}
+                      isReserved={isReserved}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
     </div>
   );
 }

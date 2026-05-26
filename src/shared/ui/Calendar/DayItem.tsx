@@ -1,8 +1,8 @@
+import React from "react";
 type DayItemProps = {
   day: {
     date: Date;
     dateKey: string;
-    weekday: string;
     dayNumber: string;
   };
 
@@ -13,22 +13,13 @@ type DayItemProps = {
   onSelect: (date: Date) => void;
 };
 
-export default function DayItem({ day, isSelected, isDone, isReserved, onSelect }: DayItemProps) {
+function DayItem({ day, isSelected, isDone, isReserved, onSelect }: DayItemProps) {
   return (
     <button
       type="button"
       onClick={() => onSelect(day.date)}
       className="group flex w-full flex-col items-center"
     >
-      {/* 요일 */}
-      <span
-        className={`mb-3 text-[11px] font-semibold ${
-          isSelected ? "text-gray-900" : "text-gray-400"
-        }`}
-      >
-        {day.weekday}
-      </span>
-
       {/* 날짜 */}
       <div
         className={`relative flex h-10 w-10 items-center justify-center rounded-full transition-all ${
@@ -44,3 +35,5 @@ export default function DayItem({ day, isSelected, isDone, isReserved, onSelect 
     </button>
   );
 }
+
+export default React.memo(DayItem);
