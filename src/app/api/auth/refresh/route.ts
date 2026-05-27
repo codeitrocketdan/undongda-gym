@@ -41,5 +41,5 @@ export async function POST() {
     });
   }
 
-  return NextResponse.json({ accessToken: currentAccessToken });
+  return NextResponse.json({ ok: true }, { status: 200 });
 }

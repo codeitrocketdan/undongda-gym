@@ -7,7 +7,10 @@ export async function GET() {
     const res = await bffFetch("/users/me");
 
     if (!res.ok) {
-      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+      if (res.status === 401) {
+        return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+      }
+      return NextResponse.json({ message: "Upstream error" }, { status: res.status || 502 });
     }
 
     const user = await res.json();

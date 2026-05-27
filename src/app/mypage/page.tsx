@@ -16,12 +16,7 @@ const Page = () => {
       {user ? (
         <div>
           <h1>{user.name}</h1>
-          <Image
-            src={user.image ?? "이미지가 없습니다."}
-            width={50}
-            height={50}
-            alt="프로필 이미지"
-          />
+          <Image src={user.image ?? "/vercel.svg"} width={50} height={50} alt="프로필 이미지" />
         </div>
       ) : (
         <Link href="/login">로그인</Link>

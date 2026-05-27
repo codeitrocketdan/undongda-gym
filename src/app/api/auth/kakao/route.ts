@@ -22,6 +22,10 @@ export async function POST(req: NextRequest) {
     // 카카오에서 accessToekn 발급
     const { access_token } = await kakaoTokenRes.json();
 
+    if (!kakaoTokenRes.ok) {
+      return NextResponse.json({ message: "카카오 토큰 발급 실패" }, { status: 401 });
+    }
+
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/oauth/kakao`, {
       method: "POST",
       headers: {
@@ -64,6 +68,7 @@ export async function POST(req: NextRequest) {
       path: "/",
       maxAge: 60 * 60 * 24 * 7,
     });
+    return NextResponse.json({ message: "카카오 로그인 성공" }, { status: 200 });
   } catch (error) {
     console.error(error);
 
