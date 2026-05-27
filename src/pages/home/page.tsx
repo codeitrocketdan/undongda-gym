@@ -14,7 +14,6 @@ const HomePage = () => {
       <Header />
       <main>
         <div className="w-full">
-          {/* <MainContent /> */}
           <MainContent isLogin={isLogin} />
         </div>
 

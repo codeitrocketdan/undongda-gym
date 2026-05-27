@@ -7,7 +7,6 @@ import type { Swiper as SwiperType } from "swiper";
 import "swiper/css";
 import { Swiper, SwiperSlide } from "swiper/react";
 
-import { Bell, CalendarCheck } from "lucide-react";
 import DayItem from "./DayItem";
 import { useCalendar } from "./useCalendar";
 
@@ -36,15 +35,46 @@ export default function WeeklyCalendar() {
   return (
     <div className="mx-auto w-full max-w-3xl rounded-2xl bg-white py-5">
       {/* 헤더 */}
-      <div className="mb-6 flex items-center justify-between px-6">
+      {/* <div className="mb-6 flex items-center justify-between px-6">
         <h2 className="text-xl font-bold text-gray-900">
-          {/* {format(currentStart, "yyyy년 M월 eeee", { locale: ko })} */}
+           {format(currentStart, "yyyy년 M월 eeee", { locale: ko })}
         </h2>
-        <div className="flex items-center gap-3">
-          <Bell size={28} />
-          <CalendarCheck size={28} />
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            disabled={!canMovePrev}
+            onClick={() => {
+              //   moveWeek("prev");
+
+              swiperRef.current?.slidePrev();
+            }}
+            className={`rounded-full p-2 transition-colors ${
+              canMovePrev
+                ? "text-gray-600 hover:bg-gray-100"
+                : "cursor-not-allowed text-gray-300 opacity-30"
+            }`}
+          >
+            <ChevronLeft size={20} />
+          </button>
+
+          <button
+            type="button"
+            disabled={!canMoveNext}
+            onClick={() => {
+              //   moveWeek("next");
+
+              swiperRef.current?.slideNext();
+            }}
+            className={`rounded-full p-2 transition-colors ${
+              canMoveNext
+                ? "text-gray-600 hover:bg-gray-100"
+                : "cursor-not-allowed text-gray-300 opacity-30"
+            }`}
+          >
+            <ChevronRight size={20} />
+          </button>
         </div>
-      </div>
+      </div> */}
 
       {/* 요일 라벨 (Swiper 밖에서 고정) */}
       <div className="mb-3 grid grid-cols-7 border-b border-b-2 border-gray-100 pb-1 text-center">
