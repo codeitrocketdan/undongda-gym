@@ -18,6 +18,7 @@ const MOCK_WORKOUT_DATA = {
 };
 
 export default function WeeklyCalendar() {
+  const pickerType = "week";
   const swiperRef = useRef<SwiperType | null>(null);
   const [today] = useState(() => new Date());
 
@@ -30,7 +31,7 @@ export default function WeeklyCalendar() {
     setSelectedDate,
     canMovePrev,
     canMoveNext,
-  } = useCalendar(today, "week");
+  } = useCalendar(today, pickerType);
 
   return (
     <div className="mx-auto w-full max-w-3xl rounded-2xl bg-white py-5">
@@ -113,6 +114,7 @@ export default function WeeklyCalendar() {
                       onSelect={setSelectedDate}
                       isDone={isDone}
                       isReserved={isReserved}
+                      pickerType={pickerType}
                     />
                   </div>
                 );

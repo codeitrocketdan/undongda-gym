@@ -12,9 +12,10 @@ type DayItemProps = {
   isReserved: boolean;
 
   onSelect: (date: Date) => void;
+  pickerType: string;
 };
 
-function DayItem({ day, isSelected, isDone, isReserved, onSelect }: DayItemProps) {
+function DayItem({ day, isSelected, isDone, isReserved, onSelect, pickerType }: DayItemProps) {
   return (
     <button
       type="button"
@@ -24,7 +25,11 @@ function DayItem({ day, isSelected, isDone, isReserved, onSelect }: DayItemProps
       {/* 날짜 */}
       <div className={`relative flex items-center justify-center p-2.5 transition-all`}>
         {/* 예약 */}
-        {isReserved && <div className="absolute top-0 h-1.5 w-1.5 rounded-full bg-blue-700" />}
+        {isReserved && (
+          <div
+            className={`absolute h-1.5 w-1.5 rounded-full bg-blue-700 ${pickerType === "week" || isDone ? "top-0" : "top-1"}`}
+          />
+        )}
 
         {/* 오운완 */}
         <div

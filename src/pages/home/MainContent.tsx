@@ -4,6 +4,7 @@ import bannerTablet from "@/shared/assets/images/banner_768.png";
 import WeeklyCalendar from "@/shared/ui/calendar/WeeklyCalendar";
 import Image from "next/image";
 // import { useAuthStore } from "@/shared/store/authStore";
+import MonthlyCalendar from "@/shared/ui/calendar/MonthlyCalendar";
 import Modal from "@/shared/ui/Modal/Modal";
 import { Bell, CalendarCheck } from "lucide-react";
 
@@ -18,8 +19,15 @@ export default function MainContent({ isLogin }: { isLogin: boolean }) {
               <h2 className="text-xl font-bold text-gray-900">
                 {/* {format(currentStart, "yyyy년 M월 eeee", { locale: ko })} */}
               </h2>
-              <div className="flex items-center gap-3">
-                <Bell size={28} />
+              <div className="mr-1 flex items-center gap-3">
+                <div className="notice-wrap relative">
+                  {/* 알람이 있을 경우 - 추후 연결
+                  <BellDot/>
+                  <div className="absolute top-[3px] right-[3px] h-[6px] w-[6px] rounded-full bg-red-500" />
+                  */}
+                  <Bell size={28} />
+                </div>
+
                 <button onClick={modal.open}>
                   <CalendarCheck size={28} />
                 </button>
@@ -48,17 +56,17 @@ export default function MainContent({ isLogin }: { isLogin: boolean }) {
         </picture>
       )}
 
-      {/* {modal.isOpen && (
+      {modal.isOpen && (
         <Modal onClose={modal.close}>
-          <Modal.Header>
-            <h2>모임 만들기</h2>
-            <Modal.CloseButton />
+          <Modal.Header className="text-base-bold flex-row justify-between">
+            <h2>나의 다짐</h2>
+            <Modal.CloseButton className="mb-2" />
           </Modal.Header>
           <div>
             <MonthlyCalendar />
           </div>
         </Modal>
-      )} */}
+      )}
     </div>
   );
 }

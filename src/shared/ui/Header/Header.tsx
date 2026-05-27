@@ -25,7 +25,7 @@ export default function Header() {
             href="/"
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 md:relative md:top-0 md:left-0 md:mr-4 md:translate-x-0 md:translate-y-0"
           >
-            <Image src={logo} alt="운동다짐 로고" width={100} className="w-25"></Image>
+            <Image src={logo} alt="운동다짐 로고" width={100} className="w-25" priority></Image>
           </Link>
           <NavLinks navItems={NAV_ITEMS} />
         </div>

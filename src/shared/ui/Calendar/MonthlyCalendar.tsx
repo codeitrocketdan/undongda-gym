@@ -13,10 +13,11 @@ import { useCalendar } from "./useCalendar";
 const WEEKDAYS = ["일", "월", "화", "수", "목", "금", "토"];
 const MOCK_WORKOUT_DATA = {
   completedDays: new Set(["2026-04-29", "2026-05-18", "2026-05-19", "2026-05-15", "2026-05-25"]),
-  reservedDays: new Set(["2026-05-21", "2026-05-23", "2026-05-28"]),
+  reservedDays: new Set(["2026-05-21", "2026-05-23", "2026-05-25", "2026-05-28"]),
 };
 
 export default function MonthlyCalendar() {
+  const pickerType = "month";
   const swiperRef = useRef<SwiperType | null>(null);
   const [today] = useState(() => new Date());
 
@@ -29,14 +30,14 @@ export default function MonthlyCalendar() {
     setSelectedDate,
     canMovePrev,
     canMoveNext,
-  } = useCalendar(today, "month");
+  } = useCalendar(today, pickerType);
 
   const handleTransitionEnd = (swiper: SwiperType) => {
     setActiveIndex(swiper.activeIndex);
   };
 
   return (
-    <div className="relative mx-auto w-full max-w-md rounded-2xl bg-white p-5 shadow-sm">
+    <div className="relative mx-auto w-full max-w-md rounded-2xl bg-white p-5">
       {/* 연도 및 월 표시, 이동 버튼 */}
       <div className="mb-6 flex items-center justify-between px-2">
         <h2 className="text-xl font-bold text-gray-900">
@@ -116,6 +117,7 @@ export default function MonthlyCalendar() {
                         isDone={isDone}
                         isReserved={isReserved}
                         onSelect={setSelectedDate}
+                        pickerType={pickerType}
                       />
                     </div>
                   );
