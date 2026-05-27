@@ -1,12 +1,13 @@
 "use client";
 
 import { format, isSameDay } from "date-fns";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+// import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useRef, useState } from "react";
 import type { Swiper as SwiperType } from "swiper";
 import "swiper/css";
 import { Swiper, SwiperSlide } from "swiper/react";
 
+import { Bell, CalendarCheck } from "lucide-react";
 import DayItem from "./DayItem";
 import { useCalendar } from "./useCalendar";
 
@@ -14,7 +15,7 @@ const WEEKDAYS = ["일", "월", "화", "수", "목", "금", "토"];
 
 const MOCK_WORKOUT_DATA = {
   completedDays: new Set(["2026-04-29", "2026-05-18", "2026-05-19", "2026-05-15", "2026-05-25"]),
-  reservedDays: new Set(["2026-05-21", "2026-05-23", "2026-05-28"]),
+  reservedDays: new Set(["2026-05-21", "2026-05-23", "2026-05-25", "2026-05-28"]),
 };
 
 export default function WeeklyCalendar() {
@@ -33,38 +34,20 @@ export default function WeeklyCalendar() {
   } = useCalendar(today, "week");
 
   return (
-    <div className="mx-auto w-full max-w-md rounded-2xl bg-white p-5 shadow-sm">
+    <div className="mx-auto w-full max-w-3xl rounded-2xl bg-white py-5">
       {/* 헤더 */}
-      <div className="mb-6 flex items-center justify-between px-2">
-        <h2 className="text-xl font-bold text-gray-900">{format(currentStart, "yyyy년 M월")}</h2>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => swiperRef.current?.slidePrev()}
-            disabled={!canMovePrev}
-            className={`rounded-full p-2 transition-colors ${
-              canMovePrev
-                ? "text-gray-600 hover:bg-gray-100"
-                : "cursor-not-allowed text-gray-200 opacity-30"
-            }`}
-          >
-            <ChevronLeft size={20} />
-          </button>
-          <button
-            onClick={() => swiperRef.current?.slideNext()}
-            disabled={!canMoveNext}
-            className={`rounded-full p-2 transition-colors ${
-              canMoveNext
-                ? "text-gray-600 hover:bg-gray-100"
-                : "cursor-not-allowed text-gray-200 opacity-30"
-            }`}
-          >
-            <ChevronRight size={20} />
-          </button>
+      <div className="mb-6 flex items-center justify-between px-6">
+        <h2 className="text-xl font-bold text-gray-900">
+          {/* {format(currentStart, "yyyy년 M월 eeee", { locale: ko })} */}
+        </h2>
+        <div className="flex items-center gap-3">
+          <Bell size={28} />
+          <CalendarCheck size={28} />
         </div>
       </div>
 
       {/* 요일 라벨 (Swiper 밖에서 고정) */}
-      <div className="mb-4 grid grid-cols-7 text-center">
+      <div className="mb-3 grid grid-cols-7 border-b border-b-2 border-gray-100 pb-1 text-center">
         {WEEKDAYS.map((day) => (
           <span key={day} className="text-[12px] font-medium text-gray-400">
             {day}

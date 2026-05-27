@@ -82,8 +82,6 @@ export default function MonthlyCalendar() {
 
       {/* 월간 그리드 Swiper */}
       <div className="relative w-full">
-        <div className="pointer-events-none absolute top-0 bottom-0 left-0 z-10 w-6 bg-linear-to-r from-white to-transparent" />
-        <div className="pointer-events-none absolute top-0 right-0 bottom-0 z-10 w-6 bg-linear-to-l from-white to-transparent" />
         <Swiper
           onSwiper={(swiper) => (swiperRef.current = swiper)}
           initialSlide={activeIndex}

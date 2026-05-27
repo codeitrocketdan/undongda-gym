@@ -1,4 +1,5 @@
 import React from "react";
+
 type DayItemProps = {
   day: {
     date: Date;
@@ -21,16 +22,18 @@ function DayItem({ day, isSelected, isDone, isReserved, onSelect }: DayItemProps
       className="group flex w-full flex-col items-center"
     >
       {/* 날짜 */}
-      <div
-        className={`relative flex h-10 w-10 items-center justify-center rounded-full transition-all ${
-          isDone ? "bg-green-500 font-bold text-white" : ""
-        } ${!isDone && isSelected ? "bg-gray-100 font-bold text-black" : "text-gray-600"}`}
-      >
-        {day.dayNumber}
+      <div className={`relative flex items-center justify-center p-2.5 transition-all`}>
+        {/* 예약 */}
+        {isReserved && <div className="absolute top-0 h-1.5 w-1.5 rounded-full bg-blue-700" />}
 
-        {!isDone && isReserved && (
-          <div className="absolute -bottom-1 h-1.5 w-1.5 rounded-full bg-[#00A378]" />
-        )}
+        {/* 오운완 */}
+        <div
+          className={`h-8 w-8 rounded-full p-1.5 text-center ${
+            isDone ? "bg-blue-500 font-bold text-white" : ""
+          } ${!isDone && isSelected ? "bg-gray-100 font-bold text-black" : "text-gray-600"}`}
+        >
+          {day.dayNumber}
+        </div>
       </div>
     </button>
   );

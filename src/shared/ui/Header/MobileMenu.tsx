@@ -3,20 +3,17 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
-
-interface NavItem {
-  label: string;
-  href: string;
-}
+import { NavItem } from "./types";
 
 interface MobileMenuProps {
   navItems: NavItem[];
-  currentPath: string;
 }
 
-export default function MobileMenu({ navItems, currentPath }: MobileMenuProps) {
+export default function MobileMenu({ navItems }: MobileMenuProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const pathname = usePathname();
 
   return (
     <div className="md:hidden">
@@ -57,7 +54,7 @@ export default function MobileMenu({ navItems, currentPath }: MobileMenuProps) {
 
               <ul className="mt-8 space-y-4">
                 {navItems.map((item) => {
-                  const isActive = currentPath === item.href;
+                  const isActive = pathname === item.href;
                   return (
                     <li key={item.href}>
                       <Link
