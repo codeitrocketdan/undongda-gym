@@ -1,26 +1,14 @@
 "use client";
+
+import { useUser } from "@/shared/hooks/useUser";
+import Link from "next/link";
+
 const HomePage = () => {
+  const { user } = useUser();
   return (
     <div>
-      <button
-        onClick={async () => {
-          try {
-            const res = await fetch("/api/me");
-            console.log(res);
-
-            if (!res.ok) {
-              return null;
-            }
-            const data = await res.text();
-            console.log(data);
-            // return res.json();
-          } catch (error) {
-            console.log(error);
-          }
-        }}
-      >
-        버튼
-      </button>
+      {user ? <div>운동</div> : <div>배너</div>}
+      <Link href="/mypage">마이페이지</Link>
     </div>
   );
 };
