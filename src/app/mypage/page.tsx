@@ -1,5 +1,6 @@
 "use client";
 import { useUser } from "@/shared/hooks/useUser";
+import Image from "next/image";
 import Link from "next/link";
 
 const Page = () => {
@@ -10,7 +11,23 @@ const Page = () => {
   const { user } = useUser();
 
   console.log(user);
-  return <div>{user ? <div>{user.name}</div> : <Link href="/login">로그인</Link>}</div>;
+  return (
+    <div>
+      {user ? (
+        <div>
+          <h1>{user.name}</h1>
+          <Image
+            src={user.image ?? "이미지가 없습니다."}
+            width={50}
+            height={50}
+            alt="프로필 이미지"
+          />
+        </div>
+      ) : (
+        <Link href="/login">로그인</Link>
+      )}
+    </div>
+  );
 };
 
 export default Page;

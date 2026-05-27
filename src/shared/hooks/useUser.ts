@@ -4,7 +4,10 @@ import { useQuery } from "@tanstack/react-query";
 
 interface User {
   id: number;
+  email: string;
   name: string;
+  image: string | null;
+  companyName: string;
 }
 
 async function fetchUser(): Promise<User | null> {

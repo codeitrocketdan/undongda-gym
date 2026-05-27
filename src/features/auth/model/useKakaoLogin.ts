@@ -21,7 +21,7 @@ export const useKakaoLogin = () => {
 
     const kakaoLogin = async () => {
       try {
-        const response = await fetch("/api/login", {
+        const response = await fetch("/api/auth/kakao", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
