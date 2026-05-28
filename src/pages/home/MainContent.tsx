@@ -6,10 +6,11 @@ import Image from "next/image";
 // import { useAuthStore } from "@/shared/store/authStore";
 import MonthlyCalendar from "@/shared/ui/calendar/MonthlyCalendar";
 import Modal from "@/shared/ui/Modal/Modal";
+import { useModal } from "@/shared/ui/Modal/useModal";
 import { Bell, CalendarCheck } from "lucide-react";
 
 export default function MainContent({ isLogin }: { isLogin: boolean }) {
-  const modal = Modal.useModal();
+  const modal = useModal();
   return (
     <div className="w-full">
       {isLogin ? (
