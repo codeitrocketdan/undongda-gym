@@ -1,6 +1,7 @@
 "use client";
 import { createContext, ReactNode, useContext } from "react";
 import { createPortal } from "react-dom";
+import { useMounted } from "../../hooks/useMounted";
 import { useFocusTrap } from "../../lib/useFocusTrap";
 import ModalBackground from "./Background";
 import CloseButton from "./CloseButton";
@@ -31,6 +32,9 @@ interface ModalProps {
 
 const Modal = ({ children, onClose, isClickToClose }: ModalProps) => {
   const trapRef = useFocusTrap<HTMLDivElement>();
+  const mounted = useMounted();
+
+  if (!mounted) return null;
 
   return createPortal(
     <ModalContext.Provider value={{ onClose }}>
