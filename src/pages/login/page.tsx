@@ -34,7 +34,7 @@ const FORM_FIELDS = [
 const LoginPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const nextRoute = searchParams?.get("next") || "/";
+  const redirect = searchParams?.get("redirect") || "/";
   const {
     register,
     handleSubmit,
@@ -64,8 +64,7 @@ const LoginPage = () => {
       }
 
       alert("로그인에 성공했습니다.");
-      router.push(nextRoute);
-      router.refresh();
+      router.replace(redirect);
     } catch (error) {
       console.log("Network Error", error);
     }
