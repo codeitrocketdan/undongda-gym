@@ -39,6 +39,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ message: "로그인에 성공하셨습니다." }, { status: 200 });
   } catch (error) {
+    console.log("Network Error", error);
     return NextResponse.json({ message: "서버 에러" }, { status: 500 });
   }
 }

@@ -9,6 +9,10 @@ const nextConfig: NextConfig = {
         hostname: "lh3.googleusercontent.com",
       },
       {
+        protocol: "https",
+        hostname: "k.kakaocdn.net",
+      },
+      {
         protocol: "http",
         hostname: "img1.kakaocdn.net",
       },

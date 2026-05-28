@@ -18,13 +18,12 @@ export async function POST(req: NextRequest) {
         code,
       }),
     });
-
-    // 카카오에서 accessToekn 발급
-    const { access_token } = await kakaoTokenRes.json();
-
     if (!kakaoTokenRes.ok) {
       return NextResponse.json({ message: "카카오 토큰 발급 실패" }, { status: 401 });
     }
+
+    // 카카오에서 accessToekn 발급
+    const { access_token } = await kakaoTokenRes.json();
 
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/oauth/kakao`, {
       method: "POST",
@@ -58,7 +57,7 @@ export async function POST(req: NextRequest) {
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       path: "/",
-      maxAge: 60 * 30,
+      maxAge: 60 * 15,
     });
 
     cookieStore.set("refreshToken", refreshToken, {

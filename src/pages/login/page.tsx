@@ -57,13 +57,17 @@ const LoginPage = () => {
         },
         body: JSON.stringify(loginData),
       });
-      if (res.ok) {
-        alert("로그인에 성공했습니다.");
-        router.push(nextRoute);
-        router.refresh();
+      const data = await res.json();
+      if (!res.ok) {
+        alert(data.message || "로그인에 실패했습니다.");
+        return;
       }
+
+      alert("로그인에 성공했습니다.");
+      router.push(nextRoute);
+      router.refresh();
     } catch (error) {
-      console.log(error);
+      console.log("Network Error", error);
     }
   };
 
