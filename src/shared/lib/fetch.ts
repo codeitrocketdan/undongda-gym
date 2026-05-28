@@ -48,6 +48,13 @@ export async function post<T>(path: string, data: T, options: RequestOptions = {
   });
 }
 
+export async function put<T>(path: string, data: T, options: RequestOptions = {}) {
+  return request(path, {
+    ...options,
+    method: "PUT",
+    body: JSON.stringify(data),
+  });
+}
 // PATCH 요청
 export async function patch<T>(path: string, data: T, options: RequestOptions = {}) {
   return request(path, {
