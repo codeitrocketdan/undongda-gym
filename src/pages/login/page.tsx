@@ -57,6 +57,7 @@ const LoginPage = () => {
         },
         body: JSON.stringify(loginData),
       });
+
       const data = await res.json();
       if (!res.ok) {
         alert(data.message || "로그인에 실패했습니다.");

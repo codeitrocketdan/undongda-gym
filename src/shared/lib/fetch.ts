@@ -18,7 +18,7 @@ async function request(path: string, { headers, ...options }: RequestOptions = {
     ...options,
     headers: {
       "Content-Type": "application/json",
-      ...(headers || {}),
+      ...headers,
     },
   });
 
@@ -28,12 +28,11 @@ async function request(path: string, { headers, ...options }: RequestOptions = {
     throw error;
   }
 
-  const text = await response.text();
-  return text ? JSON.parse(text) : null;
+  return response;
 }
 
 // GET 요청
-export async function get<T>(path: string, options: RequestOptions = {}): Promise<T> {
+export async function get(path: string, options: RequestOptions = {}) {
   return request(path, {
     ...options,
     method: "GET",
@@ -41,7 +40,7 @@ export async function get<T>(path: string, options: RequestOptions = {}): Promis
 }
 
 // POST 요청
-export async function post<T, D>(path: string, data: D, options: RequestOptions = {}): Promise<T> {
+export async function post<T>(path: string, data: T, options: RequestOptions = {}) {
   return request(path, {
     ...options,
     method: "POST",
@@ -50,7 +49,7 @@ export async function post<T, D>(path: string, data: D, options: RequestOptions 
 }
 
 // PATCH 요청
-export async function patch<T, D>(path: string, data: D, options: RequestOptions = {}): Promise<T> {
+export async function patch<T>(path: string, data: T, options: RequestOptions = {}) {
   return request(path, {
     ...options,
     method: "PATCH",
@@ -59,7 +58,7 @@ export async function patch<T, D>(path: string, data: D, options: RequestOptions
 }
 
 // DELETE 요청
-export async function del<T>(path: string, options: RequestOptions = {}): Promise<T> {
+export async function del(path: string, options: RequestOptions = {}) {
   return request(path, {
     ...options,
     method: "DELETE",
