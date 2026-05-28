@@ -2,9 +2,9 @@ import { setAuthCookies } from "@/shared/lib/auth/cookies";
 import { post } from "@/shared/lib/fetch";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(req: NextRequest) {
+export async function POST(request: NextRequest) {
   try {
-    const { code } = await req.json();
+    const { code } = await request.json();
 
     const kakaoTokenRes = await fetch("https://kauth.kakao.com/oauth/token", {
       method: "POST",
@@ -27,9 +27,7 @@ export async function POST(req: NextRequest) {
     // 카카오에서 accessToekn 발급
     const { access_token } = await kakaoTokenRes.json();
 
-    const res = await post("/oauth/kakao", {
-      token: access_token,
-    });
+    const res = await post("/oauth/kakao", { token: access_token });
 
     if (!res.ok) {
       return NextResponse.json({ message: "백엔드 OAuth 로그인 실패" }, { status: 401 });
@@ -44,14 +42,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ message: "카카오 로그인 성공" }, { status: 200 });
   } catch (error) {
     console.error(error);
-
-    return NextResponse.json(
-      {
-        message: "카카오 로그인에 실패했습니다.",
-      },
-      {
-        status: 500,
-      }
-    );
+    return NextResponse.json({ message: "카카오 로그인에 실패했습니다." }, { status: 500 });
   }
 }
