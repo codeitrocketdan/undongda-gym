@@ -6,5 +6,5 @@ interface FeedCardTitleProps {
 }
 
 export default function FeedCardTitle({ title, className }: FeedCardTitleProps) {
-  return <p className={twMerge("text-base-bold md:text-xl-bold", className)}>{title}</p>;
+  return <p className={twMerge("truncate", className)}>{title}</p>;
 }
