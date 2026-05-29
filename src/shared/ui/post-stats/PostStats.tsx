@@ -5,7 +5,7 @@ import { twMerge } from "tailwind-merge";
 interface PostStatsProps {
   likeCount: number;
   commentCount: number;
-  createdAt: string;
+  createdAt: string | null;
   className?: string;
 }
 

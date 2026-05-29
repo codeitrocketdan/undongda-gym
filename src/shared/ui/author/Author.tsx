@@ -1,4 +1,3 @@
-import { formatDate } from "@/shared/lib/formatDate";
 import { CircleUserRound } from "lucide-react";
 import Image from "next/image";
 import { twMerge } from "tailwind-merge";
@@ -6,11 +5,10 @@ import { twMerge } from "tailwind-merge";
 interface AuthorProps {
   name: string;
   image: string | null;
-  createdAt: string | null;
   className?: string;
 }
 
-export default function Author({ image, name, createdAt, className }: AuthorProps) {
+export default function Author({ image, name, className }: AuthorProps) {
   return (
     <div
       className={twMerge(
@@ -26,7 +24,6 @@ export default function Author({ image, name, createdAt, className }: AuthorProp
         <CircleUserRound className="h-6 w-6 text-slate-400" />
       )}
       <span>{name}</span>
-      <span>{formatDate(createdAt)}</span>
     </div>
   );
 }
