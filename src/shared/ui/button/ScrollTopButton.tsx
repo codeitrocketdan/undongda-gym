@@ -10,7 +10,7 @@ export default function ScrollToTopButton() {
 
   return (
     // 추후에 게시글 무한스크롤할 때 해당 버튼 호출해서 사용해주세요.
-    <IconButton onClick={scrollToTop} size="md">
+    <IconButton onClick={scrollToTop} size="md" ariaLabel="최상단으로 이동">
       <ArrowUpToLine />
     </IconButton>
   );

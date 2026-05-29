@@ -22,7 +22,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${Pretendard.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col bg-white">
-        <div className="m-auto w-full max-w-[1280px]">{children}</div>
+        <div className="mx-auto w-full max-w-[1280px]">{children}</div>
       </body>
     </html>
   );

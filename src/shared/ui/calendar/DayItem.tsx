@@ -21,6 +21,8 @@ function DayItem({ day, isSelected, isDone, isReserved, onSelect, pickerType }: 
       type="button"
       onClick={() => onSelect(day.date)}
       className="group flex w-full flex-col items-center"
+      aria-label={day.dateKey}
+      aria-pressed={isSelected}
     >
       {/* 날짜 */}
       <div className={`relative flex items-center justify-center p-2.5 transition-all`}>

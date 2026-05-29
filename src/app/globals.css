@@ -238,3 +238,7 @@ select:-webkit-autofill {
   -webkit-text-fill-color: #111827;
   transition: background-color 9999s ease-in-out 0s;
 }
+
+button {
+  cursor: pointer;
+}

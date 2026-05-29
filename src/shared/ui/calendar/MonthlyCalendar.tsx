@@ -47,6 +47,7 @@ export default function MonthlyCalendar() {
         <div className="flex items-center gap-2">
           <button
             type="button"
+            aria-label="이전 달로 이동"
             onClick={() => swiperRef.current?.slidePrev()}
             disabled={!canMovePrev}
             className={`rounded-full p-2 transition-colors ${
@@ -59,6 +60,7 @@ export default function MonthlyCalendar() {
           </button>
           <button
             type="button"
+            aria-label="다음 달로 이동"
             onClick={() => swiperRef.current?.slideNext()}
             disabled={!canMoveNext}
             className={`rounded-full p-2 transition-colors ${

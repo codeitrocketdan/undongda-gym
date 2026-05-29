@@ -5,8 +5,8 @@ import WeeklyCalendar from "@/shared/ui/calendar/WeeklyCalendar";
 import Image from "next/image";
 // import { useAuthStore } from "@/shared/store/authStore";
 import MonthlyCalendar from "@/shared/ui/calendar/MonthlyCalendar";
-import Modal from "@/shared/ui/Modal/Modal";
-import { useModal } from "@/shared/ui/Modal/useModal";
+import Modal from "@/shared/ui/modal/Modal";
+import { useModal } from "@/shared/ui/modal/useModal";
 import { Bell, CalendarCheck } from "lucide-react";
 
 export default function MainContent({ isLogin }: { isLogin: boolean }) {
@@ -29,7 +29,7 @@ export default function MainContent({ isLogin }: { isLogin: boolean }) {
                   <Bell size={28} />
                 </div>
 
-                <button onClick={modal.open}>
+                <button onClick={modal.open} aria-label="월간 달력 열기">
                   <CalendarCheck size={28} />
                 </button>
               </div>

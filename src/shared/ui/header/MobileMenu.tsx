@@ -1,5 +1,6 @@
 "use client";
 
+import useScrollLock from "@/shared/hooks/useScrollLock";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
@@ -14,6 +15,7 @@ interface MobileMenuProps {
 export default function MobileMenu({ navItems }: MobileMenuProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
+  useScrollLock(isMenuOpen);
 
   return (
     <div className="md:hidden">
@@ -44,10 +46,14 @@ export default function MobileMenu({ navItems }: MobileMenuProps) {
               animate={{ x: 0 }} // 나타날 위치
               exit={{ x: "100%" }} // 사라질 위치
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed top-0 right-0 z-50 h-full w-[280px] bg-white p-6 shadow-xl"
+              className="fixed top-0 right-0 z-50 h-full w-[280px] overflow-y-auto bg-white p-6 shadow-xl"
             >
               <div className="flex justify-end">
-                <button onClick={() => setIsMenuOpen(false)} className="cursor-pointer p-1">
+                <button
+                  onClick={() => setIsMenuOpen(false)}
+                  className="cursor-pointer p-1"
+                  aria-label="메뉴 닫기"
+                >
                   <X />
                 </button>
               </div>

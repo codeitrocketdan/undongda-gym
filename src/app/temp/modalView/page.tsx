@@ -1,6 +1,6 @@
-import LoginModal from "@/shared/ui/Modal/LoginModal";
-import MoimModal from "@/shared/ui/Modal/MoimModal";
-import ProfileModal from "@/shared/ui/Modal/ProfileModal";
+import LoginModal from "@/shared/ui/modal/LoginModal";
+import MoimModal from "@/shared/ui/modal/MoimModal";
+import ProfileModal from "@/shared/ui/modal/ProfileModal";
 
 const ModalView = () => {
   return (
