@@ -228,6 +228,12 @@
   background: var(--color-gray-500);
 }
 
+@layer utilities {
+  .bg-gradient-blue-500 {
+    background: linear-gradient(135deg, #2099fd, #08ddf0);
+  }
+}
+
 /* input, textarea autofill 제거 */
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
