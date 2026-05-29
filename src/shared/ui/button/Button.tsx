@@ -41,7 +41,9 @@ const buttonVariants = cva("flex items-center justify-center cursor-pointer", {
       false: "cursor-pointer",
     },
   },
-  compoundVariants: [{ variant: "primary", disabled: false, className: "hover:bg-blue-700" }],
+  compoundVariants: [
+    { variant: "primary", disabled: false, className: "hover:bg-blue-700" },
+  ],
   // 기본 값
   defaultVariants: {
     variant: "primary",
@@ -54,7 +56,7 @@ interface PropsType {
   variant?: VariantType;
   size?: SizeType;
   isDisabled?: boolean;
-  onClick: () => void;
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   className?: string;
 }
 
