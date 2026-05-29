@@ -1,0 +1,167 @@
+"use client";
+import {
+  formatDeadline,
+  formatMonthDay,
+  formatTime,
+} from "@/shared/lib/formatDate";
+import Button from "@/shared/ui/button/Button";
+import FeedCard from "@/shared/ui/feed-card/FeedCard";
+import { HeartButton } from "@/shared/ui/heart-button/HeartButton";
+import ProgressBar from "@/shared/ui/progress-bar/ProgressBar";
+import StatusLabel from "@/shared/ui/status-label/StatusLabel";
+import Tag from "@/shared/ui/tag/Tag";
+import { MapPin, User } from "lucide-react";
+import Link from "next/link";
+import { DagymCardProps } from "../types";
+
+export default function DagymCard({
+  id,
+  image,
+  isFavorited,
+  confirmedAt,
+  title,
+  region,
+  type,
+  dateTime,
+  registrationEnd,
+  participantCount,
+  capacity,
+  onToggleFavorite,
+  onJoin,
+}: DagymCardProps) {
+  return (
+    <Link href={`/meetings/${id}`}>
+      <FeedCard className="overflow-hidden rounded-3xl md:rounded-4xl">
+        {/* 모바일 레이아웃 */}
+        <div className="flex flex-col md:hidden">
+          <div className="relative">
+            <FeedCard.Image src={image} className="h-48 w-full" />
+            <div className="absolute top-3 right-3">
+              <HeartButton
+                isFavorited={isFavorited}
+                onClick={onToggleFavorite}
+              />
+            </div>
+          </div>
+          <div className="flex flex-col gap-3 p-4">
+            <div>
+              <div className="flex min-w-0 items-center gap-1">
+                <FeedCard.Title
+                  title={title}
+                  className="text-base-semibold min-w-0 truncate"
+                />
+                {confirmedAt && <StatusLabel />}
+              </div>
+              <div className="flex items-center gap-1 text-sm text-slate-600">
+                <MapPin className="h-3 w-3 shrink-0" />
+                <span className="truncate">
+                  {region} · {type}
+                </span>
+              </div>
+            </div>
+            <div className="flex gap-0.5">
+              <Tag label={formatMonthDay(dateTime)} />
+              <Tag label={formatTime(dateTime)} />
+              <Tag label={formatDeadline(registrationEnd)} variant="deadline" />
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="flex min-w-0 flex-1 items-center gap-1.5">
+                <User size={16} className="shrink-0 text-slate-400" />
+                <ProgressBar
+                  capacity={capacity}
+                  participantCount={participantCount}
+                />
+                <div className="shrink-0 text-sm">
+                  <span className="text-blue-500">{participantCount}</span>
+                  <span className="text-slate-600">/{capacity}</span>
+                </div>
+              </div>
+              <div className="shrink-0">
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  className="border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    onJoin();
+                  }}
+                >
+                  참여하기
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* 태블릿/데스크탑 레이아웃 */}
+        <div className="relative hidden h-55 p-6 md:flex">
+          <FeedCard.Image
+            src={image}
+            className="h-42.5 w-42.5 shrink-0 rounded-3xl"
+          />
+          <div className="flex min-w-0 flex-1 flex-col justify-between py-4 pl-4">
+            <div className="flex items-start gap-2">
+              <div className="flex min-w-0 flex-1 flex-col gap-1">
+                <div className="flex min-w-0 items-center gap-1 pr-12">
+                  <FeedCard.Title
+                    title={title}
+                    className="text-xl-semibold min-w-0 truncate"
+                  />
+                  {confirmedAt && <StatusLabel />}
+                </div>
+                <div className="flex items-center gap-1 text-sm text-slate-600">
+                  <MapPin className="h-3 w-3 shrink-0" />
+                  <span className="truncate">
+                    {region} · {type}
+                  </span>
+                </div>
+              </div>
+              <div className="absolute top-4 right-4 z-10 hidden md:block">
+                <HeartButton
+                  isFavorited={isFavorited}
+                  onClick={onToggleFavorite}
+                />
+              </div>
+            </div>
+            <div className="flex items-end gap-3">
+              <div className="flex min-w-0 flex-1 flex-col gap-2">
+                <div className="flex shrink-0 flex-nowrap gap-0.5">
+                  <Tag label={formatMonthDay(dateTime)} />
+                  <Tag label={formatTime(dateTime)} />
+                  <Tag
+                    label={formatDeadline(registrationEnd)}
+                    variant="deadline"
+                  />
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <User size={16} className="shrink-0 text-slate-400" />
+                  <ProgressBar
+                    capacity={capacity}
+                    participantCount={participantCount}
+                  />
+                  <div className="shrink-0 text-sm">
+                    <span className="text-blue-500">{participantCount}</span>
+                    <span className="text-slate-600">/{capacity}</span>
+                  </div>
+                </div>
+              </div>
+              <div className="shrink-0">
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  className="border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    onJoin();
+                  }}
+                >
+                  참여하기
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </FeedCard>
+    </Link>
+  );
+}
