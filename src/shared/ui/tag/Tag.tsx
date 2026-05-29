@@ -8,7 +8,7 @@ interface TagProps {
 
 const variantConfig = {
   deadline:
-    "bg-green-100 text-xs font-semibold text-green-800 md:text-sm md:font-semibold",
+    "bg-blue-200 text-xs font-semibold text-blue-600 md:text-sm md:font-semibold",
   default:
     "border border-slate-200 text-xs font-medium text-slate-600 md:text-sm",
 };
@@ -17,7 +17,7 @@ export default function Tag({ label, variant = "default" }: TagProps) {
   return (
     <div
       className={twMerge(
-        "flex items-center justify-center gap-1 rounded-md px-2 py-0.5 md:rounded-lg",
+        "flex items-center justify-center gap-1 rounded-md px-1.5 py-0.5 md:rounded-lg",
         variantConfig[variant]
       )}
     >
