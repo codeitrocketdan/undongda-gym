@@ -42,6 +42,7 @@ interface PropsType {
   isDisabled?: boolean;
   className?: string;
   iconClassName?: string;
+  ariaLabel?: string;
 }
 
 const IconButton = ({
@@ -51,6 +52,7 @@ const IconButton = ({
   isDisabled,
   className,
   iconClassName,
+  ariaLabel,
 }: PropsType) => {
   // 아이콘 버튼 클래스 병합
   const iconButtonClasses = twMerge(clsx(iconVariants({ size, isDisabled }), className));
@@ -61,7 +63,7 @@ const IconButton = ({
     : children;
 
   return (
-    <button onClick={onClick} className={iconButtonClasses}>
+    <button onClick={onClick} className={iconButtonClasses} aria-label={ariaLabel}>
       {icon}
     </button>
   );

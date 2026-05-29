@@ -57,6 +57,7 @@ interface PropsType {
   isDisabled?: boolean;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
   className?: string;
+  ariaLabel?: string;
 }
 
 const Button = ({
@@ -67,6 +68,7 @@ const Button = ({
   isDisabled = false,
   onClick,
   className,
+  ariaLabel,
 }: PropsType) => {
   // 버튼 클래스 병합
   const buttonClasses = twMerge(
@@ -74,7 +76,13 @@ const Button = ({
   );
 
   return (
-    <button type={type} className={buttonClasses} onClick={onClick} disabled={isDisabled}>
+    <button
+      type={type}
+      className={buttonClasses}
+      onClick={onClick}
+      disabled={isDisabled}
+      aria-label={ariaLabel}
+    >
       {children}
     </button>
   );
