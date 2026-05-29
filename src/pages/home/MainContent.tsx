@@ -21,13 +21,13 @@ export default function MainContent({ isLogin }: { isLogin: boolean }) {
                 {/* {format(currentStart, "yyyy년 M월 eeee", { locale: ko })} */}
               </h2>
               <div className="mr-1 flex items-center gap-3">
-                <div className="notice-wrap relative">
+                <button className="notice-wrap relative">
                   {/* 알람이 있을 경우 - 추후 연결
                   <BellDot/>
                   <div className="absolute top-[3px] right-[3px] h-[6px] w-[6px] rounded-full bg-red-500" />
                   */}
                   <Bell size={28} />
-                </div>
+                </button>
 
                 <button onClick={modal.open} aria-label="월간 달력 열기">
                   <CalendarCheck size={28} />

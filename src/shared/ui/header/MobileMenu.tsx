@@ -2,10 +2,10 @@
 
 import useScrollLock from "@/shared/hooks/useScrollLock";
 import { AnimatePresence, motion } from "framer-motion";
-import { Menu, X } from "lucide-react";
-import Link from "next/link";
+import { Menu } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { MobileMenuContent } from "./MobileMenuContent";
 import { NavItem } from "./types";
 
 interface MobileMenuProps {
@@ -41,44 +41,11 @@ export default function MobileMenu({ navItems }: MobileMenuProps) {
               className="fixed inset-0 z-40 bg-black"
             />
 
-            <motion.div
-              initial={{ x: "100%" }} // 시작 위치 (오른쪽 바깥)
-              animate={{ x: 0 }} // 나타날 위치
-              exit={{ x: "100%" }} // 사라질 위치
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed top-0 right-0 z-50 h-full w-[280px] overflow-y-auto bg-white p-6 shadow-xl"
-            >
-              <div className="flex justify-end">
-                <button
-                  onClick={() => setIsMenuOpen(false)}
-                  className="cursor-pointer p-1"
-                  aria-label="메뉴 닫기"
-                >
-                  <X />
-                </button>
-              </div>
-
-              <ul className="mt-8 space-y-4">
-                {navItems.map((item) => {
-                  const isActive = pathname === item.href;
-                  return (
-                    <li key={item.href}>
-                      <Link
-                        href={item.href}
-                        onClick={() => setIsMenuOpen(false)} // 링크 클릭 시 메뉴 닫기
-                        className={`block rounded-lg p-3 text-lg font-medium transition-colors ${
-                          isActive
-                            ? "bg-blue-50 font-semibold text-blue-600"
-                            : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-                        }`}
-                      >
-                        {item.label}
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ul>
-            </motion.div>
+            <MobileMenuContent
+              navItems={navItems}
+              pathname={pathname}
+              onClose={() => setIsMenuOpen(false)}
+            />
           </>
         )}
       </AnimatePresence>
