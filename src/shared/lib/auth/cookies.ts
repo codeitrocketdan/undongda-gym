@@ -7,6 +7,13 @@ const COOKIE_OPTIONS = {
   path: "/",
 };
 
+// export const getAuthCookies = async () => {
+//   const cookieStore = await cookies();
+//   const accessToken = cookieStore.get("accessToken")?.value;
+//   const refreshToken = cookieStore.get("refreshToken")?.value;
+//   return { accessToken, refreshToken };
+// };
+
 export const setAuthCookies = async (accessToken: string, refreshToken: string) => {
   const cookieStore = await cookies();
 

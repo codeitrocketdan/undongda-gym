@@ -1,45 +1,67 @@
-import { cookies } from "next/headers";
-import { NextResponse } from "next/server";
+// import { NextResponse } from "next/server";
 
-export async function POST() {
-  const cookieStore = await cookies();
-  const refreshToken = cookieStore.get("refreshToken")?.value;
+// import { get, post } from "@/shared/lib/fetch";
 
-  if (!refreshToken) {
-    return NextResponse.json({ message: "Refresh Token 없음" }, { status: 401 });
-  }
+// import { clearAuthCookies, setAuthCookies } from "@/shared/lib/auth/cookies";
+// import { cookies } from "next/headers";
 
-  // 백엔드 서버로 토큰 갱신 요청
-  const refreshRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/refresh`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ refreshToken }),
-  });
+// export async function GET() {
+//   const cookieStore = await cookies();
+//   const accessToken = cookieStore.get("accessToken")?.value;
+//   const refreshToken = cookieStore.get("refreshToken")?.value;
 
-  if (!refreshRes.ok) {
-    return NextResponse.json({ message: "토큰 재발급 실패" }, { status: 401 });
-  }
+//   // 유저 요청 함수
+//   const requestMe = (token?: string) => {
+//     return get("/users/me", {
+//       headers: {
+//         Authorization: `Bearer ${token}`,
+//       },
+//       cache: "no-store",
+//     });
+//   };
 
-  const tokens = await refreshRes.json();
-  const { currentAccessToken, refreshToken: newRefreshToken } = tokens;
+//   // 첫 요청
+//   let response = await requestMe(accessToken);
 
-  cookieStore.set("accessToken", currentAccessToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    path: "/",
-    maxAge: 60 * 15,
-  });
+//   // accessToken 만료
+//   if (response.status === 401) {
+//     // refreshToken 없음
+//     if (!refreshToken) {
+//       await clearAuthCookies();
 
-  if (newRefreshToken) {
-    cookieStore.set("refreshToken", newRefreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      path: "/",
-      maxAge: 60 * 60 * 24 * 7,
-    });
-  }
+//       return NextResponse.json({ message: "로그인 필요" }, { status: 401 });
+//     }
 
-  return NextResponse.json({ ok: true }, { status: 200 });
-}
+//     try {
+//       const refreshResponse = await post("/auth/refresh", { refreshToken });
+
+//       if (!refreshResponse.ok) {
+//         await clearAuthCookies();
+
+//         return NextResponse.json({ message: "토큰 갱신 실패" }, { status: 401 });
+//       }
+
+//       const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
+//         await refreshResponse.json();
+
+//       // 쿠키 저장
+//       await setAuthCookies(newAccessToken, newRefreshToken);
+
+//       // 요청 재시도
+//       response = await requestMe(newAccessToken);
+//     } catch (error) {
+//       await clearAuthCookies();
+
+//       return NextResponse.json({ message: "토큰 갱신 실패" }, { status: 401 });
+//     }
+//   }
+
+//   // 최종 실패
+//   if (!response.ok) {
+//     return NextResponse.json({ message: "유저 조회 실패" }, { status: response.status });
+//   }
+
+//   const user = await response.json();
+
+//   return NextResponse.json(user);
+// }

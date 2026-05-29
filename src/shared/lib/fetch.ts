@@ -11,7 +11,7 @@ interface RequestOptions extends Omit<RequestInit, "headers"> {
   headers?: Record<string, string>;
 }
 
-async function request(path: string, { headers, ...options }: RequestOptions = {}) {
+export async function request(path: string, { headers, ...options }: RequestOptions = {}) {
   const url = path.startsWith("http") ? path : `${API_URL}${path}`;
 
   const response = await fetch(url, {

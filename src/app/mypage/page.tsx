@@ -1,15 +1,10 @@
 "use client";
-import { useUser } from "@/shared/hooks/useUser";
 import Image from "next/image";
 import Link from "next/link";
+import { useAuth } from "../providers/AuthClientProvider";
 
 const Page = () => {
-  // 서버 컴포넌트 테스트
-  //   const user = await getServerUser();
-
-  // 클라이언트 컴포넌트 테스트
-  const { user } = useUser();
-
+  const { user } = useAuth();
   console.log(user);
   return (
     <div>
