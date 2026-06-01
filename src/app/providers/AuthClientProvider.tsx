@@ -38,7 +38,7 @@ const AuthClientProvider = ({
     queryFn: () => fetchUser(),
     enabled: hasToken,
     retry: false,
-    refetchOnWindowFocus: true,
+    refetchInterval: 60 * 14,
   });
   return <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>;
 };
