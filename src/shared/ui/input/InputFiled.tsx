@@ -12,7 +12,7 @@ interface PropsType {
 
 const InputField = ({ label, htmlFor, error, children, required = true, className }: PropsType) => {
   return (
-    <div className={twMerge("flex flex-col gap-1", className)}>
+    <div className={twMerge("mb-5 flex flex-col gap-1", className)}>
       {label && (
         <label
           htmlFor={htmlFor}
