@@ -1,66 +1,102 @@
+// app/api/users/me/route.ts
+import { clearAuthCookies } from "@/shared/lib/auth/cookies";
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
-import { get, post } from "@/shared/lib/fetch";
-
-import { clearAuthCookies, setAuthCookies } from "@/shared/lib/auth/cookies";
-import { cookies } from "next/headers";
+const COOKIE_OPTIONS = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: "lax" as const,
+  path: "/",
+};
 
 export async function GET() {
   const cookieStore = await cookies();
+
   const accessToken = cookieStore.get("accessToken")?.value;
   const refreshToken = cookieStore.get("refreshToken")?.value;
-  // 유저 요청 함수
-  const requestMe = (token?: string) => {
-    return get("/users/me", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      cache: "no-store",
-    });
-  };
 
-  // 첫 요청
-  let response = await requestMe(accessToken);
-  console.log(response);
-  // accessToken 만료
+  // 백엔드 API에 유저 정보 첫 요청
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/me`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+  // accessToken 만료 시 (401) 재갱신 및 재요청 로직
   if (response.status === 401) {
-    // refreshToken 없음
-    if (!refreshToken) {
-      await clearAuthCookies();
-
-      return NextResponse.json({ message: "로그인 필요" }, { status: 401 });
-    }
-
     try {
-      const refreshResponse = await post("/auth/refresh", { refreshToken });
+      // 백엔드에 토큰 재갱신 요청
+      const refreshResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/refresh`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ refreshToken }),
+      });
 
       if (!refreshResponse.ok) {
-        await clearAuthCookies();
+        if (refreshResponse.status === 401) {
+          console.log("리프레시 토큰도 만료되어 쿠키를 삭제합니다.");
+          await clearAuthCookies();
+        }
 
-        return NextResponse.json({ message: "토큰 갱신 실패" }, { status: 401 });
+        throw new Error(`액세스 토큰 재발급에 실패했습니다.`);
       }
 
-      const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
-        await refreshResponse.json();
+      const data = await refreshResponse.json();
 
-      // 쿠키 저장
-      await setAuthCookies(newAccessToken, newRefreshToken);
+      // 토큰 재갱신 성공 후 백엔드에 유저 정보 재요청
+      const retryResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/me`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${data.accessToken}`,
+        },
+      });
 
-      // 요청 재시도
-      response = await requestMe(newAccessToken);
+      if (!retryResponse.ok) {
+        return NextResponse.json(
+          { message: "재요청 유저 조회 실패" },
+          { status: retryResponse.status }
+        );
+      }
+
+      const user = await retryResponse.json();
+
+      // 새로운 응답 객체를 만들고 브라우저 쿠키 직접 설정
+      const nextResponse = NextResponse.json(user);
+
+      nextResponse.cookies.set("accessToken", data.accessToken, {
+        ...COOKIE_OPTIONS,
+        maxAge: 60 * 15,
+      });
+
+      if (data.refreshToken) {
+        nextResponse.cookies.set("refreshToken", data.refreshToken, {
+          ...COOKIE_OPTIONS,
+          maxAge: 60 * 60 * 24 * 7,
+        });
+      }
+
+      return nextResponse;
     } catch (error) {
-      await clearAuthCookies();
-
-      return NextResponse.json({ message: "토큰 갱신 실패" }, { status: 401 });
+      console.error(error);
+      return NextResponse.json(
+        { message: "인증이 만료되었습니다. 다시 로그인해주세요." },
+        { status: 401 }
+      );
     }
   }
 
-  // 최종 실패
+  // 첫 번째 요청이 401이 아니면서 실패했을 경우 처리 (예: 500, 404 등)
   if (!response.ok) {
     return NextResponse.json({ message: "유저 조회 실패" }, { status: response.status });
   }
 
+  // 첫 번째 요청이 한 번에 성공했을 경우 바로 반환
   const user = await response.json();
-
   return NextResponse.json(user);
 }

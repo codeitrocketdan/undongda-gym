@@ -1,14 +1,13 @@
-import { getMe } from "@/shared/lib/auth/getMe";
+import { getAuthCookies } from "@/shared/lib/auth/cookies";
 import React from "react";
 import AuthClientProvider from "./AuthClientProvider";
 
-const AuthProvider = async ({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) => {
-  const user = await getMe();
-  return <AuthClientProvider user={user}>{children}</AuthClientProvider>;
+const AuthProvider = async ({ children }: { children: React.ReactNode }) => {
+  const { accessToken, refreshToken } = await getAuthCookies();
+
+  const hasToken = !!accessToken || !!refreshToken;
+
+  return <AuthClientProvider hasToken={hasToken}>{children}</AuthClientProvider>;
 };
 
 export default AuthProvider;

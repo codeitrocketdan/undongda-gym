@@ -65,6 +65,7 @@ const LoginPage = () => {
       }
 
       alert("로그인에 성공했습니다.");
+      router.refresh();
       router.replace(redirect);
     } catch (error) {
       console.log("Network Error", error);

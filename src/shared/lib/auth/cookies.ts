@@ -7,25 +7,27 @@ const COOKIE_OPTIONS = {
   path: "/",
 };
 
-// export const getAuthCookies = async () => {
-//   const cookieStore = await cookies();
-//   const accessToken = cookieStore.get("accessToken")?.value;
-//   const refreshToken = cookieStore.get("refreshToken")?.value;
-//   return { accessToken, refreshToken };
-// };
+export const getAuthCookies = async () => {
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get("accessToken")?.value;
+  const refreshToken = cookieStore.get("refreshToken")?.value;
 
-export const setAuthCookies = async (accessToken: string, refreshToken: string) => {
+  return { accessToken, refreshToken };
+};
+
+export const setAuthCookies = async (accessToken: string, refreshToken: string | null) => {
   const cookieStore = await cookies();
 
   cookieStore.set("accessToken", accessToken, {
     ...COOKIE_OPTIONS,
-    maxAge: 60 * 15,
+    maxAge: 60,
   });
-
-  cookieStore.set("refreshToken", refreshToken, {
-    ...COOKIE_OPTIONS,
-    maxAge: 60 * 60 * 24 * 7,
-  });
+  if (refreshToken !== null) {
+    cookieStore.set("refreshToken", refreshToken, {
+      ...COOKIE_OPTIONS,
+      maxAge: 60 * 60 * 24 * 7,
+    });
+  }
 };
 
 export const clearAuthCookies = async () => {

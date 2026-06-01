@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import Script from "next/script";
 import "./globals.css";
+// import AuthProvider from "./providers/AuthProvider";
+import AuthHydration from "./providers/AuthHydration";
 import AuthProvider from "./providers/AuthProvider";
-import QueryProviders from "./queryProviders";
+import QueryProvider from "./providers/QueryProvider";
 
 const Pretendard = localFont({
   src: "../shared/fonts/PretendardVariable.woff2",
@@ -25,12 +27,14 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${Pretendard.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col">
-        <AuthProvider>
-          <QueryProviders>
-            {children}
-            <Script src="https://accounts.google.com/gsi/client" />
-          </QueryProviders>
-        </AuthProvider>
+        <QueryProvider>
+          <AuthHydration>
+            <AuthProvider>
+              {children}
+              <Script src="https://accounts.google.com/gsi/client" />
+            </AuthProvider>
+          </AuthHydration>
+        </QueryProvider>
       </body>
     </html>
   );
