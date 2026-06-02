@@ -23,8 +23,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${Pretendard.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col">
-        {children}
-
+        <div className="mx-auto w-full max-w-[1280px]">{children}</div>
         <Script src="https://accounts.google.com/gsi/client" />
       </body>
     </html>

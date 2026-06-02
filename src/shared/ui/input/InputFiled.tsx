@@ -27,7 +27,11 @@ const InputField = ({ label, htmlFor, error, children, required = true, classNam
 
       {children}
 
-      {error && <p className="ml-1 text-sm text-red-500">{error}</p>}
+      {error && (
+        <p id={`${htmlFor}-error`} className="ml-1 text-sm text-red-500">
+          {error}
+        </p>
+      )}
     </div>
   );
 };

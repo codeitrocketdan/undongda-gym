@@ -1,6 +1,6 @@
 "use client";
 
-import { loginSchema } from "@/features/login/model/chema";
+import { loginSchema } from "@/features/login/model/schema";
 import Button from "@/shared/ui/button/Button";
 import Input from "@/shared/ui/input/Input";
 import InputField from "@/shared/ui/input/InputFiled";
@@ -18,7 +18,7 @@ const FORM_FIELDS = [
   {
     name: "email" as const,
     label: "이메일",
-    type: "email",
+    type: "text",
     placeholder: "아이디를 입력해주세요.",
   },
   {
@@ -62,7 +62,10 @@ const LoginPage = () => {
         aria-labelledby="login-title"
         className="mx-4 w-142 max-w-142 rounded-[40px] bg-white px-4 py-10 md:px-14"
       >
-        <h1 id="login-title" className="text-base-semibold md:text-2xl-semibold mb-10 text-center">
+        <h1
+          id="login-title"
+          className="text-base-semibold md:text-2xl-semibold mb-10 text-center"
+        >
           로그인
         </h1>
 
@@ -110,7 +113,10 @@ const LoginPage = () => {
         <div className="text-center">
           <p className="text-[15px] font-medium text-gray-800">
             운동다짐이 처음이신가요?
-            <Link href="/signup" className="ml-1 font-semibold text-blue-600 underline">
+            <Link
+              href="/signup"
+              className="ml-1 font-semibold text-blue-600 underline"
+            >
               회원가입
             </Link>
           </p>
