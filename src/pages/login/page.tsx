@@ -99,7 +99,7 @@ const LoginPage = () => {
             ))}
           </div>
 
-          <Button variant="primary" isDisabled={disabled}>
+          <Button type="submit" variant="primary" isDisabled={disabled}>
             로그인
           </Button>
         </form>
