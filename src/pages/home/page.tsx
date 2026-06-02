@@ -6,7 +6,6 @@ interface User {
 }
 const HomePage = async () => {
   const user = await serverFetcher<User>("/users/me");
-  console.log(user, "홈페이지 유저 정보");
   return (
     <div>
       {user ? <div>{user.name}</div> : <div>로그인 해야돼요</div>}

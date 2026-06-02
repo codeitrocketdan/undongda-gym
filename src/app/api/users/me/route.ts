@@ -71,7 +71,7 @@ export async function GET() {
 
       nextResponse.cookies.set("accessToken", data.accessToken, {
         ...COOKIE_OPTIONS,
-        maxAge: 60 * 15,
+        maxAge: 1000 * 60 * 15,
       });
 
       if (data.refreshToken) {

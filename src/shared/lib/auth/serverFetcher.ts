@@ -21,6 +21,6 @@ export const serverFetcher = async <T>(path: string, options: RequestOptions = {
       ...options.headers,
     },
   });
-
+  if (res.status === 401) return null as T;
   return res.json();
 };
