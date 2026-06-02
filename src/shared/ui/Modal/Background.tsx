@@ -21,7 +21,7 @@ export default function ModalBackground({
   return (
     <div
       onClick={handleBackgroundClick}
-      className="bg-close fixed top-0 left-0 flex h-screen w-full items-center justify-center bg-black/50"
+      className="bg-close fixed top-0 left-0 z-9999 flex h-screen w-full items-center justify-center bg-black/50"
     >
       {children}
     </div>

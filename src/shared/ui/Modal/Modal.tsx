@@ -1,16 +1,18 @@
+"use client";
+import useScrollLock from "@/shared/hooks/useScrollLock";
 import { createContext, ReactNode, useContext } from "react";
+import { createPortal } from "react-dom";
+import { useMounted } from "../../hooks/useMounted";
 import { useFocusTrap } from "../../lib/useFocusTrap";
 import ModalBackground from "./Background";
 import CloseButton from "./CloseButton";
 import ModalFooter from "./Footer";
 import ModalHeader from "./Header";
-import { useModal } from "./useModal";
 
 interface ModalComponent extends React.FC<ModalProps> {
   Header: typeof ModalHeader;
   Footer: typeof ModalFooter;
   CloseButton: typeof CloseButton;
-  useModal: typeof useModal;
 }
 
 // 1. 모달의 기능을 공유할 컨텍스트 생성
@@ -31,8 +33,13 @@ interface ModalProps {
 
 const Modal = ({ children, onClose, isClickToClose }: ModalProps) => {
   const trapRef = useFocusTrap<HTMLDivElement>();
+  const mounted = useMounted();
 
-  return (
+  useScrollLock(true);
+
+  if (!mounted) return null;
+
+  return createPortal(
     <ModalContext.Provider value={{ onClose }}>
       <ModalBackground isClickToClose={isClickToClose}>
         <div
@@ -41,19 +48,19 @@ const Modal = ({ children, onClose, isClickToClose }: ModalProps) => {
           onKeyDown={(e) => {
             if (e.key === "Escape") onClose();
           }}
-          className="max-w-140 min-w-85 bg-white p-10"
           onClick={(e) => e.stopPropagation()}
+          className="max-w-140 min-w-85 rounded-xl bg-white p-10"
         >
           {children}
         </div>
       </ModalBackground>
-    </ModalContext.Provider>
+    </ModalContext.Provider>,
+    document.body
   );
 };
 
 (Modal as ModalComponent).Header = ModalHeader;
 (Modal as ModalComponent).Footer = ModalFooter;
 (Modal as ModalComponent).CloseButton = CloseButton;
-(Modal as ModalComponent).useModal = useModal;
 
 export default Modal as ModalComponent;
