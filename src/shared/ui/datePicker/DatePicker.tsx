@@ -45,31 +45,32 @@ export default function DatePicker({
 
   return (
     <div className="relative w-64">
-      <form action="">
-        {label && (
-          <label className="mb-1 block text-sm font-semibold text-teal-700">
-            {label}
-          </label>
-        )}
+      {label && (
+        <label className="mb-1 block text-sm font-semibold text-teal-700">
+          {label}
+        </label>
+      )}
 
-        {/* 날짜 입력 인풋 */}
-        <div
-          ref={triggerRef}
-          onClick={openModal}
-          className="flex cursor-pointer items-center rounded-xl border border-teal-400 bg-white p-3 transition hover:border-teal-600"
-        >
-          <span className="mr-2">
-            <Calendar />
-          </span>
-          <input
-            type="text"
-            readOnly
-            placeholder="YYYY-MM-DD"
-            value={formatDate(currentValue)}
-            className="w-full cursor-pointer text-gray-700 placeholder-gray-400 outline-none"
-          />
-        </div>
-      </form>
+      {/* 날짜 입력 인풋 */}
+      <div
+        ref={triggerRef}
+        tabIndex={0}
+        role="button"
+        onClick={openModal}
+        className="flex cursor-pointer items-center rounded-xl border border-teal-400 bg-white p-3 transition hover:border-teal-600"
+      >
+        <span className="mr-2">
+          <Calendar />
+        </span>
+        <input
+          type="text"
+          readOnly
+          tabIndex={-1}
+          placeholder="YYYY-MM-DD"
+          value={formatDate(currentValue)}
+          className="w-full cursor-pointer text-gray-700 placeholder-gray-400 outline-none"
+        />
+      </div>
 
       {/* 달력 모달 */}
       {isOpen &&
@@ -96,6 +97,7 @@ export default function DatePicker({
                 selected:
                   "bg-teal-500 text-white rounded-full hover:bg-teal-600",
                 today: "text-teal-500 font-bold",
+                chevron: "fill-blue-500 hover:fill-blue-600",
               }}
             />
 
@@ -103,14 +105,14 @@ export default function DatePicker({
             <div className="mt-4 flex gap-2">
               <button
                 onClick={handleReset}
-                className="flex-1 rounded-xl border border-teal-500 py-2 font-medium text-teal-500 hover:bg-teal-50"
+                className="flex-1 cursor-pointer rounded-xl border border-blue-500 py-2 font-medium text-blue-500 hover:bg-blue-50"
               >
                 초기화
               </button>
               <button
                 disabled={!tempValue}
                 onClick={handleApply}
-                className="flex-1 rounded-xl bg-teal-500 py-2 font-medium text-white hover:bg-teal-600"
+                className="flex-1 cursor-pointer rounded-xl bg-blue-500 py-2 font-medium text-white hover:bg-blue-600"
               >
                 적용
               </button>

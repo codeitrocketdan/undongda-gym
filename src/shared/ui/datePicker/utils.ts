@@ -14,10 +14,12 @@ export const formatTime = (hour: number, minute: number) => {
 
 // api 호출 시 형태
 export const toISOStringFromLocal = (date: Date, time: string) => {
+  if (!/^\d{2}:\d{2}$/.test(time)) return "";
   const dateStr = formatDate(date);
   const timeStr = time;
 
   const combinedDate = new Date(`${dateStr}T${timeStr}:00`);
+  if (Number.isNaN(combinedDate.getTime())) return "";
   return combinedDate.toISOString();
 };
 

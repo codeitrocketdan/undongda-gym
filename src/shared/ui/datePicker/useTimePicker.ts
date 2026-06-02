@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
+import { formatTime } from "./utils";
 
 export const useTimePicker = () => {
   const [selectedHour, setSelectedHour] = useState<number | null>(null);
@@ -17,8 +18,9 @@ export const useTimePicker = () => {
   }, []);
 
   const formattedTime = useMemo(() => {
-    if (selectedHour === null || selectedMinute === null) return "";
-    return `${String(selectedHour).padStart(2, "0")}:${String(selectedMinute).padStart(2, "0")}`;
+    return selectedHour !== null && selectedMinute !== null
+      ? formatTime(selectedHour, selectedMinute)
+      : "";
   }, [selectedHour, selectedMinute]);
 
   return {

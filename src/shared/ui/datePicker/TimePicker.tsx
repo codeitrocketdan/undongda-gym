@@ -100,6 +100,7 @@ export default function TimePicker({
       <div
         ref={triggerRef}
         onClick={openModal}
+        tabIndex={0}
         className="flex cursor-pointer items-center rounded-xl border border-teal-400 bg-white p-3 transition hover:border-teal-600"
       >
         <span className="mr-2">
