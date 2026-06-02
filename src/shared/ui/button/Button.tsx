@@ -29,7 +29,7 @@ const buttonVariants = cva("flex w-full items-center justify-center cursor-point
     variant: {
       primary: "bg-blue-600 text-white",
       secondary: "border border-blue-600 bg-white text-blue-600",
-      tertiary: "border border-gray-600 bg-white text-gray-600",
+      tertiary: "border border-gray-500 bg-white text-gray-600",
     },
 
     // 기본 버튼 사이즈
@@ -58,6 +58,7 @@ interface PropsType {
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
   className?: string;
   ariaLabel?: string;
+  form?: string;
 }
 
 const Button = ({
@@ -69,6 +70,7 @@ const Button = ({
   onClick,
   className,
   ariaLabel,
+  form,
 }: PropsType) => {
   // 버튼 클래스 병합
   const buttonClasses = twMerge(
@@ -82,6 +84,7 @@ const Button = ({
       onClick={onClick}
       disabled={isDisabled}
       aria-label={ariaLabel}
+      form={form}
     >
       {children}
     </button>

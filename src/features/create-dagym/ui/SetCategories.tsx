@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
-import { useState } from "react";
-import imgBusiness from "./assets/category-ex.png";
+import { useFormContext } from "react-hook-form";
+import imgBusiness from "../assets/category-ex.png";
 
 const mockOptions = [
   { imgUrl: imgBusiness, name: "맨몸운동" },
@@ -12,11 +12,13 @@ const mockOptions = [
   { imgUrl: imgBusiness, name: "기타" },
 ];
 export default function SetCategories() {
-  const [selectedValue, setSelectedValue] = useState("");
+  const { register, watch } = useFormContext();
+  const selectedValue = watch("category");
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedValue(e.target.value);
-  };
+  //const [selectedValue, setSelectedValue] = useState("");
+  //   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //     setSelectedValue(e.target.value);
+  //   };
 
   return (
     <div className="select-category">
@@ -31,10 +33,11 @@ export default function SetCategories() {
               <label key={item.name} className="cursor-pointer">
                 <input
                   type="radio"
-                  name="dagymCategory"
+                  //name="dagymCategory"
                   value={item.name}
                   checked={selectedValue === item.name}
-                  onChange={handleChange}
+                  //onChange={handleChange}
+                  {...register("category")}
                   className="peer sr-only"
                 />
                 <div className="flex h-34 w-34 flex-col items-center justify-center gap-2 rounded-xl border-gray-200 bg-gray-100 peer-checked:border-blue-400 peer-checked:bg-blue-200">

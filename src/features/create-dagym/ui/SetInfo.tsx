@@ -5,7 +5,7 @@ import { MapPin } from "lucide-react";
 import Script from "next/script";
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
-import { useKakaoPostcode } from "./hooks/useKaKaoPostcode";
+import { useKakaoPostcode } from "../lib/useKaKaoPostcode";
 import UploadImage from "./UploadImage";
 
 export default function SetInfo() {
@@ -59,7 +59,7 @@ export default function SetInfo() {
           </option>
           {centerLists.map((item) => {
             return (
-              <option key={item} value={item} className="text-gray-800">
+              <option key={item} value={item} className="text-gray-800" {...register("address")}>
                 {item}점
               </option>
             );

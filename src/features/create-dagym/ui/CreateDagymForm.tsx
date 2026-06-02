@@ -5,32 +5,50 @@ import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import SetCategories from "./SetCategories";
 import SetDate from "./SetDate";
-import SetDescribe from "./SetDescribe";
+import SetDescription from "./SetDescription";
 import SetInfo from "./SetInfo";
 import StepButtons from "./StepButtons";
 
 interface DagymFormData {
+  category: string;
   title: string;
   address: string;
   detailAddress: string;
-  selectedImage: File | null;
+  attachedImage: File | null;
   description: string;
 }
 
-export default function CreateDagymPage() {
+export default function CreateDagymForm() {
   const modal = useModal();
   const [step, setStep] = useState(1);
   const totalSteps = 4;
 
   const methods = useForm<DagymFormData>({
     defaultValues: {
+      category: "",
       title: "",
       address: "",
       detailAddress: "",
-      selectedImage: null,
+      attachedImage: null,
       description: "",
     },
   });
+  const { watch } = methods;
+  const currentCategories = watch("category");
+  const currentTitle = watch("title");
+  const currentAddress = watch("address");
+  const currentAttachedImage = watch("attachedImage");
+  const isNextDisabled = () => {
+    if (step === 1) {
+      // 1단계: 카테고리가 하나도 선택되지 않았다면 다음 버튼 비활성화
+      return !currentCategories || currentCategories.length === 0;
+    }
+    if (step === 2) {
+      return !currentTitle && !currentAddress && !currentAttachedImage;
+    }
+
+    return false; // 기본값은 활성화
+  };
 
   //   const [formData, setFormData] = useState({
   //     name: "달램핏 모임",
@@ -46,7 +64,6 @@ export default function CreateDagymPage() {
   //     description: "함께 운동하며 건강을 챙겨요!",
   //   });
 
-  const handleCancel = () => {};
   const handleNext = async () => {
     if (step < totalSteps) {
       setStep((prev) => prev + 1);
@@ -60,12 +77,13 @@ export default function CreateDagymPage() {
 
   const onSubmit = async (data: DagymFormData) => {
     const formData = new FormData();
+    formData.append("category", data.category);
     formData.append("title", data.title);
     formData.append("address", data.address);
     formData.append("detailAddress", data.detailAddress);
 
-    if (data.selectedImage) {
-      formData.append("image", data.selectedImage);
+    if (data.attachedImage) {
+      formData.append("image", data.attachedImage);
     }
 
     try {
@@ -86,7 +104,7 @@ export default function CreateDagymPage() {
   return (
     <FormProvider {...methods}>
       <Modal onClose={modal.close}>
-        <Modal.Header>
+        <Modal.Header className="flex-row justify-between">
           <p className="text-lg-bold">
             모임 만들기 <span className="text-gray-800">{step}</span>
             <span className="text-gray-600">/ {totalSteps}</span>
@@ -97,7 +115,7 @@ export default function CreateDagymPage() {
           <form id="meeting-multi-step-form" onSubmit={methods.handleSubmit(onSubmit)}>
             {step === 1 && <SetCategories />}
             {step === 2 && <SetInfo />}
-            {step === 3 && <SetDescribe />}
+            {step === 3 && <SetDescription />}
             {step === 4 && <SetDate />}
           </form>
         </main>
@@ -108,6 +126,8 @@ export default function CreateDagymPage() {
             totalSteps={totalSteps}
             onPrev={handlePrev}
             onNext={handleNext}
+            onClose={modal.close}
+            isNextDisabled={isNextDisabled()}
           />
         </Modal.Footer>
       </Modal>

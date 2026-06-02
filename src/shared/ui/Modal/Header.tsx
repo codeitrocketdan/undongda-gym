@@ -6,5 +6,5 @@ interface HeaderProps {
 }
 
 export default function ModalHeader({ children, className }: HeaderProps) {
-  return <div className={`modal-header flex flex-col ${className ?? ""}`}>{children}</div>;
+  return <div className={`modal-header mb-12 flex flex-col ${className ?? ""}`}>{children}</div>;
 }
