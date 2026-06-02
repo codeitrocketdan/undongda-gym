@@ -61,7 +61,7 @@ export default function MyPageCard({
   const badges = showBadge && (
     <div className="flex gap-2">
       <StatusBadge status={status} />
-      {!isCompleted && <ConfirmBadge isConfirmed={!!confirmedAt} />}
+      {status === "upcoming" && <ConfirmBadge isConfirmed={!!confirmedAt} />}
     </div>
   );
 
