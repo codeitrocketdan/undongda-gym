@@ -1,17 +1,17 @@
 import { serverFetcher } from "@/shared/lib/auth/serverFetcher";
-import Link from "next/link";
 interface User {
   id: number;
+  teamId: string;
+  email: string;
   name: string;
+  companyName: string;
+  image: string | null;
+  createAt: string;
+  updateAt: string;
 }
 const HomePage = async () => {
   const user = await serverFetcher<User>("/users/me");
-  return (
-    <div>
-      {user ? <div>{user.name}</div> : <div>로그인 해야돼요</div>}
-      <Link href="/mypage">마이페이지</Link>
-    </div>
-  );
+  return <div>{user?.name}</div>;
 };
 
 export default HomePage;

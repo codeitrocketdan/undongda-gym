@@ -50,17 +50,12 @@ export default function AuthClientProvider({
     queryKey: ["user"],
     queryFn: fetchUser,
     enabled: hasToken,
-
-    staleTime: 1000 * 60 * 5,
-
-    gcTime: 1000 * 60 * 30,
-
     retry: false,
-
-    refetchOnMount: false,
-
     refetchOnWindowFocus: true,
+    refetchInterval: 1000 * 60 * 15,
   });
+
+  console.log("AuthClientProvider user 정보 ==>", user);
 
   return <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>;
 }

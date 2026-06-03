@@ -1,8 +1,8 @@
-import { getAuthCookies } from "@/shared/lib/auth/cookies";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import Script from "next/script";
 import "./globals.css";
+import AuthHydration from "./providers/AuthHydration";
 import AuthProvider from "./providers/AuthProvider";
 import QueryProvider from "./providers/QueryProvider";
 
@@ -23,19 +23,16 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { accessToken, refreshToken } = await getAuthCookies();
-
-  const hasToken = !!accessToken || !!refreshToken;
   return (
     <html lang="en" className={`${Pretendard.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col">
         <QueryProvider>
-          {/* <AuthHydration> */}
-          <AuthProvider>
-            {children}
-            <Script src="https://accounts.google.com/gsi/client" />
-          </AuthProvider>
-          {/* </AuthHydration> */}
+          <AuthHydration>
+            <AuthProvider>
+              {children}
+              <Script src="https://accounts.google.com/gsi/client" />
+            </AuthProvider>
+          </AuthHydration>
         </QueryProvider>
       </body>
     </html>

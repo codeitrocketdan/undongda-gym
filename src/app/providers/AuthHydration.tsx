@@ -15,9 +15,11 @@ interface User {
 export default async function AuthHydration({ children }: { children: React.ReactNode }) {
   const queryClient = new QueryClient();
 
+  const user = await serverFetcher<User>("/users/me");
+
   await queryClient.prefetchQuery({
     queryKey: ["user"],
-    queryFn: () => serverFetcher<User>("/users/me"),
+    queryFn: () => user,
   });
 
   return <HydrationBoundary state={dehydrate(queryClient)}>{children}</HydrationBoundary>;

@@ -7,8 +7,9 @@ import Input from "@/shared/ui/input/Input";
 import InputField from "@/shared/ui/input/InputFiled";
 import PasswordInput from "@/shared/ui/input/PasswordInput";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 type Inputs = {
@@ -33,8 +34,7 @@ const FORM_FIELDS = [
 
 const LoginPage = () => {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const redirect = searchParams?.get("redirect") || "/";
+  const queryClient = useQueryClient();
   const {
     register,
     handleSubmit,
@@ -65,8 +65,11 @@ const LoginPage = () => {
       }
 
       alert("로그인에 성공했습니다.");
+      await queryClient.invalidateQueries({
+        queryKey: ["user"],
+      });
+      router.replace("/");
       router.refresh();
-      router.replace(redirect);
     } catch (error) {
       console.log("Network Error", error);
     }
