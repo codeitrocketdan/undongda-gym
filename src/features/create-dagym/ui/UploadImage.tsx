@@ -1,9 +1,10 @@
 import { ChangeEvent, useRef, useState } from "react";
+import { useFormContext } from "react-hook-form";
 
 export default function UploadImage() {
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [imageFile, setImageFile] = useState<File | null>(null);
+  const { register, setValue } = useFormContext();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   // 회색 박스 클릭 시
   const handleBoxClick = () => {
@@ -14,10 +15,12 @@ export default function UploadImage() {
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setImageFile(file); // 서버 전송용 파일 객체 저장
-      setImagePreview(URL.createObjectURL(file)); // 미리보기용 임시 URL 생성
+      setValue("attachedImage", file);
+      setImagePreview(URL.createObjectURL(file));
     }
   };
+
+  const { ref: registerRef } = register("attachedImage");
 
   return (
     <div className="flex flex-col gap-2">
@@ -25,7 +28,10 @@ export default function UploadImage() {
       <input
         id="dagymImage"
         type="file"
-        ref={fileInputRef}
+        ref={(e) => {
+          registerRef(e); // react-hook-form과 ref 연결
+          fileInputRef.current = e;
+        }}
         onChange={handleFileChange}
         accept="image/*"
         className="hidden"

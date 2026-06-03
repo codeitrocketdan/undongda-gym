@@ -20,7 +20,7 @@ interface DagymFormData {
 
 export default function CreateDagymForm() {
   const modal = useModal();
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(4);
   const totalSteps = 4;
 
   const methods = useForm<DagymFormData>({
@@ -40,11 +40,10 @@ export default function CreateDagymForm() {
   const currentAttachedImage = watch("attachedImage");
   const isNextDisabled = () => {
     if (step === 1) {
-      // 1단계: 카테고리가 하나도 선택되지 않았다면 다음 버튼 비활성화
       return !currentCategories || currentCategories.length === 0;
     }
     if (step === 2) {
-      return !currentTitle && !currentAddress && !currentAttachedImage;
+      return !currentTitle || !currentAddress || !currentAttachedImage;
     }
 
     return false; // 기본값은 활성화
