@@ -1,30 +1,22 @@
-name: Deploy
+name: Sync to Fork Repository
 
 on:
   push:
-    branches: [dev] # default로 설정해 놓은 배포하는 브랜치명
+    branches: [dev]
 
 jobs:
-  build:
+  sync:
     runs-on: ubuntu-latest
-    container: pandoc/latex
     steps:
-      - uses: actions/checkout@v2
-      - name: Install mustache (to update the date)
-        run: apk add ruby && gem install mustache
-      - name: creates output
-        run: sh ./build.sh
-      - name: Pushes to another repository
-        id: push_directory
-        uses: cpina/github-action-push-to-another-repository@main
-        env:
-          API_TOKEN_GITHUB: ${ { secrets.ROCKETDANTOKEN } } # 만들어 놓은 시크릿Name으로 변경
+      - name: Checkout Team Repo
+        uses: actions/checkout@v4
         with:
-          source-directory: "output"
-          destination-github-username: "handy-o" # 본인 깃허브 계정 이름
-          destination-repository-name: "undongda-gym" # fork한 Repository 이름
-          user-email: ${ { secrets.EMAIL } } # 만들어 놓은 시크릿Name으로 변경
-          commit-message: ${ { github.event.commits[0].message } }
-          target-branch: dev # default로 설정해 놓은 배포하는 브랜치명
-      - name: Test get variable exported by push-to-another-repository
-        run: echo $DESTINATION_CLONED_DIRECTORY
+          fetch-depth: 0
+
+      # 2. 내 개인 Fork 레포지토리로 코드를 강제 push(동기화)합니다.
+      - name: Push to Fork Repo
+        uses: mikeal/publish-to-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.ROCKETDANTOKEN }}
+          BRANCH: dev
+          REPOSITORY: handy-o/undongda-gym
