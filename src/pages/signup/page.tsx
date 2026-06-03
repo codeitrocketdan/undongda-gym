@@ -7,6 +7,7 @@ import InputField from "@/shared/ui/input/InputFiled";
 import PasswordInput from "@/shared/ui/input/PasswordInput";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 interface SignupForm {
@@ -44,6 +45,7 @@ const FORM_FIELDS = [
 ] as const;
 
 const SignupPage = () => {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -69,9 +71,9 @@ const SignupPage = () => {
       });
 
       alert("회원가입이 완료되었습니다.");
+      router.replace("/");
     } catch (error) {
       if (error instanceof ApiError) {
-        console.dir(error);
         if (error.status === 409) {
           alert(error.message);
         }
