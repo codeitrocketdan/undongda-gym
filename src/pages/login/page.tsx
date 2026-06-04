@@ -38,6 +38,7 @@ const LoginPage = () => {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors, disabled },
   } = useForm<Inputs>({
     defaultValues: {
@@ -57,10 +58,12 @@ const LoginPage = () => {
         },
         body: JSON.stringify(loginData),
       });
-
-      const data = await res.json();
       if (!res.ok) {
-        alert(data.message || "로그인에 실패했습니다.");
+        const error = await res.json().catch(() => null);
+        console.log(error);
+        setError("root", {
+          message: "이메일 또는 비밀번호가 올바르지 않습니다.",
+        });
         return;
       }
 
@@ -71,7 +74,10 @@ const LoginPage = () => {
       router.replace("/");
       router.refresh();
     } catch (error) {
-      console.log("Network Error", error);
+      console.log(error);
+      setError("root", {
+        message: "네트워크 오류가 발생했습니다. 다시 시도해주세요.",
+      });
     }
   };
 
@@ -119,7 +125,9 @@ const LoginPage = () => {
             로그인
           </Button>
         </form>
-
+        {errors.root && (
+          <p className="text-error-100 mt-4 mb-4 text-center text-sm">{errors.root.message}</p>
+        )}
         <div className="mt-8 mb-6 flex items-center gap-2">
           <span aria-hidden="true" className="h-px flex-1 bg-gray-300" />
           <p className="text-sm-medium text-gray-500">SNS 계정으로 로그인</p>

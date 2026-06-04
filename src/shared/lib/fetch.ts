@@ -22,17 +22,7 @@ async function request(path: string, { headers, ...options }: RequestOptions = {
     },
   });
 
-  if (!response.ok) {
-    const errorData = await response.json();
-    console.log("STATUS", response.status);
-    const error: HttpError = new Error(errorData.message || "요청에 실패했습니다.");
-
-    error.status = response.status;
-
-    throw error;
-  }
-
-  return response;
+  return response.json();
 }
 
 // GET 요청

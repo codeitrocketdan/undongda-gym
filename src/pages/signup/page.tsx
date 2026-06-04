@@ -13,7 +13,7 @@ import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 interface SignupForm {
-  nickname: string;
+  name: string;
   email: string;
   password: string;
   passwordConfirm: string;
@@ -28,7 +28,7 @@ const SignupPage = () => {
     formState: { errors },
   } = useForm<SignupForm>({
     defaultValues: {
-      nickname: "",
+      name: "",
       email: "",
       password: "",
       passwordConfirm: "",

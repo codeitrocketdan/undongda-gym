@@ -1,6 +1,6 @@
 export const FORM_FIELDS = [
   {
-    name: "nickname",
+    name: "name",
     label: "이름",
     type: "text",
     placeholder: "이름을 입력해주세요",
@@ -8,7 +8,7 @@ export const FORM_FIELDS = [
   {
     name: "email",
     label: "아이디",
-    type: "text",
+    type: "email",
     placeholder: "아이디를 입력해주세요",
   },
   {
