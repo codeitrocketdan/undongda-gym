@@ -1,15 +1,19 @@
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   try {
     const bodyData = await request.json();
-    const authHeader = request.headers.get("Authorization") || ""; // 헤더 토큰 추출
+    const cookieStore = await cookies();
+    const tokenObj = cookieStore.get("accessToken");
+    const accessToken = tokenObj ? tokenObj.value : "";
+
     const backendResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/meetings`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: authHeader, // 백엔드에게 헤더 토큰 패스
+        Authorization: `Bearer ${accessToken}`, // 백엔드에게 헤더 토큰 패스
       },
       body: JSON.stringify(bodyData),
     });
