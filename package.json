@@ -11,10 +11,15 @@
     "test": "jest"
   },
   "dependencies": {
+<<<<<<< feat/#48/create-dagym
+    "@daypicker/react": "^10.0.1",
+    "@hookform/resolvers": "^5.2.2",
+=======
     "@tanstack/react-query": "^5.100.14",
     "@daypicker/react": "^10.0.1",
     "@hookform/resolvers": "^5.2.2",
     "@tanstack/react-query": "^5.100.14",
+>>>>>>> dev
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
@@ -35,6 +40,7 @@
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
+    "@types/daum-postcode": "^2.0.4",
     "@types/jest": "^30.0.0",
     "@types/node": "^20",
     "@types/react": "^19",
@@ -46,6 +52,7 @@
     "husky": "^9.1.7",
     "jest": "^30.4.2",
     "jest-environment-jsdom": "^30.4.1",
+    "kakao.maps.d.ts": "^0.1.40",
     "lint-staged": "^17.0.4",
     "prettier": "^3.8.3",
     "prettier-plugin-tailwindcss": "^0.8.0",

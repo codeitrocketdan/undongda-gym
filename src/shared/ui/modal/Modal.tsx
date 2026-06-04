@@ -49,7 +49,11 @@ const Modal = ({ children, onClose, isClickToClose }: ModalProps) => {
             if (e.key === "Escape") onClose();
           }}
           onClick={(e) => e.stopPropagation()}
+<<<<<<< feat/#48/create-dagym
+          className="w-full max-w-136 rounded-xl bg-white p-6 sm:p-12"
+=======
           className="max-w-140 min-w-85 rounded-xl bg-white p-10"
+>>>>>>> dev
         >
           {children}
         </div>

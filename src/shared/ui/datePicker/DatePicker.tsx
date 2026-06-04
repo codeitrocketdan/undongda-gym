@@ -10,11 +10,7 @@ import { DatePickerProps } from "./types";
 import { useDatePicker } from "./usePicker";
 import { formatDate } from "./utils";
 
-export default function DatePicker({
-  value,
-  onChange,
-  label,
-}: DatePickerProps) {
+export default function DatePicker({ value, onChange, label }: DatePickerProps) {
   // 컴포넌트 단독 사용 시 부모에서 관리x 내부값으로 설정
   const [innerValue, setInnerValue] = useState<Date>();
   const currentValue = value ?? innerValue;
@@ -45,11 +41,7 @@ export default function DatePicker({
 
   return (
     <div className="relative w-64">
-      {label && (
-        <label className="mb-1 block text-sm font-semibold text-teal-700">
-          {label}
-        </label>
-      )}
+      {label && <label className="mb-1 block text-sm font-semibold text-teal-700">{label}</label>}
 
       {/* 날짜 입력 인풋 */}
       <div
@@ -57,7 +49,7 @@ export default function DatePicker({
         tabIndex={0}
         role="button"
         onClick={openModal}
-        className="flex cursor-pointer items-center rounded-xl border border-teal-400 bg-white p-3 transition hover:border-teal-600"
+        className="flex cursor-pointer items-center rounded-xl border border-blue-500 bg-white p-3 transition hover:border-blue-600"
       >
         <span className="mr-2">
           <Calendar />
@@ -94,10 +86,9 @@ export default function DatePicker({
               }}
               // react-day-picker 내부 기능 특정 상태 class 지정
               classNames={{
-                selected:
-                  "bg-teal-500 text-white rounded-full hover:bg-teal-600",
-                today: "text-teal-500 font-bold",
-                chevron: "fill-blue-500 hover:fill-blue-600",
+                selected: "bg-blue-500 text-white rounded-full hover:bg-blue-600",
+                today: "text-blue-500 font-bold",
+                chevron: "fill-gray-800",
               }}
             />
 

@@ -72,6 +72,9 @@ importers:
       '@testing-library/react':
         specifier: ^16.3.2
         version: 16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      '@types/daum-postcode':
+        specifier: ^2.0.4
+        version: 2.0.4
       '@types/jest':
         specifier: ^30.0.0
         version: 30.0.0
@@ -105,6 +108,9 @@ importers:
       jest-environment-jsdom:
         specifier: ^30.4.1
         version: 30.4.1
+      kakao.maps.d.ts:
+        specifier: ^0.1.40
+        version: 0.1.40
       lint-staged:
         specifier: ^17.0.4
         version: 17.0.4
@@ -337,8 +343,8 @@ packages:
     resolution: {integrity: sha512-Vd/9EVDiu6PPJt9yAh6roZP6El1xHrdvIVGjyBsHR0RYwNHgL7FJPyIIW4fANJNG6FtyZfvlRPpFI4ZM/lubvw==}
     engines: {node: '>=18'}
 
-  '@date-fns/tz@1.4.1':
-    resolution: {integrity: sha512-P5LUNhtbj6YfI3iJjw5EL9eUAG6OitD0W3fWQcpQjDRc/QIsL0tRNuO1PcDvPccWL1fSTXXdE1ds+l95DV/OFA==}
+  '@date-fns/tz@1.5.0':
+    resolution: {integrity: sha512-lwYN/vDPeNRULcepoE/LO2Pgx+7/RV+S9ARfbc9lr2DtGkOD7pAiruHvbR1RX3Qyf6ja47EWJDMsNK5vK08DJg==}
 
   '@daypicker/react@10.0.1':
     resolution: {integrity: sha512-lH4YQz4iMBWP8hsI1bD9Eg0T7t503IkSUR/WDGGkV5mKZvwVv+ukCkJz7yN+uVFBv7vHTK+ww7a5EvlkeFwPYQ==}
@@ -956,6 +962,9 @@ packages:
 
   '@types/babel__traverse@7.28.0':
     resolution: {integrity: sha512-8PvcXf70gTDZBgt9ptxJ8elBeBjcLOAcOtoO/mPJjtji1+CdGbHgm77om1GrsPxsiE+uXIpNSK64UYaIwQXd4Q==}
+
+  '@types/daum-postcode@2.0.4':
+    resolution: {integrity: sha512-W9W8tmHUJSkZNWkS9vNfbH4qc2P9yFMuQ3sYoQNVFO5bLhpqf68/4EvHzRgfFoJaKXbpdQwXNtM3odapRT4yUQ==}
 
   '@types/estree@1.0.9':
     resolution: {integrity: sha512-GhdPgy1el4/ImP05X05Uw4cw2/M93BCUmnEvWZNStlCzEKME4Fkk+YpoA5OiHNQmoS7Cafb8Xa3Pya8m1Qrzeg==}
@@ -2405,6 +2414,9 @@ packages:
     resolution: {integrity: sha512-ZZow9HBI5O6EPgSJLUb8n2NKgmVWTwCvHGwFuJlMjvLFqlGG6pjirPhtdsseaLZjSibD8eegzmYpUZwoIlj2cQ==}
     engines: {node: '>=4.0'}
 
+  kakao.maps.d.ts@0.1.40:
+    resolution: {integrity: sha512-nX69MB1ok04epe3OqS+/tEeWBbU31GSQbvDPJmQRRltzzqn6t4jBsO5v1nzalUjCKzwcH2CptOc767NZ7Hbu3g==}
+
   keyv@4.5.4:
     resolution: {integrity: sha512-oxVHkHR/EJf2CNXnWxRLW6mg7JyCCUcG0DtEGmL2ctUo1PNTin1PUil+r/+4r5MpVgC/fn1kjsx7mjSujKqIpw==}
 
@@ -3719,7 +3731,7 @@ snapshots:
 
   '@csstools/css-tokenizer@3.0.4': {}
 
-  '@date-fns/tz@1.4.1': {}
+  '@date-fns/tz@1.5.0': {}
 
   '@daypicker/react@10.0.1(@types/react@19.2.14)(react@19.2.4)':
     dependencies:
@@ -4357,6 +4369,8 @@ snapshots:
   '@types/babel__traverse@7.28.0':
     dependencies:
       '@babel/types': 7.29.0
+
+  '@types/daum-postcode@2.0.4': {}
 
   '@types/estree@1.0.9': {}
 
@@ -6149,6 +6163,8 @@ snapshots:
       object.assign: 4.1.7
       object.values: 1.2.1
 
+  kakao.maps.d.ts@0.1.40: {}
+
   keyv@4.5.4:
     dependencies:
       json-buffer: 3.0.1
@@ -6561,7 +6577,7 @@ snapshots:
 
   react-day-picker@10.0.1(@types/react@19.2.14)(react@19.2.4):
     dependencies:
-      '@date-fns/tz': 1.4.1
+      '@date-fns/tz': 1.5.0
       date-fns: 4.1.0
       react: 19.2.4
     optionalDependencies:

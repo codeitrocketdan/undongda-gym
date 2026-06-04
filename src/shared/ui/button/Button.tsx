@@ -23,16 +23,14 @@ export const sizes: Record<SizeType, string> = {
 };
 
 // 버튼 variant 관리
-const buttonVariants = cva(
-  "flex w-full items-center justify-center cursor-pointer",
-  {
-    variants: {
-      // 버튼 디자인
-      variant: {
-        primary: "bg-blue-600 text-white",
-        secondary: "border border-blue-600 bg-white text-blue-600",
-        tertiary: "border border-gray-600 bg-white text-gray-600",
-      },
+const buttonVariants = cva("flex w-full items-center justify-center cursor-pointer", {
+  variants: {
+    // 버튼 디자인
+    variant: {
+      primary: "bg-blue-600 text-white",
+      secondary: "border border-blue-600 bg-white text-blue-600",
+      tertiary: "border border-gray-500 bg-white text-gray-600",
+    },
 
       // 기본 버튼 사이즈
       size: sizes,
@@ -63,6 +61,7 @@ interface PropsType {
   onClick?: () => void;
   className?: string;
   ariaLabel?: string;
+  form?: string;
 }
 
 const Button = ({
@@ -74,6 +73,7 @@ const Button = ({
   onClick,
   className,
   ariaLabel,
+  form,
 }: PropsType) => {
   // 버튼 클래스 병합
   const buttonClasses = twMerge(
@@ -87,6 +87,7 @@ const Button = ({
       onClick={onClick}
       disabled={isDisabled}
       aria-label={ariaLabel}
+      form={form}
     >
       {children}
     </button>
