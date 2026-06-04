@@ -20,7 +20,7 @@ export default function SortFilter({ options, value, onChange }: SortFilterProps
       <Dropdown.Trigger>
         <button
           type="button"
-          className="md:text-base-medium text-sm-medium flex cursor-pointer items-center gap-1 text-slate-600 hover:text-slate-900"
+          className="md:text-base-medium text-sm-medium flex cursor-pointer items-center gap-1 whitespace-nowrap text-slate-600 hover:text-slate-900"
         >
           <ListFilter size={16} />
           <span>{value?.label}</span>

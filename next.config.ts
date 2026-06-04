@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
+  // 발표를 위한 코드 추후 제거 필요
   images: {
     remotePatterns: [
       {
@@ -19,6 +20,15 @@ const nextConfig: NextConfig = {
       {
         protocol: "http",
         hostname: "t1.kakaocdn.net",
+        hostname: "picsum.photos",
+      },
+      {
+        protocol: "https",
+        hostname: "sprint-fe-project.s3.ap-northeast-2.amazonaws.com",
+      },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
       },
     ],
   },
