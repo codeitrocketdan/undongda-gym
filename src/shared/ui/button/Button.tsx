@@ -23,14 +23,16 @@ export const sizes: Record<SizeType, string> = {
 };
 
 // 버튼 variant 관리
-const buttonVariants = cva("flex w-full items-center justify-center cursor-pointer", {
-  variants: {
-    // 버튼 디자인
-    variant: {
-      primary: "bg-blue-600 text-white",
-      secondary: "border border-blue-600 bg-white text-blue-600",
-      tertiary: "border border-gray-500 bg-white text-gray-600",
-    },
+const buttonVariants = cva(
+  "flex w-full items-center justify-center cursor-pointer",
+  {
+    variants: {
+      // 버튼 디자인
+      variant: {
+        primary: "bg-blue-600 text-white",
+        secondary: "border border-blue-600 bg-white text-blue-600",
+        tertiary: "border border-gray-500 bg-white text-gray-600",
+      },
 
       // 기본 버튼 사이즈
       size: sizes,
@@ -58,7 +60,7 @@ interface PropsType {
   variant?: VariantType;
   size?: SizeType;
   isDisabled?: boolean;
-  onClick?: () => void;
+  onClick?: (e?: React.MouseEvent<HTMLButtonElement>) => void;
   className?: string;
   ariaLabel?: string;
   form?: string;

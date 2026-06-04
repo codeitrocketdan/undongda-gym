@@ -1,5 +1,5 @@
-import headerWishlist from "@/pages/favorite/assets/images/header_wishlist.svg";
-import SubPageHeader from "@/shared/ui/SubPageHeader/SubPageHeader";
+import headerWishlist from "@/page/favorite/assets/images/header_wishlist.svg";
+import SubPageHeader from "@/shared/ui/subPageHeader/SubPageHeader";
 import FavoriteSection from "./components/FavoriteSection";
 
 export default function FavoritePage() {

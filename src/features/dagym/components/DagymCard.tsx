@@ -83,7 +83,7 @@ export default function DagymCard({
                   size="sm"
                   className="border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white"
                   onClick={(e) => {
-                    e.preventDefault();
+                    e?.preventDefault();
                     onJoin();
                   }}
                 >
@@ -152,7 +152,7 @@ export default function DagymCard({
                   size="sm"
                   className="border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white"
                   onClick={(e) => {
-                    e.preventDefault();
+                    e?.preventDefault();
                     onJoin();
                   }}
                 >

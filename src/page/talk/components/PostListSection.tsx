@@ -1,15 +1,15 @@
-
-import PostCard, { PostCardSkeleton } from "@/features/post/components/PostCard";
+import PostCard, {
+  PostCardSkeleton,
+} from "@/features/post/components/PostCard";
 import { PostDTO, PostListResponse } from "@/features/post/types";
 import emptyImage from "@/shared/assets/images/empty.svg";
 import Filter from "@/shared/ui/filter/Filter";
 import { SortOption } from "@/shared/ui/filter/SortFilter";
 import { Pagination } from "@/shared/ui/pagination/Pagination";
-import SearchBar from "@/shared/ui/SearchBar/SearchBar";
+import SearchBar from "@/shared/ui/searchBar/SearchBar";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { useState } from "react";
-
 
 const LIMIT = 5;
 
@@ -40,7 +40,9 @@ export default function PostListSection() {
         sortOrder,
         ...(search && { keyword: search }),
       });
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts?${params}`);
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/posts?${params}`
+      );
       return res.json();
     },
   });
@@ -75,15 +77,23 @@ export default function PostListSection() {
             placeholder="제목 또는 내용을 입력해주세요."
           />
         </div>
-        <Filter.Sort options={SORT_OPTIONS} value={sort} onChange={handleSort} />
+        <Filter.Sort
+          options={SORT_OPTIONS}
+          value={sort}
+          onChange={handleSort}
+        />
       </div>
 
       {/* 게시글 목록 */}
       <div className="mb-10 flex flex-col gap-5 rounded-xl bg-white p-6 md:gap-12 md:rounded-2xl lg:p-8">
         {isLoading ? (
-          Array.from({ length: LIMIT }).map((_, i) => <PostCardSkeleton key={i} />)
+          Array.from({ length: LIMIT }).map((_, i) => (
+            <PostCardSkeleton key={i} />
+          ))
         ) : isError ? (
-          <p className="py-10 text-center text-sm text-slate-400">불러오는 중 문제가 발생했어요</p>
+          <p className="py-10 text-center text-sm text-slate-400">
+            불러오는 중 문제가 발생했어요
+          </p>
         ) : posts.length === 0 ? (
           <div className="flex flex-col items-center gap-3 py-10">
             <Image src={emptyImage} alt="게시글 없음" className="h-24 w-24" />

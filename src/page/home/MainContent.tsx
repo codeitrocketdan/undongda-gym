@@ -39,11 +39,15 @@ export default function MainContent({ isLogin }: { isLogin: boolean }) {
 
           <div className="hidden md:block">
             <picture>
-              <source media="(min-width: 1024px)" srcSet={bannerPc.src} />
+              <source
+                media="(min-width: 1024px)"
+                srcSet={bannerPc.src}
+                className="hue-rotate-45"
+              />
               <Image
                 src={bannerTablet}
                 alt="지금 모임에 참여해보세요"
-                className="w-full"
+                className="w-full hue-rotate-45"
                 priority
               />
             </picture>
@@ -53,7 +57,11 @@ export default function MainContent({ isLogin }: { isLogin: boolean }) {
         <picture>
           <source media="(min-width: 1024px)" srcSet={bannerPc.src} />
           <source media="(min-width: 768px)" srcSet={bannerTablet.src} />
-          <Image src={bannerMobile} alt="지금 모임에 참여해보세요" className="w-full" />
+          <Image
+            src={bannerMobile}
+            alt="지금 모임에 참여해보세요"
+            className="w-full"
+          />
         </picture>
       )}
 

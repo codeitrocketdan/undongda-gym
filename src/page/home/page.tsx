@@ -21,7 +21,7 @@ const HomePage = () => {
 
       <div className="floating-button justify-row fixed right-5 bottom-5 z-10 flex flex-col items-end gap-2">
         <ScrollToTopButton />
-        <CreateButton>모임 만들기</CreateButton>
+        <CreateButton onClick={() => {}}>모임 만들기</CreateButton>
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import ReviewPage from "@/pages/review/page";
+import ReviewPage from "@/page/review/page";
 
 export default function Review() {
   return <ReviewPage />;

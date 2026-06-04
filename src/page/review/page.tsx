@@ -1,5 +1,5 @@
-import headerReview from "@/pages/review/assets/images/header_review.svg";
-import SubPageHeader from "@/shared/ui/SubPageHeader/SubPageHeader";
+import headerReview from "@/page/review/assets/images/header_review.svg";
+import SubPageHeader from "@/shared/ui/subPageHeader/SubPageHeader";
 import ReviewSection from "./components/ReviewSection";
 
 export default function ReviewPage() {

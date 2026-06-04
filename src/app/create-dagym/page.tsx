@@ -1,4 +1,4 @@
-import CreateDagymPage from "@/pages/create-dagym/page";
+import CreateDagymPage from "@/page/create-dagym/page";
 
 export default function Page() {
   return <CreateDagymPage />;

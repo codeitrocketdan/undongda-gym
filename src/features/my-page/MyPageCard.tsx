@@ -71,7 +71,7 @@ export default function MyPageCard({
       size="sm"
       className="shrink-0"
       onClick={(e) => {
-        e.preventDefault();
+        e?.preventDefault();
         onClick?.();
       }}
     >
