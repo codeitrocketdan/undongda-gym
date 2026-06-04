@@ -12,6 +12,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       # 2. 내 개인 Fork 레포지토리로 코드를 강제 push(동기화)합니다.
       - name: Push to Fork Repo
