@@ -53,7 +53,7 @@ export default function ReviewStats({
       </div>
 
       {/* 오른쪽: 별점 분포 바 */}
-      <div className="text-xs-medium md:text-sm-medium gap- flex w-60 flex-col text-slate-500 md:w-96 md:gap-2">
+      <div className="text-xs-medium md:text-sm-medium flex w-60 flex-col gap-0.5 text-slate-500 md:w-96 md:gap-2">
         {bars.map(({ label, count }) => (
           <div key={label} className="flex items-center gap-2 md:gap-3">
             <span className="whitespace-nowrap">{label}</span>

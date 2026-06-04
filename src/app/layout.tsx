@@ -22,7 +22,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${Pretendard.variable} h-full antialiased`}>
+    <html lang="ko" className={`${Pretendard.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col">
         <NuqsAdapter>
           <QueryProvider>
