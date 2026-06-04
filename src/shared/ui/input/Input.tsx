@@ -19,7 +19,7 @@ const Input = ({ type, id, className, error, ...props }: PropsType) => {
       className={twMerge(
         "w-full rounded-xl bg-gray-50 p-3 outline-none",
         "border border-transparent",
-        "focus:border-blue-500",
+        !error && "focus:border-blue-500",
         error && "border-error-100",
         "placeholder:text-gray-400",
         className

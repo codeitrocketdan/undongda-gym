@@ -2,8 +2,12 @@ import QueryProvider from "@/shared/api/QueryProvider";
 import Header from "@/shared/ui/header/Header";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import Script from "next/script";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import "./globals.css";
+import AuthHydration from "./providers/AuthHydration";
+import AuthProvider from "./providers/AuthProvider";
+import QueryProvider from "./providers/QueryProvider";
 
 const Pretendard = localFont({
   src: "../shared/fonts/PretendardVariable.woff2",
@@ -16,21 +20,24 @@ export const metadata: Metadata = {
   title: "운동다짐",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko" className={`${Pretendard.variable} h-full antialiased`}>
+    <html lang="en" className={`${Pretendard.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col">
         <NuqsAdapter>
-          <QueryProvider>
-            <div className="mx-auto w-full max-w-7xl">
+        <QueryProvider>
+          <AuthHydration>
+            <AuthProvider>
               <Header />
-              {children}
-            </div>
-          </QueryProvider>
+              <div className="mx-auto w-full max-w-[1280px]">{children}</div>
+              <Script src="https://accounts.google.com/gsi/client" />
+            </AuthProvider>
+          </AuthHydration>
+        </QueryProvider>
         </NuqsAdapter>
       </body>
     </html>

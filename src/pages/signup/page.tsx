@@ -1,12 +1,15 @@
 "use client";
+import { SocialLoginButtons } from "@/features/auth/components/SocialLoginButtons";
+import { FORM_FIELDS } from "@/features/signup/model/formFields";
 import { signupSchema } from "@/features/signup/model/schema";
-import { apiClient, ApiError } from "@/shared/api/apiClient";
+import { post } from "@/shared/lib/fetch";
 import Button from "@/shared/ui/button/Button";
 import Input from "@/shared/ui/input/Input";
 import InputField from "@/shared/ui/input/InputFiled";
 import PasswordInput from "@/shared/ui/input/PasswordInput";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 interface SignupForm {
@@ -16,34 +19,9 @@ interface SignupForm {
   passwordConfirm: string;
 }
 
-const FORM_FIELDS = [
-  {
-    name: "name" as const,
-    label: "이름",
-    type: "text",
-    placeholder: "이름을 입력해주세요",
-  },
-  {
-    name: "email" as const,
-    label: "아이디",
-    type: "text",
-    placeholder: "아이디를 입력해주세요",
-  },
-  {
-    name: "password" as const,
-    label: "비밀번호",
-    type: "password",
-    placeholder: "비밀번호를 입력해주세요",
-  },
-  {
-    name: "passwordConfirm" as const,
-    label: "비밀번호 확인",
-    type: "password",
-    placeholder: "비밀번호를 다시 입력해주세요",
-  },
-] as const;
-
 const SignupPage = () => {
+  const router = useRouter();
+
   const {
     register,
     handleSubmit,
@@ -63,19 +41,21 @@ const SignupPage = () => {
 
   const onSignup: SubmitHandler<SignupForm> = async (signupData) => {
     try {
-      await apiClient("/auth/signup", {
-        method: "POST",
-        body: signupData,
-      });
-
+      await post("/auth/signup", signupData);
       alert("회원가입이 완료되었습니다.");
-    } catch (error) {
-      if (error instanceof ApiError) {
-        console.dir(error);
-        if (error.status === 409) {
-          alert(error.message);
-        }
+      router.replace("/");
+    } catch (error: unknown) {
+      const err = error as {
+        status?: number;
+        message?: string;
+      };
+
+      if (err.status === 409) {
+        alert("이미 사용 중인 이메일입니다.");
+        return;
       }
+
+      alert("회원가입 중 오류가 발생했습니다. 다시 시도해 주세요.");
     }
   };
 
@@ -85,7 +65,10 @@ const SignupPage = () => {
         aria-labelledby="signup-title"
         className="mx-4 w-142 max-w-142 rounded-[40px] bg-white px-14 py-10"
       >
-        <h1 id="signup-title" className="text-base-semibold md:text-2xl-semibold mb-10 text-center">
+        <h1
+          id="signup-title"
+          className="text-base-semibold md:text-2xl-semibold mb-10 text-center"
+        >
           회원가입
         </h1>
         <form onSubmit={handleSubmit(onSignup)} className="mb-8 md:mb-10">
@@ -127,18 +110,14 @@ const SignupPage = () => {
           <span aria-hidden="true" className="h-px flex-1 bg-gray-300"></span>
         </div>
         {/* 소셜 회원가입으로 수정 */}
-        <div className="mb-8 flex flex-col gap-3 md:mb-10 md:flex-row">
-          <Button variant="secondary" onClick={() => console.log("test")}>
-            구글로 계속하기
-          </Button>
-          <Button variant="secondary" onClick={() => console.log("test")}>
-            카카오로 계속하기
-          </Button>
-        </div>
+        <SocialLoginButtons />
         <div className="text-center">
           <p className="text-[15px] font-medium text-gray-800">
             이미 회원이신가요?
-            <Link href="/login" className="ml-1 font-semibold text-blue-600 underline">
+            <Link
+              href="/login"
+              className="ml-1 font-semibold text-blue-600 underline"
+            >
               로그인
             </Link>
           </p>
