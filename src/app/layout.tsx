@@ -1,4 +1,3 @@
-import QueryProvider from "@/shared/api/QueryProvider";
 import Header from "@/shared/ui/header/Header";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
@@ -29,15 +28,15 @@ export default async function RootLayout({
     <html lang="en" className={`${Pretendard.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col">
         <NuqsAdapter>
-        <QueryProvider>
-          <AuthHydration>
-            <AuthProvider>
-              <Header />
-              <div className="mx-auto w-full max-w-[1280px]">{children}</div>
-              <Script src="https://accounts.google.com/gsi/client" />
-            </AuthProvider>
-          </AuthHydration>
-        </QueryProvider>
+          <QueryProvider>
+            <AuthHydration>
+              <AuthProvider>
+                <Header />
+                <div className="mx-auto w-full max-w-[1280px]">{children}</div>
+                <Script src="https://accounts.google.com/gsi/client" />
+              </AuthProvider>
+            </AuthHydration>
+          </QueryProvider>
         </NuqsAdapter>
       </body>
     </html>

@@ -13,7 +13,7 @@ import { MeetingTypeDTO } from "@/features/dagym/types";
 import { FavoriteListResponse } from "@/features/favorite/types";
 import emptyImage from "@/shared/assets/images/empty.svg";
 import Filter from "@/shared/ui/filter/Filter";
-import PillTabs from "@/shared/ui/Tab/PillTabs";
+import PillTabs from "@/shared/ui/tab/PillTabs";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { parseAsString, useQueryState } from "nuqs";

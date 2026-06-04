@@ -20,6 +20,9 @@ const nextConfig: NextConfig = {
       {
         protocol: "http",
         hostname: "t1.kakaocdn.net",
+      },
+      {
+        protocol: "https",
         hostname: "picsum.photos",
       },
       {

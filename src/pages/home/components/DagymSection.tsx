@@ -1,18 +1,22 @@
 "use client";
 
-import DagymCard, { DagymCardSkeleton } from "@/features/dagym/components/DagymCard";
-import DagymFilterBar, { DagymSort, DagymSortBy, DagymSortOrder } from "@/features/dagym/components/DagymFilterBar";
+import DagymCard, {
+  DagymCardSkeleton,
+} from "@/features/dagym/components/DagymCard";
+import DagymFilterBar, {
+  DagymSort,
+  DagymSortBy,
+  DagymSortOrder,
+} from "@/features/dagym/components/DagymFilterBar";
 import { REGION_OPTIONS } from "@/features/dagym/constants/region";
 import { MeetingListResponse, MeetingTypeDTO } from "@/features/dagym/types";
 import emptyImage from "@/shared/assets/images/empty.svg";
 import Filter from "@/shared/ui/filter/Filter";
-import PillTabs from "@/shared/ui/Tab/PillTabs";
+import PillTabs from "@/shared/ui/tab/PillTabs";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { createSerializer, parseAsString, useQueryState } from "nuqs";
 import { useEffect, useRef } from "react";
-
-
 
 // null 값은 자동으로 쿼리스트링에서 제외됨
 const serialize = createSerializer({
@@ -29,12 +33,22 @@ export default function DagymSection() {
     "type",
     parseAsString.withDefault("")
   );
-  const [region, setRegion] = useQueryState("region", parseAsString.withDefault(""));
-  const [sortBy, setSortBy] = useQueryState("sortBy", parseAsString.withDefault("createdAt"));
-  const [sortOrder, setSortOrder] = useQueryState("sortOrder", parseAsString.withDefault("desc"));
+  const [region, setRegion] = useQueryState(
+    "region",
+    parseAsString.withDefault("")
+  );
+  const [sortBy, setSortBy] = useQueryState(
+    "sortBy",
+    parseAsString.withDefault("createdAt")
+  );
+  const [sortOrder, setSortOrder] = useQueryState(
+    "sortOrder",
+    parseAsString.withDefault("desc")
+  );
 
   const observerRef = useRef<HTMLDivElement>(null);
-  const regionFilter = REGION_OPTIONS.find((r) => r.value === region) ?? REGION_OPTIONS[0];
+  const regionFilter =
+    REGION_OPTIONS.find((r) => r.value === region) ?? REGION_OPTIONS[0];
 
   const handleSortChange = (sort: DagymSort) => {
     setSortBy(sort.sortBy);
@@ -45,7 +59,9 @@ export default function DagymSection() {
   const { data: categories = [] } = useQuery<MeetingTypeDTO[]>({
     queryKey: ["meeting-types"],
     queryFn: async () => {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/meeting-types`);
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/meeting-types`
+      );
       return res.json();
     },
   });
@@ -65,9 +81,14 @@ export default function DagymSection() {
           cursor: (pageParam as string) || null,
         });
         // TODO: 로그인 구현 후 쿠키에서 토큰 읽도록 교체
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/meetings${query}`, {
-          headers: { Authorization: `Bearer ${process.env.NEXT_PUBLIC_TEMP_TOKEN ?? ""}` },
-        });
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/meetings${query}`,
+          {
+            headers: {
+              Authorization: `Bearer ${process.env.NEXT_PUBLIC_TEMP_TOKEN ?? ""}`,
+            },
+          }
+        );
         return res.json();
       },
       getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
@@ -77,7 +98,10 @@ export default function DagymSection() {
   // 페이지별로 나뉜 데이터를 하나의 배열로 flatten
   const meetings = data?.pages.flatMap((page) => page.data) ?? [];
 
-  const tabs = [{ id: 0, name: "전체" }, ...categories.map((c) => ({ id: c.id, name: c.name }))];
+  const tabs = [
+    { id: 0, name: "전체" },
+    ...categories.map((c) => ({ id: c.id, name: c.name })),
+  ];
 
   // 바닥 감지 시 다음 페이지 요청
   useEffect(() => {
@@ -99,7 +123,9 @@ export default function DagymSection() {
         <PillTabs
           tabs={tabs}
           defaultValue="전체"
-          onChange={(value) => setSelectedCategory(value === "전체" ? "" : value)}
+          onChange={(value) =>
+            setSelectedCategory(value === "전체" ? "" : value)
+          }
         />
         <div className="flex shrink-0 items-center gap-2">
           {/* 날짜 필터 - 달력 머지 후 연결 예정 */}
@@ -113,7 +139,13 @@ export default function DagymSection() {
             value={regionFilter}
             onChange={(option) => setRegion(option.value)}
           />
-          <DagymFilterBar value={{ sortBy: sortBy as DagymSortBy, sortOrder: sortOrder as DagymSortOrder }} onSortChange={handleSortChange} />
+          <DagymFilterBar
+            value={{
+              sortBy: sortBy as DagymSortBy,
+              sortOrder: sortOrder as DagymSortOrder,
+            }}
+            onSortChange={handleSortChange}
+          />
         </div>
       </div>
 
@@ -126,11 +158,17 @@ export default function DagymSection() {
       ) : isError ? (
         // 추후 에러 모달로 변경
         <div className="mt-6 flex flex-col items-center justify-center gap-4 py-20">
-          <p className="text-sm text-slate-400">불러오는 중 문제가 발생했어요</p>
+          <p className="text-sm text-slate-400">
+            불러오는 중 문제가 발생했어요
+          </p>
         </div>
       ) : meetings.length === 0 ? (
         <div className="mt-6 flex flex-col items-center justify-center gap-4 py-20">
-          <Image src={emptyImage} alt="데이터가 없습니다" className="h-50 w-50" />
+          <Image
+            src={emptyImage}
+            alt="데이터가 없습니다"
+            className="h-50 w-50"
+          />
           <p className="text-center text-sm text-slate-400">
             아직 다짐이 없어요 <br /> 지금 바로 다짐을 만들어보세요!
           </p>

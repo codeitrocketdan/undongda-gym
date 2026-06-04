@@ -12,11 +12,13 @@ const REVIEW_SORT_OPTIONS: SortOption[] = [
 
 import { REGION_OPTIONS } from "@/features/dagym/constants/region";
 import { MeetingTypeDTO } from "@/features/dagym/types";
-import ReviewCard, { ReviewCardSkeleton } from "@/features/review/components/ReviewCard";
+import ReviewCard, {
+  ReviewCardSkeleton,
+} from "@/features/review/components/ReviewCard";
 import { ReviewDTO, ReviewListResponse } from "@/features/review/types";
 import emptyImage from "@/shared/assets/images/empty.svg";
 import Filter from "@/shared/ui/filter/Filter";
-import PillTabs from "@/shared/ui/Tab/PillTabs";
+import PillTabs from "@/shared/ui/tab/PillTabs";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { parseAsString, useQueryState } from "nuqs";
@@ -27,16 +29,30 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 const LIMIT = 5;
 
 export default function ReviewSection() {
-  const [selectedCategory, setSelectedCategory] = useQueryState("type", parseAsString.withDefault(""));
-  const [region, setRegion] = useQueryState("region", parseAsString.withDefault(""));
-  const [sortBy, setSortBy] = useQueryState("sortBy", parseAsString.withDefault("createdAt"));
-  const [sortOrder, setSortOrder] = useQueryState("sortOrder", parseAsString.withDefault("desc"));
+  const [selectedCategory, setSelectedCategory] = useQueryState(
+    "type",
+    parseAsString.withDefault("")
+  );
+  const [region, setRegion] = useQueryState(
+    "region",
+    parseAsString.withDefault("")
+  );
+  const [sortBy, setSortBy] = useQueryState(
+    "sortBy",
+    parseAsString.withDefault("createdAt")
+  );
+  const [sortOrder, setSortOrder] = useQueryState(
+    "sortOrder",
+    parseAsString.withDefault("desc")
+  );
 
   const observerRef = useRef<HTMLDivElement>(null);
-  const regionFilter = REGION_OPTIONS.find((r) => r.value === region) ?? REGION_OPTIONS[0];
+  const regionFilter =
+    REGION_OPTIONS.find((r) => r.value === region) ?? REGION_OPTIONS[0];
 
   const currentSort =
-    REVIEW_SORT_OPTIONS.find((o) => o.value === `${sortBy}:${sortOrder}`) ?? REVIEW_SORT_OPTIONS[0];
+    REVIEW_SORT_OPTIONS.find((o) => o.value === `${sortBy}:${sortOrder}`) ??
+    REVIEW_SORT_OPTIONS[0];
 
   const handleSortChange = (option: SortOption) => {
     const [by, order] = option.value.split(":");
@@ -90,7 +106,8 @@ export default function ReviewSection() {
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && hasNextPage && !isFetching) fetchNextPage();
+        if (entries[0].isIntersecting && hasNextPage && !isFetching)
+          fetchNextPage();
       },
       { rootMargin: "200px" }
     );
@@ -110,7 +127,9 @@ export default function ReviewSection() {
         <PillTabs
           tabs={tabs}
           defaultValue="전체"
-          onChange={(value) => setSelectedCategory(value === "전체" ? "" : value)}
+          onChange={(value) =>
+            setSelectedCategory(value === "전체" ? "" : value)
+          }
         />
         <div className="flex shrink-0 items-center gap-2">
           {/* 날짜 필터 - 달력 머지 후 연결 예정 */}
@@ -148,11 +167,15 @@ export default function ReviewSection() {
       {/* 리뷰 목록 */}
       <div className="mt-6 flex flex-col gap-4 rounded-2xl bg-white px-6 py-4 md:gap-8 md:rounded-4xl md:p-8">
         {isLoading ? (
-          Array.from({ length: LIMIT }).map((_, i) => <ReviewCardSkeleton key={i} />)
+          Array.from({ length: LIMIT }).map((_, i) => (
+            <ReviewCardSkeleton key={i} />
+          ))
         ) : isError ? (
           // 추후 에러 모달로 변경
           <div className="flex flex-col items-center justify-center gap-4 py-20">
-            <p className="text-sm text-slate-400">불러오는 중 문제가 발생했어요</p>
+            <p className="text-sm text-slate-400">
+              불러오는 중 문제가 발생했어요
+            </p>
           </div>
         ) : reviews.length === 0 ? (
           <div className="flex flex-col items-center gap-4 py-20">

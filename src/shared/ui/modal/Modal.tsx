@@ -21,7 +21,8 @@ const ModalContext = createContext<{ onClose: () => void } | null>(null);
 // 2. 자식컴포넌트에서 꺼내 쓸 수 있는 커스텀 훅
 export const useModalContext = () => {
   const context = useContext(ModalContext);
-  if (!context) throw new Error("Modal 서브 컴포넌트는 Modal 안에서만 쓰여야 함");
+  if (!context)
+    throw new Error("Modal 서브 컴포넌트는 Modal 안에서만 쓰여야 함");
   return context;
 };
 
@@ -49,11 +50,7 @@ const Modal = ({ children, onClose, isClickToClose }: ModalProps) => {
             if (e.key === "Escape") onClose();
           }}
           onClick={(e) => e.stopPropagation()}
-<<<<<<< feat/#48/create-dagym
           className="w-full max-w-136 rounded-xl bg-white p-6 sm:p-12"
-=======
-          className="max-w-140 min-w-85 rounded-xl bg-white p-10"
->>>>>>> dev
         >
           {children}
         </div>
