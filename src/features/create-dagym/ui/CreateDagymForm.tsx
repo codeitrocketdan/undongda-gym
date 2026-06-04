@@ -1,6 +1,5 @@
 "use client";
 import Modal from "@/shared/ui/modal/Modal";
-import { useModal } from "@/shared/ui/modal/useModal";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { uploadImageToStorage } from "../lib/uploadImage";
@@ -10,6 +9,9 @@ import SetDescription from "./SetDescription";
 import SetInfo from "./SetInfo";
 import StepButtons from "./StepButtons";
 
+interface useModalTypeProps {
+  onClose: () => void;
+}
 interface DagymFormData {
   type: string;
   name: string;
@@ -25,8 +27,7 @@ interface DagymFormData {
   capacity: number;
 }
 
-export default function CreateDagymForm() {
-  const modal = useModal();
+export default function CreateDagymForm({ onClose }: useModalTypeProps) {
   const [step, setStep] = useState(1);
   const totalSteps = 4;
 
@@ -115,19 +116,20 @@ export default function CreateDagymForm() {
       }
 
       const submitData = {
-        type: data.type,
+        type: "달램핏",
         name: data.name,
         region: data.region,
         address: data.address,
         addressDetail: data.addressDetail,
-        latitude: data.latitude,
-        longitude: data.longitude,
+        latitude: data.latitude ? Number(data.latitude) : 37.4979,
+        longitude: data.longitude ? Number(data.longitude) : 127.0276,
         image: finalImageUrl, // File 객체 대신 최종 발급받은 publicUrl 주소 대입!
         description: data.description,
         dateTime: data.dateTime,
         registrationEnd: data.registrationEnd,
         capacity: data.capacity,
       };
+      console.log("다짐 입력 데이터 확인!", submitData);
 
       const response = await fetch("/api/meetings", {
         method: "POST",
@@ -142,7 +144,7 @@ export default function CreateDagymForm() {
       }
       const result = await response.json();
       console.log("다짐 생성 최종 성공!", result);
-      modal.close(); // 성공 시 모달 닫기 추가
+      onClose(); // 성공 시 모달 닫기 추가
     } catch (error) {
       console.error("최종 생성 실패:", error);
       alert("다짐 생성 중 오류가 발생했습니다.");
@@ -150,7 +152,7 @@ export default function CreateDagymForm() {
   };
   return (
     <FormProvider {...methods}>
-      <Modal onClose={modal.close}>
+      <Modal onClose={onClose}>
         <Modal.Header className="flex-row justify-between">
           <p className="text-lg-bold">
             다짐 만들기 <span className="text-gray-800">{step}</span>
@@ -159,7 +161,10 @@ export default function CreateDagymForm() {
           <Modal.CloseButton />
         </Modal.Header>
         <main>
-          <form id="meeting-multi-step-form" onSubmit={methods.handleSubmit(onSubmit)}>
+          <form
+            id="meeting-multi-step-form"
+            onSubmit={methods.handleSubmit(onSubmit)}
+          >
             {step === 1 && <SetCategories />}
             {step === 2 && <SetInfo />}
             {step === 3 && <SetDescription />}
@@ -173,7 +178,7 @@ export default function CreateDagymForm() {
             totalSteps={totalSteps}
             onPrev={handlePrev}
             onNext={handleNext}
-            onClose={modal.close}
+            onClose={onClose}
             isNextDisabled={isNextDisabled()}
             onSubmit={methods.handleSubmit(onSubmit)}
           />

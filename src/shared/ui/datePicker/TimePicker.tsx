@@ -9,13 +9,19 @@ import { useDatePicker } from "./usePicker";
 import { useTimePicker } from "./useTimePicker";
 import { HOURS, MINUTES, formatTime, isPastHour, isPastMinute } from "./utils";
 
-export default function TimePicker({ value, onChange, selectedDate, label }: TimePickerProps) {
+export default function TimePicker({
+  value,
+  onChange,
+  selectedDate,
+  label,
+}: TimePickerProps) {
   const [innerValue, setInnerValue] = useState("");
   const currentValue = value ?? innerValue;
 
-  const { isOpen, ref, triggerRef, coords, openModal, closeModal } = useDatePicker<string>({
-    initialValue: currentValue,
-  });
+  const { isOpen, ref, triggerRef, coords, openModal, closeModal } =
+    useDatePicker<string>({
+      initialValue: currentValue,
+    });
   const {
     selectedHour,
     selectedMinute,
@@ -62,16 +68,27 @@ export default function TimePicker({ value, onChange, selectedDate, label }: Tim
 
     const handleScroll = () => {
       if (selectedHour !== null && hourScrollRef.current) {
+        const container = hourScrollRef.current;
         const target = hourScrollRef.current.querySelector(
           `[data-hour="${selectedHour}"]`
         ) as HTMLElement;
-        if (target) target.scrollIntoView({ block: "center", behavior: "instant" });
+        if (target)
+          container.scrollTop =
+            target.offsetTop +
+            target.offsetHeight / 2 -
+            container.offsetHeight / 2;
       }
       if (selectedMinute !== null && minuteScrollRef.current) {
+        const container = minuteScrollRef.current;
         const target = minuteScrollRef.current.querySelector(
           `[data-minute="${selectedMinute}"]`
         ) as HTMLElement;
-        if (target) target.scrollIntoView({ block: "center", behavior: "instant" });
+        if (target) {
+          container.scrollTop =
+            target.offsetTop +
+            target.offsetHeight / 2 -
+            container.offsetHeight / 2;
+        }
       }
     };
 
@@ -84,7 +101,11 @@ export default function TimePicker({ value, onChange, selectedDate, label }: Tim
   return (
     <div className="relative w-48">
       {/* 시간 입력 인풋 */}
-      {label && <span className="mb-1 block text-sm font-semibold text-teal-700">{label}</span>}
+      {label && (
+        <span className="mb-1 block text-sm font-semibold text-teal-700">
+          {label}
+        </span>
+      )}
       <div
         ref={triggerRef}
         onClick={openModal}
@@ -94,7 +115,9 @@ export default function TimePicker({ value, onChange, selectedDate, label }: Tim
         <span className="mr-2">
           <Clock4 />
         </span>
-        <span className={`font-medium ${currentValue ? "text-gray-700" : "text-gray-400"} `}>
+        <span
+          className={`font-medium ${currentValue ? "text-gray-700" : "text-gray-400"} `}
+        >
           {currentValue || "00 : 00"}
         </span>
       </div>
@@ -113,7 +136,10 @@ export default function TimePicker({ value, onChange, selectedDate, label }: Tim
           >
             <div className="flex h-48 divide-x divide-gray-200">
               {/* '시' 스크롤 영역 */}
-              <div ref={hourScrollRef} className="flex-1 scrollbar-none overflow-y-auto pr-1">
+              <div
+                ref={hourScrollRef}
+                className="flex-1 scrollbar-none overflow-y-auto pr-1"
+              >
                 <div className="flex flex-col gap-1 pb-1">
                   {HOURS.map((hour) => {
                     const disabled = isPastHour(selectedDate, hour);
@@ -138,7 +164,10 @@ export default function TimePicker({ value, onChange, selectedDate, label }: Tim
               </div>
 
               {/* '분' 스크롤 영역 */}
-              <div ref={minuteScrollRef} className="flex-1 scrollbar-none overflow-y-auto pl-2">
+              <div
+                ref={minuteScrollRef}
+                className="flex-1 scrollbar-none overflow-y-auto pl-2"
+              >
                 <div className="flex flex-col gap-1 pb-1">
                   {MINUTES.map((minute) => {
                     const disabled =

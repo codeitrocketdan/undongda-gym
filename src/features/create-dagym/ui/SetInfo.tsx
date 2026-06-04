@@ -16,16 +16,21 @@ export default function SetInfo() {
   const currentAddress = watch("address");
   const [isMapScriptLoaded, setIsMapScriptLoaded] = useState(false);
 
-  const { isPostcodeOpen, postcodeContainerRef, handleScriptLoad, openPostcode, closePostcode } =
-    useKakaoPostcode({
-      onCompleteAddress: (currentAddress) => {
-        // 기존 react-hook-form(추정)에 주소 텍스트 저장
-        setValue("address", currentAddress);
+  const {
+    isPostcodeOpen,
+    postcodeContainerRef,
+    handleScriptLoad,
+    openPostcode,
+    closePostcode,
+  } = useKakaoPostcode({
+    onCompleteAddress: (currentAddress) => {
+      // 기존 react-hook-form(추정)에 주소 텍스트 저장
+      setValue("address", currentAddress);
 
-        // 위경도 임시 저장
-        setValue("latitude", "37.4979");
-        setValue("longitude", "127.0276");
-        /*
+      // 위경도 임시 저장
+      setValue("latitude", 37.4979);
+      setValue("longitude", 127.0276);
+      /*
         // 위경도 추가 작업 => 추후 승인 받으면 진행
         if (
           isMapScriptLoaded &&
@@ -54,8 +59,8 @@ export default function SetInfo() {
             });
           });
         }*/
-      },
-    });
+    },
+  });
 
   const handleCenterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selected = e.target.value;

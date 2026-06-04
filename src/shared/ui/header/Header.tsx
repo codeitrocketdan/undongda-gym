@@ -1,3 +1,5 @@
+"use client";
+import { useAuth } from "@/app/providers/AuthClientProvider";
 import logo from "@/shared/assets/images/logo_dagym.png";
 import { Bell } from "lucide-react";
 import Image from "next/image";
@@ -15,17 +17,26 @@ export default function Header() {
     { label: "다짐 토크", href: "/talk" },
   ];
 
-  const isLogin = true;
+  const { user } = useAuth();
+  const isLogin = !!user;
   return (
     <>
       <header className="relative flex items-center justify-between p-6 md:mb-7">
-        <div className="header-wrap md:hidden">{isLogin && <ProfileIcon />}</div>
+        <div className="header-wrap md:hidden">
+          {isLogin && <ProfileIcon />}
+        </div>
         <div className="header-wrap flex items-center">
           <Link
             href="/"
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 md:relative md:top-0 md:left-0 md:mr-4 md:translate-x-0 md:translate-y-0"
           >
-            <Image src={logo} alt="운동다짐 로고" width={100} className="w-25" priority></Image>
+            <Image
+              src={logo}
+              alt="운동다짐 로고"
+              width={100}
+              className="w-25"
+              priority
+            ></Image>
           </Link>
           <NavLinks navItems={NAV_ITEMS} />
         </div>
@@ -38,7 +49,10 @@ export default function Header() {
               </>
             ) : (
               <>
-                <Link href="/signup" className="text-gray-700">
+                <Link
+                  href="/signup"
+                  className="whitespace-nowrap text-gray-700"
+                >
                   회원가입
                 </Link>
                 <Button
@@ -47,7 +61,7 @@ export default function Header() {
                   onClick={() => console.log("test")}
                   className="flex gap-1.5 rounded-xl px-6 py-3"
                 >
-                  로그인
+                  <Link href="/login">로그인</Link>
                 </Button>
               </>
             )}
