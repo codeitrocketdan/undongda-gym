@@ -21,7 +21,7 @@ const FORM_FIELDS = [
   {
     name: "email" as const,
     label: "이메일",
-    type: "text",
+    type: "email",
     placeholder: "아이디를 입력해주세요.",
   },
   {

@@ -29,7 +29,7 @@ export default async function RootLayout({
         <QueryProvider>
           <AuthHydration>
             <AuthProvider>
-              {children}
+              <div className="mx-auto w-full max-w-[1280px]">{children}</div>
               <Script src="https://accounts.google.com/gsi/client" />
             </AuthProvider>
           </AuthHydration>

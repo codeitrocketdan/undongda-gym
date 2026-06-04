@@ -1,6 +1,6 @@
-import Author from "@/shared/ui/Author/Author";
-import FeedCard from "@/shared/ui/FeedCard/FeedCard";
-import PostStats from "@/shared/ui/PostStats/PostStats";
+import Author from "@/shared/ui/author/Author";
+import FeedCard from "@/shared/ui/feed-card/FeedCard";
+import PostStats from "@/shared/ui/post-stats/PostStats";
 import Link from "next/link";
 import { PostCardProps } from "../types";
 
@@ -16,17 +16,34 @@ export default function PostCard({
 }: PostCardProps) {
   return (
     <Link href={`/posts/${id}`}>
-      <FeedCard className="w-full md:max-w-157 lg:max-w-304">
-        <FeedCard.Image src={image} className="hidden md:block" />
-        <FeedCard.Body>
-          <FeedCard.Title title={title} className="mb-2" />
-          <FeedCard.Image src={image} className="mb-2 md:hidden" />
-          <FeedCard.Content content={content} className="mb-4 line-clamp-2 md:mb-10" />
-          <div className="mt-auto flex items-end justify-between">
-            <Author name={author.name} image={author.image} createdAt={author.createdAt} />
-            <PostStats likeCount={likeCount} commentCount={commentCount} createdAt={createdAt} />
+      <FeedCard className="flex h-full w-full md:flex-row md:gap-8">
+        <FeedCard.Image
+          src={image}
+          className="hidden h-50 w-50 shrink-0 rounded-xl md:block"
+        />
+        <div className="flex flex-1 flex-col pt-2 pb-6 md:pt-4">
+          <FeedCard.Title
+            title={title}
+            className="text-base-bold md:text-xl-bold mb-2"
+          />
+          <FeedCard.Image
+            src={image}
+            className="mb-3 h-36 rounded-xl md:hidden"
+          />
+          <p className="mb-4 line-clamp-2 min-h-[2lh] text-sm md:text-lg">
+            {content}
+          </p>
+          <div className="mt-auto flex items-center justify-between">
+            <div className="flex items-center gap-1.5 md:gap-2">
+              <Author name={author.name} image={author.image} />
+            </div>
+            <PostStats
+              likeCount={likeCount}
+              commentCount={commentCount}
+              createdAt={createdAt}
+            />
           </div>
-        </FeedCard.Body>
+        </div>
       </FeedCard>
     </Link>
   );

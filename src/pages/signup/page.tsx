@@ -35,6 +35,8 @@ const SignupPage = () => {
     },
     resolver: zodResolver(signupSchema),
     shouldFocusError: true,
+    mode: "onBlur",
+    reValidateMode: "onChange",
   });
 
   const onSignup: SubmitHandler<SignupForm> = async (signupData) => {
