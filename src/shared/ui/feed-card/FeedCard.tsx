@@ -1,7 +1,5 @@
 import React from "react";
 import { twMerge } from "tailwind-merge";
-import FeedCardBody from "./FeedCardBody";
-import FeedCardContent from "./FeedCardContent";
 import FeedCardImage from "./FeedCardImage";
 import FeedCardTitle from "./FeedCardTitle";
 
@@ -14,7 +12,7 @@ function FeedCard({ children, className }: FeedCardProps) {
   return (
     <div
       className={twMerge(
-        "group flex flex-col bg-white transition-all duration-300 hover:-translate-y-0.5 md:flex-row md:gap-8",
+        "group bg-white transition-all duration-300 hover:-translate-y-0.5",
         className
       )}
     >
@@ -25,7 +23,5 @@ function FeedCard({ children, className }: FeedCardProps) {
 
 export default Object.assign(FeedCard, {
   Image: FeedCardImage,
-  Body: FeedCardBody,
   Title: FeedCardTitle,
-  Content: FeedCardContent,
 });
