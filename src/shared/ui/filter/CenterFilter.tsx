@@ -19,7 +19,7 @@ function CenterTrigger({ value }: { value?: CenterOption }) {
   return (
     <button
       type="button"
-      className="md:text-base-medium flex cursor-pointer items-center gap-1 text-sm text-slate-600 hover:text-slate-900"
+      className="md:text-base-medium flex cursor-pointer items-center gap-1 whitespace-nowrap text-sm text-slate-600 hover:text-slate-900"
     >
       {value?.label}
       {isOpen ? <ChevronUp size={17} /> : <ChevronDown size={17} />}
