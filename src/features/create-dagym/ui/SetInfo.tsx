@@ -22,18 +22,11 @@ export default function SetInfo() {
         // 기존 react-hook-form(추정)에 주소 텍스트 저장
         setValue("address", currentAddress);
 
-        console.log("[현재 상태 디버깅 시작]");
-        console.log("- 주소 텍스트:", currentAddress);
-        console.log("- 스크립트 로드 상태(isMapScriptLoaded):", isMapScriptLoaded);
-        console.log("- window 존재 여부:", typeof window !== "undefined");
-        console.log("- kakao 객체 존재 여부:", typeof window !== "undefined" && !!window.kakao);
-        console.log(
-          "- kakao.maps 존재 여부:",
-          typeof window !== "undefined" && window.kakao && !!window.kakao.maps
-        );
-        console.log("[현재 상태 디버깅 끝]");
-
-        // 위도+경도 추가 작업
+        // 위경도 임시 저장
+        setValue("latitude", "37.4979");
+        setValue("longitude", "127.0276");
+        /*
+        // 위경도 추가 작업 => 추후 승인 받으면 진행
         if (
           isMapScriptLoaded &&
           typeof window !== "undefined" &&
@@ -60,7 +53,7 @@ export default function SetInfo() {
               }
             });
           });
-        }
+        }*/
       },
     });
 
