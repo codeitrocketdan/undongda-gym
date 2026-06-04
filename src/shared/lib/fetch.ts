@@ -11,7 +11,10 @@ interface RequestOptions extends Omit<RequestInit, "headers"> {
   headers?: Record<string, string>;
 }
 
-async function request(path: string, { headers, ...options }: RequestOptions = {}) {
+async function request(
+  path: string,
+  { headers, ...options }: RequestOptions = {}
+) {
   const url = path.startsWith("http") ? path : `${API_URL}${path}`;
 
   const response = await fetch(url, {
@@ -21,8 +24,14 @@ async function request(path: string, { headers, ...options }: RequestOptions = {
       ...headers,
     },
   });
-
-  return response.json();
+  if (!response.ok) {
+    const error: HttpError = new Error(
+      `HTTP error! status: ${response.status}`
+    );
+    error.status = response.status;
+    throw error;
+  }
+  return response;
 }
 
 // GET 요청
@@ -34,7 +43,11 @@ export async function get(path: string, options: RequestOptions = {}) {
 }
 
 // POST 요청
-export async function post<T>(path: string, data: T, options: RequestOptions = {}) {
+export async function post<T>(
+  path: string,
+  data: T,
+  options: RequestOptions = {}
+) {
   return request(path, {
     ...options,
     method: "POST",
@@ -42,7 +55,11 @@ export async function post<T>(path: string, data: T, options: RequestOptions = {
   });
 }
 // PUT 요청
-export async function put<T>(path: string, data: T, options: RequestOptions = {}) {
+export async function put<T>(
+  path: string,
+  data: T,
+  options: RequestOptions = {}
+) {
   return request(path, {
     ...options,
     method: "PUT",
@@ -50,7 +67,11 @@ export async function put<T>(path: string, data: T, options: RequestOptions = {}
   });
 }
 // PATCH 요청
-export async function patch<T>(path: string, data: T, options: RequestOptions = {}) {
+export async function patch<T>(
+  path: string,
+  data: T,
+  options: RequestOptions = {}
+) {
   return request(path, {
     ...options,
     method: "PATCH",

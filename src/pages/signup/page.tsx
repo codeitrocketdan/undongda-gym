@@ -51,7 +51,7 @@ const SignupPage = () => {
       };
 
       if (err.status === 409) {
-        alert(err.message ?? "이미 사용 중인 이메일입니다.");
+        alert("이미 사용 중인 이메일입니다.");
         return;
       }
 
@@ -65,7 +65,10 @@ const SignupPage = () => {
         aria-labelledby="signup-title"
         className="mx-4 w-142 max-w-142 rounded-[40px] bg-white px-14 py-10"
       >
-        <h1 id="signup-title" className="text-base-semibold md:text-2xl-semibold mb-10 text-center">
+        <h1
+          id="signup-title"
+          className="text-base-semibold md:text-2xl-semibold mb-10 text-center"
+        >
           회원가입
         </h1>
         <form onSubmit={handleSubmit(onSignup)} className="mb-8 md:mb-10">
@@ -111,7 +114,10 @@ const SignupPage = () => {
         <div className="text-center">
           <p className="text-[15px] font-medium text-gray-800">
             이미 회원이신가요?
-            <Link href="/login" className="ml-1 font-semibold text-blue-600 underline">
+            <Link
+              href="/login"
+              className="ml-1 font-semibold text-blue-600 underline"
+            >
               로그인
             </Link>
           </p>

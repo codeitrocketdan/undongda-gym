@@ -29,13 +29,16 @@ export async function GET() {
   if (response.status === 401) {
     try {
       // 백엔드에 토큰 재갱신 요청
-      const refreshResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/refresh`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ refreshToken }),
-      });
+      const refreshResponse = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/auth/refresh`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ refreshToken }),
+        }
+      );
 
       if (!refreshResponse.ok) {
         if (refreshResponse.status === 401) {
@@ -49,13 +52,16 @@ export async function GET() {
       const data = await refreshResponse.json();
 
       // 토큰 재갱신 성공 후 백엔드에 유저 정보 재요청
-      const retryResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/me`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${data.accessToken}`,
-        },
-      });
+      const retryResponse = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/users/me`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${data.accessToken}`,
+          },
+        }
+      );
 
       if (!retryResponse.ok) {
         return NextResponse.json(
@@ -71,8 +77,7 @@ export async function GET() {
 
       nextResponse.cookies.set("accessToken", data.accessToken, {
         ...COOKIE_OPTIONS,
-        // maxAge: 1000 * 60 * 15,
-        maxAge: 60 * 15,
+        maxAge: 1000 * 60 * 15,
       });
 
       if (data.refreshToken) {
@@ -94,7 +99,10 @@ export async function GET() {
 
   // 첫 번째 요청이 401이 아니면서 실패했을 경우 처리 (예: 500, 404 등)
   if (!response.ok) {
-    return NextResponse.json({ message: "유저 조회 실패" }, { status: response.status });
+    return NextResponse.json(
+      { message: "유저 조회 실패" },
+      { status: response.status }
+    );
   }
 
   // 첫 번째 요청이 한 번에 성공했을 경우 바로 반환
