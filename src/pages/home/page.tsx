@@ -2,7 +2,7 @@
 // import { cookies } from "next/headers";
 import CreateButton from "@/shared/ui/button/CreateButton";
 import ScrollToTopButton from "@/shared/ui/button/ScrollTopButton";
-import Header from "@/shared/ui/header/Header";
+import DagymSection from "./components/DagymSection";
 import MainContent from "./MainContent";
 
 const HomePage = () => {
@@ -11,13 +11,12 @@ const HomePage = () => {
   const isLogin = true;
   return (
     <div>
-      <Header />
       <main>
-        <div className="w-full">
+        <div className="mb-6 w-full md:mb-10 lg:mb-12">
           <MainContent isLogin={isLogin} />
         </div>
 
-        <div className="h-[1500px]">fetch해온 데이터</div>
+        <DagymSection />
       </main>
 
       <div className="floating-button justify-row fixed right-5 bottom-5 z-10 flex flex-col items-end gap-2">
