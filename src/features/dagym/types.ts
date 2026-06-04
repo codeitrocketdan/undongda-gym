@@ -1,4 +1,13 @@
-/** Swagger Meeting 스키마 1대1 대응 DTO */
+// Swagger MeetingType 스키마 1대1 대응 DTO
+export interface MeetingTypeDTO {
+  id: number;
+  teamId: string;
+  name: string;
+  description: string | null;
+  createdAt: string | null;
+}
+
+// Swagger Meeting 스키마 1대1 대응 DTO
 export interface MeetingDTO {
   id: number;
   teamId: string;
@@ -22,7 +31,25 @@ export interface MeetingDTO {
   updatedAt: string | null;
 }
 
-/** 클래스 목록 카드 */
+// Swagger MeetingWithHost 스키마 1대1 대응 DTO
+export interface MeetingWithHostDTO extends MeetingDTO {
+  host: { id: number; name: string; image: string | null };
+  isFavorited: boolean;
+  isJoined: boolean;
+  isCompleted: boolean;
+}
+
+// GET /{teamId}/meetings 응답
+export interface MeetingListResponse {
+  data: MeetingWithHostDTO[];
+  nextCursor: string | null;
+  hasMore: boolean;
+  totalCount?: number;
+  currentOffset?: number;
+  limit?: number;
+}
+
+// 다짐 카드 컴포넌트 props
 export interface DagymCardProps {
   id: number;
   image: string | null;
@@ -39,7 +66,7 @@ export interface DagymCardProps {
   onJoin: () => void;
 }
 
-/** 클래스 상세 카드 */
+// 다짐 상세 카드 컴포넌트 props
 export interface DagymDetailCardProps {
   confirmedAt: string | null;
   title: string;
@@ -52,7 +79,7 @@ export interface DagymDetailCardProps {
   onJoin: () => void;
 }
 
-/** 추천 클래스 카드 */
+// 추천 다짐 카드 컴포넌트 props
 export interface FeatureDagymCardProps {
   id: number;
   image: string | null;
