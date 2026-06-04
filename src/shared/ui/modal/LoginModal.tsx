@@ -14,8 +14,11 @@ export default function LoginModal() {
         <Modal onClose={modal.close} isClickToClose={true}>
           <Modal.Header>
             <Modal.CloseButton />
+<<<<<<< feat/#48/create-dagym
           </Modal.Header>
           <main>
+=======
+>>>>>>> dev
             <p className="mt-5 text-center">로그인이 필요한 서비스입니다.</p>
             <input
               type="text"
@@ -23,7 +26,11 @@ export default function LoginModal() {
               className="border-1 border-gray-800"
               autoFocus
             />
+<<<<<<< feat/#48/create-dagym
           </main>
+=======
+          </Modal.Header>
+>>>>>>> dev
           <Modal.Footer>
             {/* 버튼 공통 컴포넌트로 교체 */}
             <button onClick={modal.close}>취소</button>

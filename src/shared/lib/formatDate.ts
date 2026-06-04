@@ -1,4 +1,7 @@
 import { format } from "date-fns";
+import { formatInTimeZone, toZonedTime } from "date-fns-tz";
+
+const KST = "Asia/Seoul";
 
 /**
  * 2026.05.18 형식으로 날짜 포맷팅
@@ -7,7 +10,9 @@ import { format } from "date-fns";
  */
 export function formatDate(date: string | null) {
   if (!date) return "";
-  return format(new Date(date), "yyyy.MM.dd");
+  const d = new Date(date);
+  if (isNaN(d.getTime())) return "";
+  return formatInTimeZone(d, KST, "yyyy.MM.dd");
 }
 
 /**
@@ -20,7 +25,11 @@ export function formatRelativeDate(date: string | null) {
 
   const now = new Date();
   const target = new Date(date);
+  if (isNaN(target.getTime())) return "";
   const diffMs = now.getTime() - target.getTime();
+
+  if (diffMs < 0) return formatDate(date); // 미래면 그냥 날짜로 표시
+
   const diffMin = Math.floor(diffMs / 1000 / 60);
   const diffHour = Math.floor(diffMin / 60);
 
@@ -28,4 +37,52 @@ export function formatRelativeDate(date: string | null) {
   if (diffMin < 60) return `${diffMin}분 전`;
   if (diffHour < 24) return `${diffHour}시간 전`;
   return formatDate(date);
+}
+
+/**
+ * M월 d일 형식으로 날짜 포맷팅
+ */
+export function formatMonthDay(date: string | null) {
+  if (!date) return "";
+  const d = new Date(date);
+  if (isNaN(d.getTime())) return "";
+  return formatInTimeZone(d, KST, "M월 d일");
+}
+
+/**
+ * HH:mm 형식으로 시간 포맷팅
+ */
+export function formatTime(date: string | null) {
+  if (!date) return "";
+  const d = new Date(date);
+  if (isNaN(d.getTime())) return "";
+  return formatInTimeZone(d, KST, "HH:mm");
+}
+
+/**
+ * 마감일 포맷팅
+ * 마감: "마감"
+ * 오늘 마감: "오늘 21시 마감"
+ * 내일 마감: "내일 마감"
+ * 이후 마감: "13일 후 마감"
+ */
+export function formatDeadline(date: string | null) {
+  if (!date) return "";
+
+  const now = new Date();
+  const target = new Date(date);
+  if (isNaN(target.getTime())) return "";
+
+  if (target.getTime() < now.getTime()) return "마감";
+
+  const nowKST = toZonedTime(now, KST);
+  const targetKST = toZonedTime(target, KST);
+
+  const todayMidnight = new Date(nowKST.getFullYear(), nowKST.getMonth(), nowKST.getDate());
+  const targetMidnight = new Date(targetKST.getFullYear(), targetKST.getMonth(), targetKST.getDate());
+  const diffDays = Math.round((targetMidnight.getTime() - todayMidnight.getTime()) / 86_400_000);
+
+  if (diffDays === 0) return `오늘 ${format(targetKST, "H")}시 마감`;
+  if (diffDays === 1) return "내일 마감";
+  return `${diffDays}일 후 마감`;
 }

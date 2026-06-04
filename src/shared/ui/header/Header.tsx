@@ -9,8 +9,8 @@ import ProfileIcon from "./ProfileIcon";
 
 export default function Header() {
   const NAV_ITEMS = [
-    { label: "다짐 보기", href: "/gym" },
-    { label: "찜한 다짐", href: "/class" },
+    { label: "다짐 보기", href: "/dagym" },
+    { label: "찜한 다짐", href: "/favorite" },
     { label: "모든 리뷰", href: "/review" },
     { label: "다짐 토크", href: "/talk" },
   ];
@@ -18,7 +18,7 @@ export default function Header() {
   const isLogin = true;
   return (
     <>
-      <header className="relative flex items-center justify-between bg-white p-6 md:mb-7">
+      <header className="relative flex items-center justify-between p-6 md:mb-7">
         <div className="header-wrap md:hidden">{isLogin && <ProfileIcon />}</div>
         <div className="header-wrap flex items-center">
           <Link

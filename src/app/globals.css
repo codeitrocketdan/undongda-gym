@@ -238,3 +238,20 @@ select:-webkit-autofill {
   -webkit-text-fill-color: #111827;
   transition: background-color 9999s ease-in-out 0s;
 }
+
+button {
+  cursor: pointer;
+}
+
+@utility bg-gradient-blue-500 {
+  background: linear-gradient(135deg, #2099fd, #08ddf0);
+}
+
+@utility bg-gradient-blue-200 {
+  background: linear-gradient(135deg, #d3f5ff, #edfff5);
+}
+
+@utility inner {
+  padding-inline: 1.5rem;
+  padding-bottom: 4rem;
+}

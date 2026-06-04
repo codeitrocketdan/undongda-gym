@@ -9,7 +9,11 @@ export default function CloseButton({ className }: Props) {
   // 내부 컴포넌트에서는 context 사용
   const { onClose } = useModalContext();
   return (
+<<<<<<< feat/#48/create-dagym
     <button type="button" className={`${className} cursor-pointer self-end`} onClick={onClose}>
+=======
+    <button className={`${className} self-end`} onClick={onClose}>
+>>>>>>> dev
       <X />
     </button>
   );
