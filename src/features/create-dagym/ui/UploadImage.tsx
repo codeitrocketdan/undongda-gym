@@ -15,12 +15,12 @@ export default function UploadImage() {
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setValue("attachedImage", file);
+      setValue("image", file);
       setImagePreview(URL.createObjectURL(file));
     }
   };
 
-  const { ref: registerRef } = register("attachedImage");
+  const { ref: registerRef } = register("image"); // 추후 저장된 이미지 url로 변경 예정
 
   return (
     <div className="flex flex-col gap-2">

@@ -1,13 +1,14 @@
 import Button from "@/shared/ui/button/Button";
 
 interface StepButtonsProps {
-  formId: string; // 💡 여기에 타입을 추가해 줍니다!
+  formId: string;
   currentStep: number;
   totalSteps: number;
   onPrev: () => void;
   onNext: () => void;
   onClose: () => void;
   isNextDisabled: boolean;
+  onSubmit: () => void;
 }
 
 export default function StepButtons({
@@ -18,6 +19,7 @@ export default function StepButtons({
   onNext,
   onClose,
   isNextDisabled,
+  onSubmit,
 }: StepButtonsProps) {
   const isLastStep = currentStep === totalSteps;
   return (
@@ -33,7 +35,13 @@ export default function StepButtons({
       )}
 
       {isLastStep ? (
-        <Button variant="primary" type="submit" form={formId}>
+        <Button
+          variant="primary"
+          type="button"
+          form={formId}
+          onClick={onSubmit}
+          isDisabled={isNextDisabled}
+        >
           만들기
         </Button>
       ) : (

@@ -14,6 +14,22 @@ export default function SetDate() {
 
   const [date, setDate] = useState<Date>();
   const [time, setTime] = useState<string>("");
+  const [capacityMessage, setCapacityMessage] = useState("");
+
+  const handleCapacityBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    const value = Number(e.target.value);
+
+    if (value < 2) {
+      setValue("capacity", 2);
+      setCapacityMessage("모집 정원은 최소 3명 부터 설정 가능합니다.");
+    } else if (value > 20) {
+      setValue("capacity", 20);
+      setCapacityMessage("모집 정원은 최대 20명까지 설정 가능합니다.");
+    } else {
+      setValue("capacity", value);
+      setCapacityMessage("");
+    }
+  };
 
   // react-hook-form으로 dateTime에 넣어주는 코드
   useEffect(() => {
@@ -36,12 +52,17 @@ export default function SetDate() {
         </div>
       </InputField>
 
-      <InputField label="모집 정원" htmlFor="capacity">
+      <InputField label="모집 정원" htmlFor="capacity" error={capacityMessage}>
         <Input
           type="number"
           id="capacity"
           placeholder="숫자만 입력해주세요."
-          {...register("capacity", { valueAsNumber: true })}
+          min="2"
+          max="20"
+          {...register("capacity", {
+            valueAsNumber: true,
+            onBlur: handleCapacityBlur,
+          })}
         />
       </InputField>
       {/* <button onClick={handleSubmit}>[콘솔에 찍어보기]</button> */}

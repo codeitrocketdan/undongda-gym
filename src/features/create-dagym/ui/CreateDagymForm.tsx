@@ -22,11 +22,12 @@ interface DagymFormData {
   description: string;
   dateTime: Date;
   registrationEnd: Date;
+  capacity: number;
 }
 
 export default function CreateDagymForm() {
   const modal = useModal();
-  const [step, setStep] = useState(2);
+  const [step, setStep] = useState(1);
   const totalSteps = 4;
 
   const methods = useForm<DagymFormData>({
@@ -42,21 +43,38 @@ export default function CreateDagymForm() {
       description: "",
       dateTime: undefined,
       registrationEnd: undefined,
+      capacity: 2,
     },
   });
   const { watch } = methods;
 
   const currentCategories = watch("type");
   const currentTitle = watch("name");
+  const currentRegion = watch("region");
   const currentAddress = watch("address");
   const currentAttachedImage = watch("image");
+  const currentdescription = watch("description");
+  const currentDateTime = watch("dateTime");
+  const currentCapacity = watch("capacity");
+  //console.log("와치", watch());
 
   const isNextDisabled = () => {
     if (step === 1) {
       return !currentCategories || currentCategories.length === 0;
     }
     if (step === 2) {
-      return !currentTitle || !currentAddress || !currentAttachedImage;
+      return (
+        !currentTitle ||
+        !currentAttachedImage ||
+        !currentRegion ||
+        (currentRegion === "지점 외 장소" && !currentAddress)
+      );
+    }
+    if (step === 3) {
+      return !currentdescription;
+    }
+    if (step === 4) {
+      return !currentDateTime || !currentCapacity;
     }
 
     return false; // 기본값은 활성화
@@ -91,9 +109,9 @@ export default function CreateDagymForm() {
     try {
       let finalImageUrl = "";
       if (data.image) {
-        console.log("📸 스토리지 이미지 업로드 시작...");
+        console.log("스토리지 이미지 업로드 시작...");
         finalImageUrl = await uploadImageToStorage({ file: data.image });
-        console.log("✅ 스토리지 이미지 업로드 성공! URL:", finalImageUrl);
+        console.log("스토리지 이미지 업로드 성공! URL:", finalImageUrl);
       }
 
       const submitData = {
@@ -156,6 +174,7 @@ export default function CreateDagymForm() {
             onNext={handleNext}
             onClose={modal.close}
             isNextDisabled={isNextDisabled()}
+            onSubmit={methods.handleSubmit(onSubmit)}
           />
         </Modal.Footer>
       </Modal>
