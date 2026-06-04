@@ -12,28 +12,63 @@ import UploadImage from "./UploadImage";
 const centerLists = ["강남", "판교", "마곡", "광교", "동탄", "성수", "용산"];
 export default function SetInfo() {
   const { register, setValue, watch } = useFormContext();
-  const currentCenter = watch("dagymCenter") || "default";
+  const currentRegion = watch("region") || "default";
   const currentAddress = watch("address");
-  const [detailAddress, setDetailAddress] = useState("");
+  const [isMapScriptLoaded, setIsMapScriptLoaded] = useState(false);
 
   const { isPostcodeOpen, postcodeContainerRef, handleScriptLoad, openPostcode, closePostcode } =
     useKakaoPostcode({
-      onCompleteAddress: (fullAddress) => setValue("address", fullAddress),
+      onCompleteAddress: (currentAddress) => {
+        // 기존 react-hook-form(추정)에 주소 텍스트 저장
+        setValue("address", currentAddress);
+
+        console.log("[현재 상태 디버깅 시작]");
+        console.log("- 주소 텍스트:", currentAddress);
+        console.log("- 스크립트 로드 상태(isMapScriptLoaded):", isMapScriptLoaded);
+        console.log("- window 존재 여부:", typeof window !== "undefined");
+        console.log("- kakao 객체 존재 여부:", typeof window !== "undefined" && !!window.kakao);
+        console.log(
+          "- kakao.maps 존재 여부:",
+          typeof window !== "undefined" && window.kakao && !!window.kakao.maps
+        );
+        console.log("[현재 상태 디버깅 끝]");
+
+        // 위도+경도 추가 작업
+        if (
+          isMapScriptLoaded &&
+          typeof window !== "undefined" &&
+          window.kakao &&
+          window.kakao.maps
+        ) {
+          window.kakao.maps.load(() => {
+            const geocoder = new window.kakao.maps.services.Geocoder();
+
+            // 받아온 주소로 위경도 검색
+            geocoder.addressSearch(currentAddress, (result, status) => {
+              if (status === window.kakao.maps.services.Status.OK) {
+                const lat = parseFloat(result[0].y); // 위도
+                const lng = parseFloat(result[0].x); // 경도
+
+                console.log("🔥 [테스트 성공] 위경도 추출 완료!");
+                console.log("위도(lat):", lat);
+                console.log("경도(lng):", lng);
+
+                setValue("latitude", lat);
+                setValue("longitude", lng);
+              } else {
+                console.error("주소는 가져왔으나 카카오맵 위경도 변환에 실패했습니다.");
+              }
+            });
+          });
+        }
+      },
     });
 
   const handleCenterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selected = e.target.value;
-    setValue("dagymCenter", selected);
-
-    if (selected === "address") {
-      // '지점 외 장소'를 누르면 기존 주소값을 비워줌
-      setValue("address", "지점 외 장소");
-    } else {
-      // 일반 지점("강남" 등)을 누르면 지점 이름을 address 값으로 설정
-      setValue("address", `${selected}점`);
-    }
+    setValue("region", selected);
   };
-  console.log("currentAddress", currentAddress);
+
   return (
     <div className="set-info">
       {/* 주소 검색 */}
@@ -42,6 +77,13 @@ export default function SetInfo() {
         strategy="lazyOnload"
         onLoad={handleScriptLoad}
       />
+      <Script
+        src={`https://dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_MAP_JS_KEY}&libraries=services&autoload=false`}
+        strategy="lazyOnload"
+        onLoad={() => {
+          setIsMapScriptLoaded(true);
+        }}
+      />
 
       {/* 모임 이름 */}
       <InputField label="다짐 이름" htmlFor="dagymName">
@@ -49,7 +91,7 @@ export default function SetInfo() {
           type="text"
           id="dagymName"
           placeholder="다짐 이름을 입력해주세요"
-          {...register("title")}
+          {...register("name")}
         ></Input>
       </InputField>
 
@@ -59,12 +101,12 @@ export default function SetInfo() {
         <select
           id="dagymCenter"
           //name="dagymCenter"
-          value={currentCenter}
+          value={currentRegion}
           //onChange={(e) => setCenterValue(e.target.value)}
           onChange={handleCenterChange}
           className={clsx(
             "w-full rounded-xl border border-transparent bg-gray-50 p-3 outline-none focus:border-blue-500",
-            currentCenter === "default" ? "text-gray-400" : "text-inherit"
+            currentRegion === "default" ? "text-gray-400" : "text-inherit"
           )}
         >
           <option disabled hidden value="default">
@@ -77,14 +119,14 @@ export default function SetInfo() {
               </option>
             );
           })}
-          <option value="address" className="text-gray-800">
+          <option value="지점 외 장소" className="text-gray-800">
             지점 외 장소
           </option>
         </select>
       </InputField>
 
       {/* 주소 검색 */}
-      {currentCenter === "address" && (
+      {currentRegion === "지점 외 장소" && (
         <>
           <InputField label="주소" htmlFor="address">
             <div className="relative">
@@ -92,10 +134,10 @@ export default function SetInfo() {
                 type="text"
                 id="address"
                 placeholder="건물, 지번 또는 도로명 검색"
-                // value={address}
                 value={currentAddress || ""}
                 onClick={openPostcode}
                 readOnly
+                {...register("address")}
               />
               <MapPin className="absolute top-1/2 right-3 -translate-y-1/2 text-gray-800" />
             </div>
@@ -105,7 +147,7 @@ export default function SetInfo() {
               type="text"
               id="addressDetail"
               placeholder="상세주소"
-              onChange={(e) => setDetailAddress(e.target.value)}
+              {...register("addressDetail")}
             />
           </InputField>
         </>
@@ -124,7 +166,7 @@ export default function SetInfo() {
               이전
             </button>
           </div>
-          {/* 6. 카카오 UI가 주입될 Ref 연결 */}
+          {/* 카카오 UI가 주입될 Ref 연결 */}
           <div ref={postcodeContainerRef} className="w-full flex-1" />
         </div>
       )}

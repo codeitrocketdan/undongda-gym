@@ -13,12 +13,7 @@ const mockOptions = [
 ];
 export default function SetCategories() {
   const { register, watch } = useFormContext();
-  const selectedValue = watch("category");
-
-  //const [selectedValue, setSelectedValue] = useState("");
-  //   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //     setSelectedValue(e.target.value);
-  //   };
+  const selectedValue = watch("type");
 
   return (
     <div className="select-category">
@@ -33,11 +28,9 @@ export default function SetCategories() {
               <label key={item.name} className="cursor-pointer">
                 <input
                   type="radio"
-                  //name="dagymCategory"
                   value={item.name}
                   checked={selectedValue === item.name}
-                  //onChange={handleChange}
-                  {...register("category")}
+                  {...register("type")}
                   className="peer sr-only"
                 />
                 <div className="flex h-34 w-34 flex-col items-center justify-center gap-2 rounded-xl border-gray-200 bg-gray-100 peer-checked:border-blue-400 peer-checked:bg-blue-200">

@@ -1,16 +1,31 @@
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
-  const formData = await request.formData();
+  try {
+    const bodyData = await request.json();
+    const authHeader = request.headers.get("Authorization") || ""; // 헤더 토큰 추출
+    const backendResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/meetings`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: authHeader, // 백엔드에게 헤더 토큰 패스
+      },
+      body: JSON.stringify(bodyData),
+    });
 
-  const backendResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/meetings`, {
-    method: "POST",
-    body: formData,
-    headers: {
-      // 필요한 경우 백엔드 전용 인증 토큰(Secret Key) 등
-    },
-  });
+    if (!backendResponse.ok) {
+      const errorData = await backendResponse.json().catch(() => ({}));
+      return NextResponse.json(
+        { error: "dalaem 백엔드 서버에서 요청을 거부했습니다.", details: errorData },
+        { status: backendResponse.status }
+      );
+    }
 
-  const data = await backendResponse.json();
-  return NextResponse.json(data);
+    const data = await backendResponse.json();
+    return NextResponse.json(data);
+  } catch (error) {
+    console.error("Next.js meetings 라우트 에러:", error);
+    return NextResponse.json({ error: "Next.js 서버 내부 에러가 발생했습니다." }, { status: 500 });
+  }
 }
