@@ -38,10 +38,11 @@ const iconVariants = cva(
 interface PropsType {
   children: React.ReactElement<{ className?: string }>;
   size: SizeType;
-  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  onClick: React.MouseEventHandler<HTMLButtonElement>;
   isDisabled?: boolean;
   className?: string;
   iconClassName?: string;
+  ariaLabel?: string;
 }
 
 const IconButton = ({
@@ -51,17 +52,26 @@ const IconButton = ({
   isDisabled,
   className,
   iconClassName,
+  ariaLabel,
 }: PropsType) => {
   // 아이콘 버튼 클래스 병합
-  const iconButtonClasses = twMerge(clsx(iconVariants({ size, isDisabled }), className));
+  const iconButtonClasses = twMerge(
+    clsx(iconVariants({ size, isDisabled }), className)
+  );
 
   // 아이콘 크기 적용
   const icon = React.isValidElement(children)
-    ? cloneElement(children, { className: twMerge(iconSizes[size], iconClassName) })
+    ? cloneElement(children, {
+        className: twMerge(iconSizes[size], iconClassName),
+      })
     : children;
 
   return (
-    <button onClick={onClick} className={iconButtonClasses}>
+    <button
+      onClick={onClick}
+      className={iconButtonClasses}
+      aria-label={ariaLabel}
+    >
       {icon}
     </button>
   );

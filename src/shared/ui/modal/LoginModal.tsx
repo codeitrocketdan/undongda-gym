@@ -1,13 +1,15 @@
 "use client";
 import Modal from "./Modal";
+import { useModal } from "./useModal";
 
 export default function LoginModal() {
-  const modal = Modal.useModal();
+  const modal = useModal();
   return (
     <>
       <button onClick={modal.open} className="bg-blue-400">
         모달 열기
       </button>
+
       {modal.isOpen && (
         <Modal onClose={modal.close} isClickToClose={true}>
           <Modal.Header>
