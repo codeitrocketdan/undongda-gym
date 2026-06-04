@@ -23,8 +23,12 @@ async function request(path: string, { headers, ...options }: RequestOptions = {
   });
 
   if (!response.ok) {
-    const error: HttpError = new Error(`HTTP error! status: ${response.status}`);
+    const errorData = await response.json();
+    console.log("STATUS", response.status);
+    const error: HttpError = new Error(errorData.message || "요청에 실패했습니다.");
+
     error.status = response.status;
+
     throw error;
   }
 
@@ -47,7 +51,7 @@ export async function post<T>(path: string, data: T, options: RequestOptions = {
     body: JSON.stringify(data),
   });
 }
-
+// PUT 요청
 export async function put<T>(path: string, data: T, options: RequestOptions = {}) {
   return request(path, {
     ...options,
