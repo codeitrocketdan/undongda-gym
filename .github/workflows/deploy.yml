@@ -15,8 +15,10 @@ jobs:
 
       # 2. 내 개인 Fork 레포지토리로 코드를 강제 push(동기화)합니다.
       - name: Push to Fork Repo
-        uses: mikeal/publish-to-github-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.ROCKETDANTOKEN }}
-          BRANCH: dev
-          REPOSITORY: handy-o/undongda-gym
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+          git remote add fork https://x-access-token:${{ secrets.ROCKETDANTOKEN }}@github.com/handy-o/undongda-gym.git
+
+          git push fork dev --force
