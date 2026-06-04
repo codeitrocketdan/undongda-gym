@@ -9,7 +9,7 @@ interface SearchBarProps {
 
 export default function SearchBar({ value, onChange, onSearch, placeholder = "" }: SearchBarProps) {
   return (
-    <label className="flex h-11 w-full cursor-text items-center rounded-full bg-slate-100 pr-3 pl-4">
+    <label className="flex h-11 w-full cursor-text items-center rounded-full bg-slate-200 pr-3 pl-4">
       <input
         type="text"
         value={value}

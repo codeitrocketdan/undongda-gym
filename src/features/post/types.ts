@@ -1,7 +1,4 @@
-/**
- * Swagger Post 스키마 1대1 대응 DTO
- * GET /{teamId}/posts 응답 타입
- */
+// Swagger PostWithAuthor 스키마 1대1 대응 DTO
 export interface PostDTO {
   id: number;
   teamId: string;
@@ -23,9 +20,18 @@ export interface PostDTO {
   };
 }
 
-/**
- * PostCard 컴포넌트에 필요한 타입
- */
+// GET /{teamId}/posts 응답
+export interface PostListResponse {
+  data: PostDTO[];
+  nextCursor: string | null;
+  hasMore: boolean;
+  totalCount?: number;
+  currentOffset?: number;
+  limit?: number;
+  totalViewCount?: number;
+}
+
+// PostCard 컴포넌트 props
 export interface PostCardProps {
   id: number;
   title: string;
@@ -40,9 +46,7 @@ export interface PostCardProps {
   commentCount: number;
 }
 
-/**
- * HotPostCard 컴포넌트에 필요한 타입
- */
+// HotPostCard 컴포넌트 props
 export interface HotPostCardProps {
   id: number;
   title: string;

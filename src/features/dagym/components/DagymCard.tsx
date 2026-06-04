@@ -8,6 +8,7 @@ import Button from "@/shared/ui/button/Button";
 import FeedCard from "@/shared/ui/feed-card/FeedCard";
 import { HeartButton } from "@/shared/ui/heart-button/HeartButton";
 import ProgressBar from "@/shared/ui/progress-bar/ProgressBar";
+import Skeleton from "@/shared/ui/skeleton/Skeleton";
 import StatusLabel from "@/shared/ui/status-label/StatusLabel";
 import Tag from "@/shared/ui/tag/Tag";
 import { MapPin, User } from "lucide-react";
@@ -163,5 +164,31 @@ export default function DagymCard({
         </div>
       </FeedCard>
     </Link>
+  );
+}
+
+// 로딩시 스켈레톤
+export function DagymCardSkeleton() {
+  return (
+    <div className="overflow-hidden rounded-3xl bg-white md:rounded-4xl">
+      <div className="flex flex-col md:hidden">
+        <Skeleton className="h-48 w-full rounded-none" />
+        <div className="flex flex-col gap-3 p-4">
+          <Skeleton className="h-5 w-2/3" />
+          <Skeleton className="h-4 w-1/2" />
+          <Skeleton className="h-3 w-full" />
+          <Skeleton className="h-8 w-20 self-end" />
+        </div>
+      </div>
+      <div className="relative hidden h-55 gap-4 p-6 md:flex">
+        <Skeleton className="h-42.5 w-42.5 shrink-0 rounded-3xl" />
+        <div className="flex flex-1 flex-col justify-between py-4">
+          <Skeleton className="h-6 w-2/3" />
+          <Skeleton className="h-4 w-1/2" />
+          <Skeleton className="h-3 w-full" />
+          <Skeleton className="h-8 w-20 self-end" />
+        </div>
+      </div>
+    </div>
   );
 }

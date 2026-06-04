@@ -1,7 +1,4 @@
-/**
- * Swagger ReviewWithDetails 스키마 1대1 대응 DTO
- * GET /{teamId}/reviews 응답 타입
- */
+// Swagger ReviewWithDetails 스키마 1대1 대응 DTO
 export interface ReviewDTO {
   id: number;
   teamId: string;
@@ -27,9 +24,14 @@ export interface ReviewDTO {
   };
 }
 
-/**
- * ReviewCard 컴포넌트 props 타입
- */
+// GET /{teamId}/reviews 응답 (커서 기반, totalCount 없음)
+export interface ReviewListResponse {
+  data: ReviewDTO[];
+  nextCursor: string | null;
+  hasMore: boolean;
+}
+
+// ReviewCard 컴포넌트 props
 export interface ReviewCardProps {
   score: number;
   comment: string;
