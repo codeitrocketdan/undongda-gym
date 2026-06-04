@@ -30,6 +30,8 @@ export function Pagination({
     <div className={twMerge("flex items-center gap-1 text-sm", className)}>
       {/* 이전 버튼 */}
       <button
+        type="button"
+        aria-label="이전 페이지"
         onClick={goPrev}
         className={twMerge(
           "flex h-8 w-8 cursor-pointer items-center justify-center rounded text-slate-400 hover:bg-slate-200",
@@ -43,6 +45,7 @@ export function Pagination({
       {pages.map((page) => (
         <button
           key={page}
+          type="button"
           onClick={() => goTo(page)}
           aria-label={`${page}페이지`}
           aria-current={currentPage === page ? "page" : undefined}
@@ -59,6 +62,8 @@ export function Pagination({
 
       {/* 다음 버튼 */}
       <button
+        type="button"
+        aria-label="다음 페이지"
         onClick={goNext}
         className={twMerge(
           "flex h-8 w-8 cursor-pointer items-center justify-center rounded text-slate-400 hover:bg-slate-200",
