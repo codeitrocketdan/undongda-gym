@@ -122,16 +122,19 @@ export default function CreateDagymForm() {
         addressDetail: data.addressDetail,
         latitude: data.latitude,
         longitude: data.longitude,
+        image: finalImageUrl, // File 객체 대신 최종 발급받은 publicUrl 주소 대입!
         description: data.description,
         dateTime: data.dateTime,
         registrationEnd: data.registrationEnd,
-        image: finalImageUrl, // 🌟 File 객체 대신 최종 발급받은 publicUrl 주소 대입!
+        capacity: data.capacity,
       };
 
+      const accessToken = localStorage.getItem("accessToken");
       const response = await fetch("/api/meetings", {
         method: "POST",
         headers: {
           "Content-Type": "application/json", // JSON 전송 명시
+          Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify(submitData),
       });

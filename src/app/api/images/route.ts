@@ -23,9 +23,8 @@ export async function POST(request: Request) {
     });
 
     if (!backendResponse.ok) {
-      const errorText = await backendResponse.text();
       return NextResponse.json(
-        { error: `dalaem 백엔드 서버 에러: ${errorText}` },
+        { error: "이미지 업로드 요청 처리 중 오류가 발생했습니다." },
         { status: backendResponse.status }
       );
     }

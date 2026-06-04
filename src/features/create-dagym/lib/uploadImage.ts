@@ -12,6 +12,8 @@ export const uploadImageToStorage = async ({ file }: UploadImageParams): Promise
       },
       body: JSON.stringify({
         fileName: file.name,
+        contentType: file.type,
+        folder: "meetings",
       }),
     });
 
