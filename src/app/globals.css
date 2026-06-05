@@ -239,11 +239,11 @@ select:-webkit-autofill {
   transition: background-color 9999s ease-in-out 0s;
 }
 
-@utility bg-gradient-blue-500 {
+@utility gradient-blue {
   background: linear-gradient(135deg, #2099fd, #08ddf0);
 }
 
-@utility bg-gradient-blue-200 {
+@utility gradient-blue-light {
   background: linear-gradient(135deg, #d3f5ff, #edfff5);
 }
 

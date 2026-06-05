@@ -67,15 +67,7 @@ export default function FavoriteSection() {
         params.set("sortOrder", sortOrder);
         params.set("size", "10");
         if (pageParam) params.set("cursor", pageParam as string);
-        // TODO: 로그인 구현 후 토큰 교체
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/favorites?${params}`,
-          {
-            headers: {
-              Authorization: `Bearer ${process.env.NEXT_PUBLIC_TEMP_TOKEN ?? ""}`,
-            }, // TODO: 로그인 구현 후 쿠키에서 토큰 읽도록 교체
-          }
-        );
+        const res = await fetch(`/api/favorites?${params}`);
         return res.json();
       },
       getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,

@@ -2,7 +2,9 @@ interface UploadImageParams {
   file: File;
 }
 
-export const uploadImageToStorage = async ({ file }: UploadImageParams): Promise<string> => {
+export const uploadImageToStorage = async ({
+  file,
+}: UploadImageParams): Promise<string> => {
   try {
     // Next.js API 라우터(/api/images)에게 Presigned URL 발급 요청 (POST)
     const tokenResponse = await fetch("/api/images", {
@@ -10,6 +12,7 @@ export const uploadImageToStorage = async ({ file }: UploadImageParams): Promise
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
       body: JSON.stringify({
         fileName: file.name,
         contentType: file.type,
@@ -18,7 +21,9 @@ export const uploadImageToStorage = async ({ file }: UploadImageParams): Promise
     });
 
     if (!tokenResponse.ok) {
-      throw new Error(`Next.js 서버에서 URL 발급 실패: ${tokenResponse.statusText}`);
+      throw new Error(
+        `Next.js 서버에서 URL 발급 실패: ${tokenResponse.statusText}`
+      );
     }
 
     const { presignedUrl, publicUrl } = await tokenResponse.json(); // supabase url, https://~.jpg
