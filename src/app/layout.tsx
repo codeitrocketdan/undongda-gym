@@ -32,7 +32,7 @@ export default async function RootLayout({
             <AuthHydration>
               <AuthProvider>
                 <Header />
-                <div className="mx-auto w-full max-w-[1280px]">{children}</div>
+                <div className="mx-auto w-full max-w-7xl">{children}</div>
                 <Script src="https://accounts.google.com/gsi/client" />
               </AuthProvider>
             </AuthHydration>

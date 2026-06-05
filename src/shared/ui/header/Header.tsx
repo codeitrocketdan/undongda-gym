@@ -21,7 +21,8 @@ export default function Header() {
   const isLogin = !!user;
   return (
     <>
-      <header className="relative flex items-center justify-between p-6 md:mb-7">
+      <header className="relative md:mb-7">
+        <div className="mx-auto flex w-full max-w-7xl items-center justify-between p-6">
         <div className="header-wrap md:hidden">
           {isLogin && <ProfileIcon />}
         </div>
@@ -68,6 +69,7 @@ export default function Header() {
           </div>
 
           <MobileMenu navItems={NAV_ITEMS} />
+        </div>
         </div>
       </header>
 
