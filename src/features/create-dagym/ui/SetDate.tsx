@@ -19,8 +19,8 @@ export default function SetDate() {
   const handleCapacityBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     const value = Number(e.target.value);
 
-    if (value < 2) {
-      setValue("capacity", 2);
+    if (value < 3) {
+      setValue("capacity", 3);
       setCapacityMessage("모집 정원은 최소 3명 부터 설정 가능합니다.");
     } else if (value > 20) {
       setValue("capacity", 20);
@@ -37,7 +37,10 @@ export default function SetDate() {
       return;
     }
     const formattedDateTime = toISOStringFromLocal(date, time);
-    const formattedRegistrationEnd = toISOStringFromLocal(subDays(date, 1), "23:59");
+    const formattedRegistrationEnd = toISOStringFromLocal(
+      subDays(date, 1),
+      "23:59"
+    );
 
     setValue("dateTime", formattedDateTime);
     setValue("registrationEnd", formattedRegistrationEnd);
@@ -57,7 +60,7 @@ export default function SetDate() {
           type="number"
           id="capacity"
           placeholder="숫자만 입력해주세요."
-          min="2"
+          min="3"
           max="20"
           {...register("capacity", {
             valueAsNumber: true,
