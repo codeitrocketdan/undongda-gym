@@ -29,7 +29,7 @@ export default function ReviewStats({
   ];
 
   return (
-    <div className="bg-gradient-blue-200 mt-4 flex justify-around rounded-3xl px-6 py-6 md:mt-6 md:rounded-4xl md:py-10 lg:mt-8">
+    <div className="gradient-blue-light mt-4 flex justify-around rounded-3xl px-6 py-6 md:mt-6 md:rounded-4xl md:py-10 lg:mt-8">
       {/* 왼쪽: 평균 점수 */}
       <div className="flex flex-col items-center justify-center md:w-96">
         <span className="text-2xl-bold md:text-display-md-bold mb-1">

@@ -12,7 +12,7 @@ export default function ProgressBar({
   return (
     <div className="h-1.25 w-full overflow-hidden rounded-[10px] bg-slate-200">
       <div
-        className="bg-gradient-blue-500 h-full rounded-[10px]"
+        className="gradient-blue h-full rounded-[10px]"
         style={{ width: `${percent}%` }}
       />
     </div>
