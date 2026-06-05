@@ -1,5 +1,9 @@
-import { serverFetcher } from "@/shared/lib/auth/serverFetcher";
-import { HydrationBoundary, QueryClient, dehydrate } from "@tanstack/react-query";
+import { authServerFetch } from "@/shared/lib/auth/authServerFetch";
+import {
+  HydrationBoundary,
+  QueryClient,
+  dehydrate,
+} from "@tanstack/react-query";
 
 interface User {
   id: number;
@@ -12,15 +16,23 @@ interface User {
   updateAt: string;
 }
 
-export default async function AuthHydration({ children }: { children: React.ReactNode }) {
+export default async function AuthHydration({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const queryClient = new QueryClient();
 
-  const user = await serverFetcher<User>("/users/me");
+  const user = await authServerFetch<User>("/users/me");
 
   await queryClient.prefetchQuery({
     queryKey: ["user"],
     queryFn: () => user,
   });
 
-  return <HydrationBoundary state={dehydrate(queryClient)}>{children}</HydrationBoundary>;
+  return (
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      {children}
+    </HydrationBoundary>
+  );
 }

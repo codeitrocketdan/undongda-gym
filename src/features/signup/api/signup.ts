@@ -1,4 +1,4 @@
-import { post } from "@/shared/lib/fetch";
+import { post } from "@/shared/lib/server-fetch";
 import { SignupFormValues } from "../model/types";
 
 export const signup = async (signupData: SignupFormValues) => {

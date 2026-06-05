@@ -54,6 +54,7 @@ export async function post<T>(
     body: JSON.stringify(data),
   });
 }
+
 // PUT 요청
 export async function put<T>(
   path: string,
@@ -66,6 +67,7 @@ export async function put<T>(
     body: JSON.stringify(data),
   });
 }
+
 // PATCH 요청
 export async function patch<T>(
   path: string,

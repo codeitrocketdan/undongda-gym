@@ -6,7 +6,10 @@ interface RequestOptions extends Omit<RequestInit, "headers"> {
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
 
-export const serverFetcher = async <T>(path: string, options: RequestOptions = {}): Promise<T> => {
+export const authServerFetch = async <T>(
+  path: string,
+  options: RequestOptions = {}
+): Promise<T> => {
   const cookieStore = await cookies();
 
   const accessToken = cookieStore.get("accessToken")?.value;
