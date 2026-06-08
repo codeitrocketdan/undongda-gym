@@ -44,7 +44,7 @@ export default function CreateDagymForm({ onClose }: useModalTypeProps) {
       description: "",
       dateTime: undefined,
       registrationEnd: undefined,
-      capacity: 2,
+      capacity: 3,
     },
   });
   const { watch } = methods;
