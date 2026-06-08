@@ -1,3 +1,4 @@
+"use client";
 import bannerPc from "@/shared/assets/images/banner_1024.png";
 import bannerMobile from "@/shared/assets/images/banner_360.png";
 import bannerTablet from "@/shared/assets/images/banner_768.png";
