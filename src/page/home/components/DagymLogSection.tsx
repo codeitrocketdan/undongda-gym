@@ -2,13 +2,10 @@
 import bannerPc from "@/shared/assets/images/banner_1024.png";
 import bannerMobile from "@/shared/assets/images/banner_360.png";
 import bannerTablet from "@/shared/assets/images/banner_768.png";
-import WeeklyCalendar from "@/shared/ui/calendar/WeeklyCalendar";
-import Image from "next/image";
-// import { useAuthStore } from "@/shared/store/authStore";
-import MonthlyCalendar from "@/shared/ui/calendar/MonthlyCalendar";
-import Modal from "@/shared/ui/modal/Modal";
-import { useModal } from "@/shared/ui/modal/useModal";
+import { MonthlyCalendar, WeeklyCalendar } from "@/shared/ui/calendar";
+import { Modal, useModal } from "@/shared/ui/modal";
 import { Bell, CalendarCheck } from "lucide-react";
+import Image from "next/image";
 
 export default function MainContent({ isLogin }: { isLogin: boolean }) {
   const modal = useModal();

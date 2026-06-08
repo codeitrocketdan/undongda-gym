@@ -1,8 +1,10 @@
 "use client";
 
-import DatePicker from "@/shared/ui/datePicker/DatePicker";
-import TimePicker from "@/shared/ui/datePicker/TimePicker";
-import { toISOStringFromLocal } from "@/shared/ui/datePicker/utils";
+import {
+  DatePicker,
+  TimePicker,
+  toISOStringFromLocal,
+} from "@/shared/ui/datePicker";
 import Input from "@/shared/ui/input/Input";
 import InputField from "@/shared/ui/input/InputFiled";
 import { subDays } from "date-fns";
