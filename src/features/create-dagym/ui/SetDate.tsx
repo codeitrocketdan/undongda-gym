@@ -1,5 +1,6 @@
 "use client";
 
+import { subDays } from "@/shared/lib/date";
 import {
   DatePicker,
   TimePicker,
@@ -7,7 +8,6 @@ import {
 } from "@/shared/ui/datePicker";
 import Input from "@/shared/ui/input/Input";
 import InputField from "@/shared/ui/input/InputFiled";
-import { subDays } from "date-fns";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 
