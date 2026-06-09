@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { twMerge } from "tailwind-merge";
 
 interface HeaderProps {
   children: ReactNode;
@@ -7,7 +8,9 @@ interface HeaderProps {
 
 export default function ModalHeader({ children, className }: HeaderProps) {
   return (
-    <div className={`modal-header mb-12 flex flex-col ${className ?? ""}`}>
+    <div
+      className={twMerge(`modal-header mb-12 flex flex-col ${className ?? ""}`)}
+    >
       {children}
     </div>
   );

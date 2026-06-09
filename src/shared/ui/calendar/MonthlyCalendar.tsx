@@ -1,6 +1,6 @@
 "use client";
 
-import { format, isSameDay, isSameMonth } from "date-fns";
+import { format, isSameDay, isSameMonth } from "@/shared/lib/date";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useRef, useState } from "react";
 import type { Swiper as SwiperType } from "swiper";
@@ -12,8 +12,19 @@ import { useCalendar } from "./useCalendar";
 
 const WEEKDAYS = ["일", "월", "화", "수", "목", "금", "토"];
 const MOCK_WORKOUT_DATA = {
-  completedDays: new Set(["2026-04-29", "2026-05-18", "2026-05-19", "2026-05-15", "2026-05-25"]),
-  reservedDays: new Set(["2026-05-21", "2026-05-23", "2026-05-25", "2026-05-28"]),
+  completedDays: new Set([
+    "2026-04-29",
+    "2026-05-18",
+    "2026-05-19",
+    "2026-05-15",
+    "2026-05-25",
+  ]),
+  reservedDays: new Set([
+    "2026-05-21",
+    "2026-05-23",
+    "2026-05-25",
+    "2026-05-28",
+  ]),
 };
 
 export default function MonthlyCalendar() {
@@ -102,7 +113,8 @@ export default function MonthlyCalendar() {
                   const isCurrentMonth = isSameMonth(date, slide.baseDate);
 
                   const isDone = MOCK_WORKOUT_DATA.completedDays.has(dateKey);
-                  const isReserved = MOCK_WORKOUT_DATA.reservedDays.has(dateKey);
+                  const isReserved =
+                    MOCK_WORKOUT_DATA.reservedDays.has(dateKey);
 
                   return (
                     <div

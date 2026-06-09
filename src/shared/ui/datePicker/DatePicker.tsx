@@ -1,7 +1,7 @@
 "use client";
+import { ko } from "@/shared/lib/date";
 import { DayPicker } from "@daypicker/react";
 import "@daypicker/react/style.css";
-import { ko } from "date-fns/locale";
 
 import { Calendar } from "lucide-react";
 import { useState } from "react";
@@ -10,7 +10,11 @@ import { DatePickerProps } from "./types";
 import { useDatePicker } from "./usePicker";
 import { formatDate } from "./utils";
 
-export default function DatePicker({ value, onChange, label }: DatePickerProps) {
+export default function DatePicker({
+  value,
+  onChange,
+  label,
+}: DatePickerProps) {
   // 컴포넌트 단독 사용 시 부모에서 관리x 내부값으로 설정
   const [innerValue, setInnerValue] = useState<Date>();
   const currentValue = value ?? innerValue;
@@ -41,7 +45,11 @@ export default function DatePicker({ value, onChange, label }: DatePickerProps) 
 
   return (
     <div className="relative w-64">
-      {label && <label className="mb-1 block text-sm font-semibold text-teal-700">{label}</label>}
+      {label && (
+        <label className="mb-1 block text-sm font-semibold text-teal-700">
+          {label}
+        </label>
+      )}
 
       {/* 날짜 입력 인풋 */}
       <div
@@ -86,7 +94,8 @@ export default function DatePicker({ value, onChange, label }: DatePickerProps) 
               }}
               // react-day-picker 내부 기능 특정 상태 class 지정
               classNames={{
-                selected: "bg-blue-500 text-white rounded-full hover:bg-blue-600",
+                selected:
+                  "bg-blue-500 text-white rounded-full hover:bg-blue-600",
                 today: "text-blue-500 font-bold",
                 chevron: "fill-gray-800",
               }}
