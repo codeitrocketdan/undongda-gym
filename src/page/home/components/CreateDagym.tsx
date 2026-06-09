@@ -14,7 +14,7 @@ export default function CreateDagym({ isLogin }: { isLogin: boolean }) {
   };
   return (
     <>
-      <CreateButton onClick={handleOpenModal}>모임 만들기</CreateButton>;
+      <CreateButton onClick={handleOpenModal}>모임 만들기</CreateButton>
       {modal.isOpen && <CreateDagymForm onClose={modal.close} />}
     </>
   );
