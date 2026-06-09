@@ -116,7 +116,7 @@ export default function CreateDagymForm({ onClose }: useModalTypeProps) {
       }
 
       const submitData = {
-        type: "웨이트",
+        type: data.type,
         name: data.name,
         region: data.region,
         address: data.address,
