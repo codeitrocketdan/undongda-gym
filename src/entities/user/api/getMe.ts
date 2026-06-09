@@ -1,15 +1,17 @@
+import { clientFetcher } from "@/shared/api/clientFetcher";
+import { ApiError } from "@/shared/api/types";
 import { User } from "../model/types";
 
 export const getMe = async (): Promise<User | null> => {
-  const response = await fetch("/api/users/me");
+  try {
+    const user = await clientFetcher.get<User>("/api/users/me");
 
-  if (response.status === 401) {
-    return null;
+    return user;
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 401) {
+      return null;
+    }
+
+    throw error;
   }
-
-  if (!response.ok) {
-    throw new Error("유저 정보 조회 실패");
-  }
-
-  return response.json();
 };

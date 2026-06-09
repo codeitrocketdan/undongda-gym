@@ -1,4 +1,4 @@
-import { authServerFetch } from "@/shared/lib/auth/authServerFetch";
+import { serverFetcher } from "@/shared/api/serverFetcher";
 import {
   HydrationBoundary,
   QueryClient,
@@ -23,13 +23,14 @@ export default async function AuthHydration({
 }) {
   const queryClient = new QueryClient();
 
-  const user = await authServerFetch<User>("/users/me");
-
-  await queryClient.prefetchQuery({
-    queryKey: ["user"],
-    queryFn: () => user,
-  });
-
+  try {
+    await queryClient.prefetchQuery({
+      queryKey: ["user"],
+      queryFn: () => serverFetcher.get<User>("/users/me"),
+    });
+  } catch {
+    queryClient.setQueryData(["user"], null);
+  }
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       {children}

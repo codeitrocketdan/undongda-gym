@@ -8,6 +8,8 @@ export const useUserQuery = (enabled: boolean) => {
     enabled,
     retry: false,
     staleTime: 1000 * 60 * 15,
+    refetchOnWindowFocus: true,
   });
+
   return { user, isLoading, isAuthenticated: !!user };
 };
