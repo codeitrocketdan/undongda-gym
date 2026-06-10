@@ -1,20 +1,13 @@
-import { publicServerFetcher } from "@/shared/api/publicServerFetcher";
 import { ApiError } from "@/shared/api/types";
 import { clearAuthCookies } from "@/shared/lib/auth/cookies";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
-interface LogoutRequest {
-  refreshToken: string;
-}
-
-interface LogoutResponse {
-  message?: string;
-}
-
 export async function POST(request: Request) {
   try {
     const cookieStore = await cookies();
+    const accessToken = cookieStore.get("accessToken")?.value;
+
     const refreshToken = cookieStore.get("refreshToken")?.value;
 
     if (!refreshToken) {
@@ -28,10 +21,16 @@ export async function POST(request: Request) {
     }
 
     // 백엔드 세션/DB에서 해당 refreshToken 무효화 요청
-    await publicServerFetcher.post<LogoutRequest, LogoutResponse>(
-      "/auth/logout",
-      { refreshToken }
-    );
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify({
+        refreshToken,
+      }),
+    });
 
     const response = NextResponse.json(
       { message: "로그아웃에 성공하셨습니다." },
