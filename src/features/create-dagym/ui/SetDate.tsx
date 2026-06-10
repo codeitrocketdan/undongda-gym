@@ -1,11 +1,13 @@
 "use client";
 
-import DatePicker from "@/shared/ui/datePicker/DatePicker";
-import TimePicker from "@/shared/ui/datePicker/TimePicker";
-import { toISOStringFromLocal } from "@/shared/ui/datePicker/utils";
+import { subDays } from "@/shared/lib/date";
+import {
+  DatePicker,
+  TimePicker,
+  toISOStringFromLocal,
+} from "@/shared/ui/datePicker";
 import Input from "@/shared/ui/input/Input";
 import InputField from "@/shared/ui/input/InputFiled";
-import { subDays } from "date-fns";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 
