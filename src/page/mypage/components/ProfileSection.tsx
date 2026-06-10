@@ -6,7 +6,15 @@ import { Pencil } from "lucide-react";
 import Image from "next/image";
 
 export default function ProfileSection() {
-  const { data: profile, isLoading } = useUserProfile();
+  const { data: profile, isLoading, isError } = useUserProfile();
+
+  if (isError) {
+    return (
+      <div className="gradient-blue-light flex flex-row gap-6 rounded-2xl border border-blue-300 p-4 md:rounded-3xl md:p-6 lg:flex-col lg:items-center lg:justify-center lg:gap-4 lg:px-10 lg:py-8">
+        <p className="text-sm text-slate-400">불러오는 중 문제가 발생했어요</p>
+      </div>
+    );
+  }
 
   if (isLoading || !profile) {
     return (
