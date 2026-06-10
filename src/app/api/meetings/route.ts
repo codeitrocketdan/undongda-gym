@@ -1,5 +1,12 @@
+import { serverFetcher } from "@/shared/lib/auth/serverFetcher";
 import { cookies } from "next/headers";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+
+export async function GET(request: NextRequest) {
+  const { searchParams } = new URL(request.url);
+  const data = await serverFetcher(`/meetings?${searchParams}`);
+  return NextResponse.json(data);
+}
 
 export async function POST(request: Request) {
   try {

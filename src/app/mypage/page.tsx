@@ -1,5 +1,5 @@
-const Page = async () => {
-  return <div>마이페이지</div>;
-};
+import MyPage from "@/page/mypage/page";
 
-export default Page;
+export default function Favorite() {
+  return <MyPage />;
+}

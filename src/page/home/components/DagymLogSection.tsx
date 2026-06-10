@@ -44,7 +44,7 @@ export default function MainContent({ isLogin }: { isLogin: boolean }) {
               />
               <Image
                 src={bannerTablet}
-                alt="지금 모임에 참여해보세요"
+                alt="지금 다짐에 참여해보세요"
                 className="w-full hue-rotate-45"
                 priority
               />
@@ -57,7 +57,7 @@ export default function MainContent({ isLogin }: { isLogin: boolean }) {
           <source media="(min-width: 768px)" srcSet={bannerTablet.src} />
           <Image
             src={bannerMobile}
-            alt="지금 모임에 참여해보세요"
+            alt="지금 다짐에 참여해보세요"
             className="w-full"
           />
         </picture>

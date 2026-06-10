@@ -55,7 +55,8 @@ export default function MyPageCard({
 }: MyPageCardProps) {
   const status = getMeetingStatus({ canceledAt, isCompleted });
   const showBadge = variant === "my-dagym";
-  const showCancelButton = variant === "my-dagym";
+  const showCancelButton =
+    variant === "my-dagym" && !canceledAt && !isCompleted;
   const showReviewButton = variant === "my-review";
 
   const badges = showBadge && (
@@ -69,7 +70,7 @@ export default function MyPageCard({
     <Button
       variant={showCancelButton ? "secondary" : "primary"}
       size="sm"
-      className="shrink-0"
+      className="w-auto"
       onClick={(e) => {
         e?.preventDefault();
         onClick?.();
