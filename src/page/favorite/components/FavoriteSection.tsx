@@ -4,96 +4,32 @@ import DagymCard, {
   DagymCardSkeleton,
 } from "@/features/dagym/components/DagymCard";
 import DagymFilterBar, {
-  DagymSort,
   DagymSortBy,
   DagymSortOrder,
 } from "@/features/dagym/components/DagymFilterBar";
 import { REGION_OPTIONS } from "@/features/dagym/constants/region";
-import { MeetingTypeDTO } from "@/features/dagym/types";
-import { FavoriteListResponse } from "@/features/favorite/types";
 import emptyImage from "@/shared/assets/images/empty.svg";
 import Filter from "@/shared/ui/filter/Filter";
 import PillTabs from "@/shared/ui/tab/PillTabs";
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import Image from "next/image";
-import { parseAsString, useQueryState } from "nuqs";
-import { useEffect, useRef } from "react";
+import { useFavoriteSectionViewModel } from "../model/useFavoriteSectionViewModel";
 
 export default function FavoriteSection() {
-  const [selectedCategory, setSelectedCategory] = useQueryState(
-    "type",
-    parseAsString.withDefault("")
-  );
-  const [region, setRegion] = useQueryState(
-    "region",
-    parseAsString.withDefault("")
-  );
-  const [sortBy, setSortBy] = useQueryState(
-    "sortBy",
-    parseAsString.withDefault("createdAt")
-  );
-  const [sortOrder, setSortOrder] = useQueryState(
-    "sortOrder",
-    parseAsString.withDefault("desc")
-  );
-  const observerRef = useRef<HTMLDivElement>(null);
-
-  const regionFilter =
-    REGION_OPTIONS.find((r) => r.value === region) ?? REGION_OPTIONS[0];
-
-  const handleSortChange = (sort: DagymSort) => {
-    setSortBy(sort.sortBy);
-    setSortOrder(sort.sortOrder);
-  };
-
-  const { data: categories = [] } = useQuery<MeetingTypeDTO[]>({
-    queryKey: ["meeting-types"],
-    queryFn: async () => {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/meeting-types`
-      );
-      return res.json();
-    },
-  });
-
-  const { data, fetchNextPage, hasNextPage, isFetching, isLoading, isError } =
-    useInfiniteQuery<FavoriteListResponse>({
-      queryKey: ["favorites", selectedCategory, region, sortBy, sortOrder],
-      queryFn: async ({ pageParam }) => {
-        const params = new URLSearchParams();
-        if (selectedCategory) params.set("type", selectedCategory);
-        if (region) params.set("region", region);
-        params.set("sortBy", sortBy);
-        params.set("sortOrder", sortOrder);
-        params.set("size", "10");
-        if (pageParam) params.set("cursor", pageParam as string);
-        const res = await fetch(`/api/favorites?${params}`);
-        return res.json();
-      },
-      getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
-      initialPageParam: null,
-    });
-
-  // page.data가 없을 수 있음 (인증 없을 때 에러 응답 반환)
-  const meetings =
-    data?.pages.flatMap((page) => (page.data ?? []).map((f) => f.meeting)) ??
-    [];
-  const tabs = [
-    { id: 0, name: "전체" },
-    ...categories.map((c) => ({ id: c.id, name: c.name })),
-  ];
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && hasNextPage && !isFetching)
-          fetchNextPage();
-      },
-      { rootMargin: "200px" }
-    );
-    if (observerRef.current) observer.observe(observerRef.current);
-    return () => observer.disconnect();
-  }, [fetchNextPage, hasNextPage, isFetching]);
+  const {
+    selectedCategory,
+    regionFilter,
+    sortBy,
+    sortOrder,
+    tabs,
+    meetings,
+    isLoading,
+    isError,
+    observerRef,
+    setSelectedCategory,
+    setRegion,
+    handleSortChange,
+    toggleFavorite,
+  } = useFavoriteSectionViewModel();
 
   return (
     <section className="mt-8">
@@ -165,7 +101,7 @@ export default function FavoriteSection() {
               registrationEnd={meeting.registrationEnd}
               participantCount={meeting.participantCount}
               capacity={meeting.capacity}
-              onToggleFavorite={() => {}}
+              onToggleFavorite={() => toggleFavorite(meeting.id, true)}
               onJoin={() => {}}
             />
           ))}
