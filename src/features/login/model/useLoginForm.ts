@@ -25,7 +25,7 @@ export const useLoginForm = () => {
   const onSubmit: SubmitHandler<LoginFormValues> = async (loginData) => {
     try {
       const response = await login(loginData);
-      console.log(response);
+
       if (!response.ok) {
         form.setError("root", {
           message: "이메일 또는 비밀번호가 올바르지 않습니다.",
@@ -37,8 +37,6 @@ export const useLoginForm = () => {
       await queryClient.invalidateQueries({
         queryKey: ["user"],
       });
-
-      alert("로그인에 성공했습니다.");
 
       router.replace("/");
       router.refresh();
