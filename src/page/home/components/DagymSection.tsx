@@ -10,13 +10,14 @@ import DagymFilterBar, {
 } from "@/features/dagym/components/DagymFilterBar";
 import { REGION_OPTIONS } from "@/features/dagym/constants/region";
 import { MeetingListResponse, MeetingTypeDTO } from "@/features/dagym/types";
+import { useFavorite } from "@/features/favorite/model/useFavorite";
 import emptyImage from "@/shared/assets/images/empty.svg";
+import useInfiniteScroll from "@/shared/hooks/useInfiniteScroll";
 import Filter from "@/shared/ui/filter/Filter";
 import PillTabs from "@/shared/ui/tab/PillTabs";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { createSerializer, parseAsString, useQueryState } from "nuqs";
-import { useEffect, useRef } from "react";
 
 // null 값은 자동으로 쿼리스트링에서 제외됨
 const serialize = createSerializer({
@@ -29,6 +30,7 @@ const serialize = createSerializer({
 });
 
 export default function DagymSection() {
+  const { toggleFavorite } = useFavorite();
   const [selectedCategory, setSelectedCategory] = useQueryState(
     "type",
     parseAsString.withDefault("")
@@ -46,7 +48,6 @@ export default function DagymSection() {
     parseAsString.withDefault("desc")
   );
 
-  const observerRef = useRef<HTMLDivElement>(null);
   const regionFilter =
     REGION_OPTIONS.find((r) => r.value === region) ?? REGION_OPTIONS[0];
 
@@ -66,7 +67,7 @@ export default function DagymSection() {
     },
   });
 
-  // 모임 목록 무한스크롤
+  // 다짐 목록 무한스크롤
   // queryKey에 필터값이 포함되어 있어서 필터 변경 시 자동으로 처음부터 다시 fetch
   const { data, fetchNextPage, hasNextPage, isFetching, isLoading, isError } =
     useInfiniteQuery<MeetingListResponse>({
@@ -80,18 +81,10 @@ export default function DagymSection() {
           size: "10",
           cursor: (pageParam as string) || null,
         });
-        // TODO: 로그인 구현 후 쿠키에서 토큰 읽도록 교체
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/meetings${query}`,
-          {
-            headers: {
-              Authorization: `Bearer ${process.env.NEXT_PUBLIC_TEMP_TOKEN ?? ""}`,
-            },
-          }
-        );
+        const res = await fetch(`/api/meetings${query}`);
         return res.json();
       },
-      getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
+      getNextPageParam: (lastPage) => lastPage?.nextCursor ?? undefined,
       initialPageParam: null,
     });
 
@@ -103,19 +96,11 @@ export default function DagymSection() {
     ...categories.map((c) => ({ id: c.id, name: c.name })),
   ];
 
-  // 바닥 감지 시 다음 페이지 요청
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && hasNextPage && !isFetching) {
-          fetchNextPage();
-        }
-      },
-      { rootMargin: "200px" }
-    );
-    if (observerRef.current) observer.observe(observerRef.current);
-    return () => observer.disconnect();
-  }, [fetchNextPage, hasNextPage, isFetching]);
+  const observerRef = useInfiniteScroll({
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+  });
 
   return (
     <section className="inner">
@@ -189,7 +174,9 @@ export default function DagymSection() {
               registrationEnd={meeting.registrationEnd}
               participantCount={meeting.participantCount}
               capacity={meeting.capacity}
-              onToggleFavorite={() => {}}
+              onToggleFavorite={() =>
+                toggleFavorite(meeting.id, meeting.isFavorited ?? false)
+              }
               onJoin={() => {}}
             />
           ))}
