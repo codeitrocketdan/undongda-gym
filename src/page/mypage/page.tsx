@@ -17,6 +17,9 @@ export default function MyPage() {
     "tab",
     parseAsString.withDefault(TABS[0].name)
   );
+  const validTab = TABS.some((t) => t.name === activeTab)
+    ? activeTab
+    : TABS[0].name;
   return (
     <div className="inner flex flex-col lg:flex-row lg:gap-10">
       <div className="mb-8 flex flex-col gap-2 md:mb-10 md:gap-6 lg:w-1/5 lg:gap-11">
@@ -33,9 +36,9 @@ export default function MyPage() {
             onChange={setActiveTab}
           />
         </div>
-        {activeTab === "나의 다짐" && <MyDagymSection />}
-        {activeTab === "나의 리뷰" && <MyReviewSection />}
-        {activeTab === "내가 만든 다짐" && <MyCreatedDagymSection />}
+        {validTab === "나의 다짐" && <MyDagymSection />}
+        {validTab === "나의 리뷰" && <MyReviewSection />}
+        {validTab === "내가 만든 다짐" && <MyCreatedDagymSection />}
       </div>
     </div>
   );
