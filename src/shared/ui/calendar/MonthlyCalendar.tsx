@@ -48,7 +48,7 @@ export default function MonthlyCalendar() {
   };
 
   return (
-    <div className="relative mx-auto w-full max-w-md rounded-2xl bg-white p-5">
+    <div className="relative mx-auto w-full rounded-2xl bg-white">
       {/* 연도 및 월 표시, 이동 버튼 */}
       <div className="mb-6 flex items-center justify-between px-2">
         <h2 className="text-xl font-bold text-gray-900">
@@ -61,7 +61,7 @@ export default function MonthlyCalendar() {
             aria-label="이전 달로 이동"
             onClick={() => swiperRef.current?.slidePrev()}
             disabled={!canMovePrev}
-            className={`rounded-full p-2 transition-colors ${
+            className={`cursor-pointer rounded-full p-2 transition-colors ${
               canMovePrev
                 ? "text-gray-600 hover:bg-gray-100"
                 : "cursor-not-allowed text-gray-200 opacity-30"
@@ -74,7 +74,7 @@ export default function MonthlyCalendar() {
             aria-label="다음 달로 이동"
             onClick={() => swiperRef.current?.slideNext()}
             disabled={!canMoveNext}
-            className={`rounded-full p-2 transition-colors ${
+            className={`cursor-pointer rounded-full p-2 transition-colors ${
               canMoveNext
                 ? "text-gray-600 hover:bg-gray-100"
                 : "cursor-not-allowed text-gray-200 opacity-30"

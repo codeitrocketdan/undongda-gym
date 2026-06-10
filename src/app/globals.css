@@ -6,6 +6,7 @@
 }
 @theme {
   --font-sans: var(--font-pretendard);
+  --breakpoint-xs: 414px;
 }
 
 @layer base {

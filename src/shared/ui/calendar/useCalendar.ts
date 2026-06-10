@@ -3,6 +3,7 @@
 import {
   addMonths,
   addWeeks,
+  differenceInCalendarWeeks,
   endOfMonth,
   endOfWeek,
   format,
@@ -16,17 +17,46 @@ const MAX_RANGE = 2; // 오늘 기준 앞뒤로 2개씩
 type CalendarType = "week" | "month";
 
 export function useCalendar(TODAY: Date, type: CalendarType = "week") {
-  // 1. 기준이 되는 오늘 달/주의 시작점 (고정)
+  // 기준이 되는 오늘 달/주의 시작점 (고정)
   const initialStart = useMemo(() => {
     return type === "week"
       ? startOfWeek(TODAY, { weekStartsOn: 0 })
       : startOfMonth(TODAY);
   }, [TODAY, type]);
 
-  // 2. 처음부터 슬라이드 날짜들을 배열로 미리 생성
+  // 주간일 때 현재 월의 첫 주와 마지막 주 범위 동적 계산
+  const { prevRange, nextRange, initialActiveIndex } = useMemo(() => {
+    if (type === "month") {
+      return {
+        prevRange: MAX_RANGE,
+        nextRange: MAX_RANGE,
+        initialActiveIndex: MAX_RANGE,
+      };
+    }
+
+    // 주간(week)일 때: 이번 달의 첫 날과 마지막 날 계산
+    const monthStart = startOfMonth(TODAY);
+    const monthEnd = endOfMonth(TODAY);
+
+    // 오늘 속한 주와 첫 주, 마지막 주의 차이 계산 (date-fns 함수 활용)
+    const prevRange = Math.abs(
+      differenceInCalendarWeeks(initialStart, monthStart, { weekStartsOn: 0 })
+    );
+    const nextRange = Math.abs(
+      differenceInCalendarWeeks(monthEnd, initialStart, { weekStartsOn: 0 })
+    );
+
+    return {
+      prevRange,
+      nextRange,
+      initialActiveIndex: prevRange, // 0부터 시작하므로 앞으로 갈 수 있는 방의 개수가 곧 오늘 주차의 index가 됩니다.
+    };
+  }, [TODAY, initialStart, type]);
+
+  // 처음부터 슬라이드 날짜들을 배열로 미리 생성
   const calendarSlides = useMemo(() => {
     const slides = [];
-    for (let i = -MAX_RANGE; i <= MAX_RANGE; i++) {
+    for (let i = -prevRange; i <= nextRange; i++) {
       const baseDate =
         type === "week"
           ? addWeeks(initialStart, i)
@@ -65,14 +95,14 @@ export function useCalendar(TODAY: Date, type: CalendarType = "week") {
       });
     }
     return slides;
-  }, [initialStart, type]);
+  }, [initialStart, type, prevRange, nextRange]);
 
-  // 3. 초기 Swiper가 바라보고 있는 방의 인덱스 (초기값은 가운데인 MAX_RANGE 슬라이드)
-  const [activeIndex, setActiveIndex] = useState(MAX_RANGE);
+  // 초기 Swiper가 바라보고 있는 방의 인덱스 (초기값은 가운데인 MAX_RANGE 슬라이드)
+  const [activeIndex, setActiveIndex] = useState(initialActiveIndex);
   const [selectedDate, setSelectedDate] = useState(() => TODAY);
 
-  // 4. 현재 인덱스 기준으로 상태 및 버튼 활성화 여부 계산
-  const currentStart = calendarSlides[activeIndex].baseDate;
+  // 현재 인덱스 기준으로 상태 및 버튼 활성화 여부 계산
+  const currentStart = calendarSlides[activeIndex]?.baseDate || initialStart;
   const canMovePrev = activeIndex > 0;
   const canMoveNext = activeIndex < calendarSlides.length - 1;
 

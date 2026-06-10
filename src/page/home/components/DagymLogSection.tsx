@@ -1,72 +1,42 @@
 "use client";
-import bannerPc from "@/shared/assets/images/banner_1024.png";
-import bannerMobile from "@/shared/assets/images/banner_360.png";
-import bannerTablet from "@/shared/assets/images/banner_768.png";
 import { MonthlyCalendar, WeeklyCalendar } from "@/shared/ui/calendar";
 import { Modal, useModal } from "@/shared/ui/modal";
 import { Bell, CalendarCheck } from "lucide-react";
-import Image from "next/image";
 
-export default function MainContent({ isLogin }: { isLogin: boolean }) {
+export default function MainContent() {
   const modal = useModal();
   return (
-    <div className="w-full">
-      {isLogin ? (
-        <>
-          <div className="md:hidden">
-            <div className="mb-6 flex items-center justify-between px-6">
-              <h2 className="text-xl font-bold text-gray-900">
-                {/* {format(currentStart, "yyyy년 M월 eeee", { locale: ko })} */}
-              </h2>
-              <div className="mr-1 flex items-center gap-3">
-                <button className="notice-wrap relative">
-                  {/* 알람이 있을 경우 - 추후 연결
+    <div className="relative mb-5 w-full">
+      <div className="mb-6 flex items-center justify-between px-6">
+        <h2 className="text-xl font-bold text-gray-900">
+          {/* {format(currentStart, "yyyy년 M월 eeee", { locale: ko })} */}
+        </h2>
+        <div className="mr-1 flex items-center gap-3">
+          <button className="notice-wrap relative">
+            {/* 알람이 있을 경우 - 추후 연결
                   <BellDot/>
                   <div className="absolute top-[3px] right-[3px] h-[6px] w-[6px] rounded-full bg-red-500" />
                   */}
-                  <Bell size={28} />
-                </button>
+            <Bell size={28} />
+          </button>
 
-                <button onClick={modal.open} aria-label="월간 달력 열기">
-                  <CalendarCheck size={28} />
-                </button>
-              </div>
-            </div>
-            <WeeklyCalendar />
-          </div>
-
-          <div className="hidden md:block">
-            <picture>
-              <source
-                media="(min-width: 1024px)"
-                srcSet={bannerPc.src}
-                className="hue-rotate-45"
-              />
-              <Image
-                src={bannerTablet}
-                alt="지금 다짐에 참여해보세요"
-                className="w-full hue-rotate-45"
-                priority
-              />
-            </picture>
-          </div>
-        </>
-      ) : (
-        <picture>
-          <source media="(min-width: 1024px)" srcSet={bannerPc.src} />
-          <source media="(min-width: 768px)" srcSet={bannerTablet.src} />
-          <Image
-            src={bannerMobile}
-            alt="지금 다짐에 참여해보세요"
-            className="w-full"
-          />
-        </picture>
-      )}
+          <button onClick={modal.open} aria-label="월간 달력 열기">
+            <CalendarCheck size={28} />
+          </button>
+        </div>
+      </div>
+      <WeeklyCalendar />
 
       {modal.isOpen && (
         <Modal onClose={modal.close}>
-          <Modal.Header className="text-base-bold flex-row justify-between">
-            <h2>나의 다짐</h2>
+          <Modal.Header className="mb-4 flex-row items-start justify-between">
+            <div>
+              <h2 className="text-base-bold">나의 다짐 기록</h2>
+              <p className="text-xs-regular -ml-2 rounded-xl bg-gray-100 px-2 py-1">
+                <span className="xs:inline-block hidden">이뤄낸 다짐과 </span>
+                &nbsp;예정된 다짐을 달력으로 확인할 수 있어요!
+              </p>
+            </div>
             <Modal.CloseButton className="mb-2" />
           </Modal.Header>
           <div>

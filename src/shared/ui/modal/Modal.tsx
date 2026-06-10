@@ -50,7 +50,7 @@ const Modal = ({ children, onClose, isClickToClose }: ModalProps) => {
             if (e.key === "Escape") onClose();
           }}
           onClick={(e) => e.stopPropagation()}
-          className="w-full max-w-136 rounded-xl bg-white p-6 sm:p-12"
+          className="xs:p-12 w-full max-w-136 rounded-xl bg-white px-6 py-8"
         >
           {children}
         </div>

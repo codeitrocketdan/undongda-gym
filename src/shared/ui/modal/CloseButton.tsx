@@ -12,7 +12,7 @@ export default function CloseButton({ className }: Props) {
   return (
     <button
       type="button"
-      className={twMerge("cursor-pointer self-end", className)}
+      className={twMerge("cursor-pointer", className)}
       onClick={onClose}
     >
       <X />
