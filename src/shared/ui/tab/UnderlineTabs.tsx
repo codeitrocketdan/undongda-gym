@@ -9,7 +9,11 @@ interface UnderlineTabsProps {
   onChange?: (value: string) => void;
 }
 
-export default function UnderlineTabs({ tabs, defaultValue = "", onChange }: UnderlineTabsProps) {
+export default function UnderlineTabs({
+  tabs,
+  defaultValue = "",
+  onChange,
+}: UnderlineTabsProps) {
   const { isActive, handleChange } = useTabs<string>({
     defaultValue,
     onChange,
@@ -22,7 +26,7 @@ export default function UnderlineTabs({ tabs, defaultValue = "", onChange }: Und
           key={type.id}
           type="button"
           className={twMerge(
-            "text-sm-semibold -mb-0.5 cursor-pointer border-b-2 px-8 py-2 whitespace-nowrap",
+            "text-sm-semibold -mb-0.5 flex-1 cursor-pointer border-b-2 px-8 py-2 whitespace-nowrap md:flex-none",
             isActive(type.name)
               ? "border-blue-500 text-blue-600"
               : "border-transparent text-slate-600 hover:border-slate-300"

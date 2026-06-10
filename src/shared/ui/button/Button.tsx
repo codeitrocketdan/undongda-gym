@@ -29,8 +29,8 @@ const buttonVariants = cva(
     variants: {
       // 버튼 디자인
       variant: {
-        primary: "bg-blue-600 text-white",
-        secondary: "border border-blue-600 bg-white text-blue-600",
+        primary: "bg-blue-500 text-white",
+        secondary: "border border-blue-500 bg-white text-blue-500",
         tertiary: "border border-gray-500 bg-white text-gray-600",
       },
 

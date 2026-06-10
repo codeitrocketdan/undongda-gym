@@ -1,14 +1,24 @@
-import { UserRound } from "lucide-react";
+"use client";
+
+import { useUserProfile } from "@/features/my-page/model/useUserProfile";
+import avatar from "@/shared/assets/images/avatar.svg";
+import Image from "next/image";
 import Link from "next/link";
 
 export default function ProfileIcon() {
+  const { data: profile } = useUserProfile();
+
   return (
     <Link
       href="/mypage"
-      className="inline-block rounded-full bg-gray-900 p-2"
+      className="flex h-10 w-10 items-center justify-center rounded-full bg-white"
       aria-label="마이페이지"
     >
-      <UserRound size={26} color="#fff" />
+      {profile?.image ? (
+        <Image src={profile.image} alt={profile.name} width={40} height={40} />
+      ) : (
+        <Image src={avatar} alt="기본 이미지" className="rounded-full" />
+      )}
     </Link>
   );
 }

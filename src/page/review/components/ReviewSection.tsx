@@ -19,10 +19,10 @@ import { ReviewDTO, ReviewListResponse } from "@/features/review/types";
 import emptyImage from "@/shared/assets/images/empty.svg";
 import Filter from "@/shared/ui/filter/Filter";
 import PillTabs from "@/shared/ui/tab/PillTabs";
+import useInfiniteScroll from "@/shared/hooks/useInfiniteScroll";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { parseAsString, useQueryState } from "nuqs";
-import { useEffect, useRef } from "react";
 import ReviewStats from "./ReviewStats";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -46,7 +46,6 @@ export default function ReviewSection() {
     parseAsString.withDefault("desc")
   );
 
-  const observerRef = useRef<HTMLDivElement>(null);
   const regionFilter =
     REGION_OPTIONS.find((r) => r.value === region) ?? REGION_OPTIONS[0];
 
@@ -96,24 +95,13 @@ export default function ReviewSection() {
         const res = await fetch(`${API_URL}/reviews?${params}`);
         return res.json();
       },
-      getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
+      getNextPageParam: (lastPage) => lastPage?.nextCursor ?? undefined,
       initialPageParam: null,
     });
 
   const reviews = data?.pages.flatMap((page) => page.data) ?? [];
 
-  // 바닥 감지 시 다음 페이지 요청
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && hasNextPage && !isFetching)
-          fetchNextPage();
-      },
-      { rootMargin: "200px" }
-    );
-    if (observerRef.current) observer.observe(observerRef.current);
-    return () => observer.disconnect();
-  }, [fetchNextPage, hasNextPage, isFetching]);
+  const observerRef = useInfiniteScroll({ fetchNextPage, hasNextPage, isFetching });
 
   const tabs = [
     { id: 0, name: "전체" },
@@ -181,7 +169,7 @@ export default function ReviewSection() {
           <div className="flex flex-col items-center gap-4 py-20">
             <Image src={emptyImage} alt="리뷰 없음" className="h-50 w-50" />
             <p className="text-center text-sm text-slate-400">
-              아직 리뷰가 없어요 <br /> 모임에 참여하고 첫 리뷰를 남겨보세요!
+              아직 리뷰가 없어요 <br /> 다짐에 참여하고 첫 리뷰를 남겨보세요!
             </p>
           </div>
         ) : (
