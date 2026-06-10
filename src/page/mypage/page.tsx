@@ -1,10 +1,10 @@
 "use client";
 import UnderlineTabs from "@/shared/ui/tab/UnderlineTabs";
 import { parseAsString, useQueryState } from "nuqs";
-import MyCreatedDagymSection from "./components/MyCreatedDagymSection";
-import MyDagymSection from "./components/MyDagymSection";
-import MyReviewSection from "./components/MyReviewSection";
-import ProfileSection from "./components/ProfileSection";
+import MyCreatedDagymSection from "@/features/my-page/ui/MyCreatedDagymSection";
+import MyDagymSection from "@/features/my-page/ui/MyDagymSection";
+import MyReviewSection from "@/features/my-page/ui/MyReviewSection";
+import ProfileSection from "@/features/my-page/ui/ProfileSection";
 
 const TABS = [
   { id: 0, name: "나의 다짐" },

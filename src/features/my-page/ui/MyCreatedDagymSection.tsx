@@ -1,29 +1,25 @@
 "use client";
 
+import { MeetingWithHostDTO } from "@/features/dagym/types";
 import { useFavorite } from "@/features/favorite/model/useFavorite";
-import MyPageCard from "@/features/my-page/MyPageCard";
-import {
-  JoinedMeetingDTO,
-  MyMeetingListResponse,
-} from "@/features/my-page/types";
+import { CreatedMeetingListResponse } from "@/features/my-page/types";
 import emptyImage from "@/shared/assets/images/empty.svg";
 import useInfiniteScroll from "@/shared/hooks/useInfiniteScroll";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import Image from "next/image";
+import MyPageCard from "./MyPageCard";
 import MyPageCardSkeleton from "./MyPageCardSkeleton";
 
 const LIMIT = 5;
 
-export default function WritableReviewList() {
+export default function MyCreatedDagymSection() {
   const { toggleFavorite } = useFavorite();
   const { data, fetchNextPage, hasNextPage, isFetching, isLoading, isError } =
-    useInfiniteQuery<MyMeetingListResponse>({
-      queryKey: ["users/me/meetings/writable"],
+    useInfiniteQuery<CreatedMeetingListResponse>({
+      queryKey: ["users/me/meetings/created"],
       queryFn: async ({ pageParam }) => {
         const params = new URLSearchParams({
-          type: "joined",
-          completed: "true",
-          reviewed: "false",
+          type: "created",
           size: String(LIMIT),
           ...(pageParam ? { cursor: pageParam as string } : {}),
         });
@@ -65,18 +61,18 @@ export default function WritableReviewList() {
       <div className="flex flex-col items-center justify-center gap-4 py-20">
         <Image src={emptyImage} alt="빈 목록" className="h-50 w-50" />
         <p className="text-center text-sm text-slate-400">
-          작성 가능한 리뷰가 없어요
+          아직 만든 다짐이 없어요
         </p>
       </div>
     );
   }
 
   return (
-    <div className="mt-4 flex flex-col gap-4 lg:gap-6">
-      {meetings.map((meeting: JoinedMeetingDTO) => (
+    <div className="flex flex-col gap-4 lg:gap-6">
+      {meetings.map((meeting: MeetingWithHostDTO) => (
         <MyPageCard
           key={meeting.id}
-          variant="my-review"
+          variant="created-dagym"
           id={meeting.id}
           image={meeting.image}
           isFavorited={meeting.isFavorited ?? false}
@@ -88,7 +84,9 @@ export default function WritableReviewList() {
           dateTime={meeting.dateTime}
           participantCount={meeting.participantCount}
           capacity={meeting.capacity}
-          onToggleFavorite={() => toggleFavorite(meeting.id, meeting.isFavorited ?? false)}
+          onToggleFavorite={() =>
+            toggleFavorite(meeting.id, meeting.isFavorited ?? false)
+          }
           onClick={() => {}}
         />
       ))}
