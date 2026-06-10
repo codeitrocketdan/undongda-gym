@@ -7,6 +7,7 @@ import Link from "next/link";
 import Button from "../button/Button";
 import MobileMenu from "./MobileMenu";
 import NavLinks from "./NavLinks";
+import ProfileDropdown from "./ProfileDropdown";
 import ProfileIcon from "./ProfileIcon";
 
 export default function Header() {
@@ -45,8 +46,8 @@ export default function Header() {
               {isAuthenticated ? (
                 <>
                   <Bell />
-                  <ProfileIcon />
-                  {/* <ProfileDropdown/> */}
+                  {/* <ProfileIcon /> */}
+                  <ProfileDropdown />
                 </>
               ) : (
                 <>
