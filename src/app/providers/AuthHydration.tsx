@@ -1,20 +1,10 @@
+import { User } from "@/entities/user";
 import { serverFetcher } from "@/shared/api/serverFetcher";
 import {
   HydrationBoundary,
   QueryClient,
   dehydrate,
 } from "@tanstack/react-query";
-
-interface User {
-  id: number;
-  teamId: string;
-  email: string;
-  name: string;
-  companyName: string;
-  image: string | null;
-  createAt: string;
-  updateAt: string;
-}
 
 export default async function AuthHydration({
   children,

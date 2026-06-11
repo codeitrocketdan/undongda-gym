@@ -1,35 +1,61 @@
 /**
- * 클라이언트 컴포넌트 전용 Fetcher (토큰 필요 없는 요청)
+ * clientFetcher
  *
- * 1. 클라이언트 컴포넌트 -> BFF(Route Handler) 요청
- * ex) clientFetcher.post("/api/users/me")
+ * 사용 위치
+ * - Client Component
+ * - React Query(queryFn, mutationFn)
+ * - 이벤트 핸들러(onClick, onSubmit)
  *
- * 2. 클라이언트 컴포넌트 -> 백엔드 직접 요청
- * ex) clientFetcher.get(`${process.env.NEXT_PUBLIC_API_URL}/reviews`)
+ * 요청 경로
+ * - 반드시 BFF(/api/*) 사용
+ *
+ * 예시
+ * const user = await clientFetcher.get<User>("/api/users/me");
+ *
+ * 주의
+ * - 백엔드 주소를 직접 호출하지 않습니다.
+ * - accessToken을 직접 읽지 않습니다.
+ * - 쿠키는 브라우저가 자동 전송합니다.
  */
 
-import { ApiError, RequestOptions } from "./types";
+import { ApiError } from "./types";
+
+interface RequestOptions extends Omit<RequestInit, "body"> {
+  body?: unknown;
+}
 
 const request = async <T>(
   path: string,
   options: RequestOptions = {}
 ): Promise<T> => {
-  const res = await fetch(path, {
-    ...options,
+  const { body, headers, ...restOptions } = options;
+
+  const response = await fetch(path, {
+    ...restOptions,
     headers: {
-      "Content-Type": "application/json",
-      ...options.headers,
+      ...(body && !(body instanceof FormData)
+        ? { "Content-Type": "application/json" }
+        : {}),
+      ...headers,
     },
-    body: options.body ? JSON.stringify(options.body) : undefined,
+    ...(body !== undefined && {
+      body: body instanceof FormData ? body : JSON.stringify(body),
+    }),
   });
 
-  const data = await res.json();
+  if (!response.ok) {
+    const error = await response
+      .json()
+      .catch(() => ({ message: "요청에 실패했습니다." }));
 
-  if (!res.ok) {
-    throw new ApiError(res.status, data?.message || "API 호출에 실패했습니다.");
+    throw new ApiError(response.status, error.message);
   }
 
-  return data as T;
+  if (response.status === 204) {
+    return undefined as T;
+  }
+
+  return response.json();
 };
 
 export const clientFetcher = {
