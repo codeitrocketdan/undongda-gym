@@ -12,7 +12,7 @@ export default function MainContent() {
           {/* {format(currentStart, "yyyy년 M월 eeee", { locale: ko })} */}
         </h2>
         <div className="mr-1 flex items-center gap-3">
-          <button className="notice-wrap relative">
+          <button className="notice-wrap relative cursor-pointer">
             {/* 알람이 있을 경우 - 추후 연결
                   <BellDot/>
                   <div className="absolute top-[3px] right-[3px] h-[6px] w-[6px] rounded-full bg-red-500" />
@@ -20,7 +20,11 @@ export default function MainContent() {
             <Bell size={28} />
           </button>
 
-          <button onClick={modal.open} aria-label="월간 달력 열기">
+          <button
+            onClick={modal.open}
+            aria-label="월간 달력 열기"
+            className="cursor-pointer"
+          >
             <CalendarCheck size={28} />
           </button>
         </div>
