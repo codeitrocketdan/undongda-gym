@@ -2,7 +2,7 @@
 import bgCharacter from "@/shared/assets/images/bg_character.png";
 import { format } from "@/shared/lib/date";
 import Skeleton from "@/shared/ui/skeleton/Skeleton";
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 interface Meeting {
   id: number;
@@ -15,8 +15,6 @@ interface Meeting {
 
 interface ApiResponse {
   data: Meeting[];
-  nextCursor: string;
-  hasMore: boolean;
 }
 
 function ReservationCardSkeleton() {
@@ -35,46 +33,29 @@ function ReservationCardSkeleton() {
     </div>
   );
 }
+async function fetchMeetings(): Promise<ApiResponse> {
+  const response = await fetch("/api/users/me/meetings");
+  if (!response.ok) throw new Error(`서버 에러 상태코드: ${response.status}`);
+  return response.json();
+}
+
 export default function ReservationCard({ isLogin }: { isLogin: boolean }) {
-  const [meeting, setMeeting] = useState<Meeting | null>(null);
-  const [loading, setLoading] = useState(false);
+  const { data, isLoading } = useQuery({
+    queryKey: ["joinedMeetings"],
+    queryFn: fetchMeetings,
+    enabled: isLogin,
+  });
 
-  useEffect(() => {
-    if (!isLogin) {
-      return;
-    }
+  const now = new Date();
+  const meeting =
+    data?.data
+      ?.filter((m) => !m.isCompleted && new Date(m.dateTime) >= now)
+      .sort(
+        (a, b) =>
+          new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime()
+      )[0] ?? null;
 
-    async function fetchMeetings() {
-      try {
-        setLoading(true);
-        const response = await fetch("/api/users/me/meetings");
-        if (!response.ok)
-          throw new Error(`서버 에러 상태코드: ${response.status}`);
-
-        const result: ApiResponse = await response.json();
-
-        if (result?.data) {
-          const now = new Date();
-          const next =
-            result.data
-              .filter((m) => !m.isCompleted && new Date(m.dateTime) >= now)
-              .sort(
-                (a, b) =>
-                  new Date(a.dateTime).getTime() -
-                  new Date(b.dateTime).getTime()
-              )[0] ?? null;
-          setMeeting(next);
-        }
-      } catch (err) {
-        console.error("예약 카드 데이터 로딩 실패:", err);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchMeetings();
-  }, [isLogin]);
-
-  if (loading) return <ReservationCardSkeleton />;
+  if (isLoading) return <ReservationCardSkeleton />;
   if (!meeting) return null;
 
   return (

@@ -1,6 +1,6 @@
 "use client";
 import Skeleton from "@/shared/ui/skeleton/Skeleton";
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { DashboardCard } from "./DashboardCard";
 import { calculateDashboardStats } from "./lib/useDashboardCard";
 
@@ -13,8 +13,6 @@ export interface Meeting {
 // API 응답 데이터 전체를 받을 State 타입 정의
 interface ApiResponse {
   data: Meeting[];
-  nextCursor: string;
-  hasMore: boolean;
 }
 
 function DashboardCardSkeleton() {
@@ -34,50 +32,28 @@ function DashboardCardSkeleton() {
   );
 }
 
+async function fetchJoinedMeetings(): Promise<ApiResponse> {
+  const response = await fetch("/api/users/me/meetings");
+  if (!response.ok) throw new Error(`서버 에러 상태코드: ${response.status}`);
+  return response.json();
+}
+
 export default function DashboardCardSection({
   isLogin,
 }: {
   isLogin: boolean;
 }) {
-  const [stats, setStats] = useState({
-    streak: 0,
-    thisMonthCount: 0,
-    totalHours: 0,
+  const { data, isLoading } = useQuery({
+    queryKey: ["joinedMeetings"],
+    queryFn: fetchJoinedMeetings,
+    enabled: isLogin,
   });
-  const [loading, setLoading] = useState(false);
-  useEffect(() => {
-    if (!isLogin) {
-      return;
-    }
-    async function fetchJoinedMeetings() {
-      try {
-        setLoading(true);
-        const response = await fetch("/api/users/me/meetings");
 
-        if (!response.ok) {
-          throw new Error(`서버 에러 상태코드: ${response.status}`);
-        }
+  const stats = data?.data
+    ? calculateDashboardStats(data.data.filter((m) => m.isCompleted))
+    : { streak: 0, thisMonthCount: 0, totalHours: 0 };
 
-        const result: ApiResponse = await response.json();
-
-        if (result && result.data) {
-          const completedMeetings = result.data.filter(
-            (meeting: Meeting) => meeting.isCompleted === true
-          );
-          const calculatedData = calculateDashboardStats(completedMeetings);
-          setStats(calculatedData);
-        }
-      } catch (error) {
-        console.error("대시보드 데이터 로딩 실패:", error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchJoinedMeetings();
-  }, [isLogin]);
-
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="inner flex justify-between gap-2 md:flex-row md:gap-4">
         <DashboardCardSkeleton />
