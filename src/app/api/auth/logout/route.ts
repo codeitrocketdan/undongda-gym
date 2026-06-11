@@ -1,3 +1,4 @@
+import { serverFetcher } from "@/shared/api/serverFetcher";
 import { ApiError } from "@/shared/api/types";
 import { clearAuthCookies } from "@/shared/lib/auth/cookies";
 import { cookies } from "next/headers";
@@ -21,15 +22,8 @@ export async function POST(request: Request) {
     }
 
     // 백엔드 세션/DB에서 해당 refreshToken 무효화 요청
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
-      body: JSON.stringify({
-        refreshToken,
-      }),
+    await serverFetcher.post("/auth/logout", {
+      refreshToken,
     });
 
     const response = NextResponse.json(
@@ -37,7 +31,7 @@ export async function POST(request: Request) {
       { status: 200 }
     );
 
-    clearAuthCookies();
+    await clearAuthCookies();
 
     return response;
   } catch (error) {

@@ -24,15 +24,7 @@ export const useLoginForm = () => {
 
   const onSubmit: SubmitHandler<LoginFormValues> = async (loginData) => {
     try {
-      const response = await login(loginData);
-
-      if (!response.ok) {
-        form.setError("root", {
-          message: "이메일 또는 비밀번호가 올바르지 않습니다.",
-        });
-
-        return;
-      }
+      await login(loginData);
 
       await queryClient.invalidateQueries({
         queryKey: ["user"],
@@ -40,9 +32,9 @@ export const useLoginForm = () => {
 
       router.replace("/");
       router.refresh();
-    } catch {
+    } catch (error) {
       form.setError("root", {
-        message: "네트워크 오류가 발생했습니다.",
+        message: "이메일 또는 비밀번호가 올바르지 않습니다.",
       });
     }
   };

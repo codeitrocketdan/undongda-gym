@@ -1,6 +1,6 @@
-import { post } from "@/shared/lib/server-fetch";
+import { serverFetcher } from "@/shared/api/serverFetcher";
 import { SignupFormValues } from "../model/types";
 
 export const signup = async (signupData: SignupFormValues) => {
-  return post("/auth/signup", signupData);
+  return serverFetcher.post("/auth/signup", signupData);
 };

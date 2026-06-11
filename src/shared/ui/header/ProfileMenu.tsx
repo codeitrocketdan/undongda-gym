@@ -23,7 +23,7 @@ export default function ProfileMenu({ onLogout, setIsOpen }: Props) {
 
       <button
         onClick={onLogout}
-        className="w-full px-4 py-3 text-left text-sm hover:bg-gray-50"
+        className="w-full cursor-pointer px-4 py-3 text-left text-sm hover:bg-gray-50"
       >
         로그아웃
       </button>
