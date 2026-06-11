@@ -1,3 +1,4 @@
+"use client";
 import { useUserProfile } from "@/features/my-page/model/useUserProfile";
 import avatar from "@/shared/assets/images/avatar.svg";
 import Image from "next/image";

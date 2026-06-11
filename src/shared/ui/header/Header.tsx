@@ -1,15 +1,15 @@
-"use client";
-import { useAuth } from "@/app/providers/AuthClientProvider";
+import { buttonVariants } from "../button/Button";
 import logo from "@/shared/assets/images/logo.png";
 import { Bell } from "lucide-react";
+import { cookies } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
-import Button from "../button/Button";
+import { twMerge } from "tailwind-merge";
 import MobileMenu from "./MobileMenu";
 import NavLinks from "./NavLinks";
 import ProfileIcon from "./ProfileIcon";
 
-export default function Header() {
+export default async function Header() {
   const NAV_ITEMS = [
     { label: "다짐 보기", href: "/dagym" },
     { label: "찜한 다짐", href: "/favorite" },
@@ -17,8 +17,8 @@ export default function Header() {
     { label: "다짐 토크", href: "/talk" },
   ];
 
-  const { user } = useAuth();
-  const isLogin = !!user;
+  const cookieStore = await cookies();
+  const isLogin = !!cookieStore.get("accessToken")?.value;
   return (
     <>
       <header className="relative md:mb-7">
@@ -56,14 +56,12 @@ export default function Header() {
                   >
                     회원가입
                   </Link>
-                  <Button
-                    variant="primary"
-                    size="md"
-                    onClick={() => console.log("test")}
-                    className="flex gap-1.5 rounded-xl px-6 py-3"
+                  <Link
+                    href="/login"
+                    className={twMerge(buttonVariants({ variant: "primary", size: "md" }), "flex gap-1.5 rounded-xl px-6 py-3")}
                   >
-                    <Link href="/login">로그인</Link>
-                  </Button>
+                    로그인
+                  </Link>
                 </>
               )}
             </div>
