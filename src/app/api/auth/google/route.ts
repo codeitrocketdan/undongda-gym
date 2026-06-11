@@ -1,4 +1,4 @@
-import { publicServerFetcher } from "@/shared/api/publicServerFetcher";
+import { serverFetcher } from "@/shared/api/serverFetcher";
 import { ApiError } from "@/shared/api/types"; // ApiError 타입 임포트 필요
 import { setAuthCookies } from "@/shared/lib/auth/cookies";
 import { NextResponse } from "next/server";
@@ -16,12 +16,12 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
 
-    const data = await publicServerFetcher.post<
-      GoogleLoginRequest,
-      LoginResponse
-    >(`/oauth/google`, body);
+    const data = await serverFetcher.post<GoogleLoginRequest, LoginResponse>(
+      `/oauth/google`,
+      body,
+      { isPublic: true }
+    );
 
-    // publicServerFetcher 내부에서 실패 시 에러를 throw
     const { accessToken, refreshToken } = data;
 
     // 쿠키 저장

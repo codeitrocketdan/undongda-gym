@@ -1,4 +1,4 @@
-import { publicServerFetcher } from "@/shared/api/publicServerFetcher";
+import { serverFetcher } from "@/shared/api/serverFetcher";
 import { ApiError } from "@/shared/api/types";
 import { setAuthCookies } from "@/shared/lib/auth/cookies";
 import { NextRequest, NextResponse } from "next/server";
@@ -41,10 +41,11 @@ export async function POST(request: NextRequest) {
     // 카카오 access_token 추출
     const { access_token } = await kakaoTokenRes.json();
 
-    const data = await publicServerFetcher.post<
-      KakaoLoginRequest,
-      LoginResponse
-    >("/oauth/kakao", { token: access_token });
+    const data = await serverFetcher.post<KakaoLoginRequest, LoginResponse>(
+      "/oauth/kakao",
+      { token: access_token },
+      { isPublic: true }
+    );
 
     const { accessToken, refreshToken } = data;
 

@@ -1,4 +1,4 @@
-import { publicServerFetcher } from "@/shared/api/publicServerFetcher";
+import { serverFetcher } from "@/shared/api/serverFetcher";
 import { ApiError } from "@/shared/api/types";
 import { setAuthCookies } from "@/shared/lib/auth/cookies";
 import { NextResponse } from "next/server";
@@ -17,9 +17,10 @@ export async function POST(request: Request) {
   try {
     const body: LoginRequest = await request.json();
 
-    const data = await publicServerFetcher.post<LoginRequest, LoginResponse>(
+    const data = await serverFetcher.post<LoginRequest, LoginResponse>(
       "/auth/login",
-      body
+      body,
+      { isPublic: true }
     );
 
     const { accessToken, refreshToken } = data;
