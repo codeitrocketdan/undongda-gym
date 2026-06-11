@@ -15,7 +15,10 @@ export const getAuthCookies = async () => {
   return { accessToken, refreshToken };
 };
 
-export const setAuthCookies = async (accessToken: string, refreshToken: string | null) => {
+export const setAuthCookies = async (
+  accessToken: string,
+  refreshToken: string | null
+) => {
   const cookieStore = await cookies();
 
   cookieStore.set("accessToken", accessToken, {

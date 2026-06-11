@@ -7,7 +7,9 @@ const AuthProvider = async ({ children }: { children: React.ReactNode }) => {
 
   const hasToken = !!accessToken || !!refreshToken;
 
-  return <AuthClientProvider hasToken={hasToken}>{children}</AuthClientProvider>;
+  return (
+    <AuthClientProvider hasToken={hasToken}>{children}</AuthClientProvider>
+  );
 };
 
 export default AuthProvider;

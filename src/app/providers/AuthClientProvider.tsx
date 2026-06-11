@@ -1,43 +1,20 @@
 "use client";
-
+import { User, useUserQuery } from "@/entities/user";
 import { createContext, useContext } from "react";
-
-import { useQuery } from "@tanstack/react-query";
-
-interface User {
-  id: number;
-  teamId: string;
-  email: string;
-  name: string;
-  companyName: string;
-  image: string | null;
-  createAt: string;
-  updateAt: string;
-}
 
 interface AuthContextType {
   user: User | null;
+  isLoading: boolean;
+  isAuthenticated: boolean;
 }
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
+  isLoading: false,
+  isAuthenticated: false,
 });
 
 export const useAuth = () => useContext(AuthContext);
-
-const fetchUser = async (): Promise<User | null> => {
-  const response = await fetch("/api/users/me");
-
-  if (response.status === 401) {
-    return null;
-  }
-
-  if (!response.ok) {
-    throw new Error("유저 정보 조회 실패");
-  }
-
-  return response.json();
-};
 
 export default function AuthClientProvider({
   children,
@@ -46,16 +23,11 @@ export default function AuthClientProvider({
   children: React.ReactNode;
   hasToken: boolean;
 }) {
-  const { data: user = null } = useQuery({
-    queryKey: ["user"],
-    queryFn: fetchUser,
-    enabled: hasToken,
-    retry: false,
-    refetchOnWindowFocus: true,
-    refetchInterval: 1000 * 60 * 15,
-  });
+  const { user, isLoading, isAuthenticated } = useUserQuery(hasToken);
 
-  console.log("AuthClientProvider user 정보 ==>", user);
-
-  return <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ user, isLoading, isAuthenticated }}>
+      {children}
+    </AuthContext.Provider>
+  );
 }
