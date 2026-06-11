@@ -1,5 +1,5 @@
 "use client";
-import { Modal } from "@/shared/ui/modal";
+import { Modal } from "@/shared/ui/Modal";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { uploadImageToStorage } from "../lib/uploadImage";

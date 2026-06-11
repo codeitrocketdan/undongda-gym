@@ -3,7 +3,7 @@ import bannerPc from "@/shared/assets/images/banner_1024.png";
 import bannerMobile from "@/shared/assets/images/banner_360.png";
 import bannerTablet from "@/shared/assets/images/banner_768.png";
 import { MonthlyCalendar, WeeklyCalendar } from "@/shared/ui/calendar";
-import { Modal, useModal } from "@/shared/ui/modal";
+import { Modal, useModal } from "@/shared/ui/Modal";
 import { Bell, CalendarCheck } from "lucide-react";
 import Image from "next/image";
 

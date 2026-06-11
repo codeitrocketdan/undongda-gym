@@ -1,7 +1,7 @@
 "use client";
 import { CreateDagymForm } from "@/features/create-dagym";
 import CreateButton from "@/shared/ui/button/CreateButton";
-import { useModal } from "@/shared/ui/modal";
+import { useModal } from "@/shared/ui/Modal";
 export default function CreateDagym({ isLogin }: { isLogin: boolean }) {
   const modal = useModal();
   const handleOpenModal = () => {
