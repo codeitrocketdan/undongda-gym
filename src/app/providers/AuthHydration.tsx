@@ -1,5 +1,6 @@
 import { User } from "@/entities/user";
 import { serverFetcher } from "@/shared/api/serverFetcher";
+import { ApiError } from "@/shared/api/types";
 import {
   HydrationBoundary,
   QueryClient,
@@ -18,8 +19,12 @@ export default async function AuthHydration({
       queryKey: ["user"],
       queryFn: () => serverFetcher.get<User>("/users/me"),
     });
-  } catch {
-    queryClient.setQueryData(["user"], null);
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 401) {
+      queryClient.setQueryData<User | null>(["user"], null);
+    } else {
+      throw error;
+    }
   }
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
