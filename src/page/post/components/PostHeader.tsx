@@ -1,13 +1,13 @@
 "use client";
-import headerTalk from "@/page/talk/assets/images/header_talk.svg";
+import headerPost from "@/page/post/assets/images/header_post.svg";
 import CreateButton from "@/shared/ui/button/CreateButton";
 import SubPageHeader from "@/shared/ui/subPageHeader/SubPageHeader";
 
-export default function TalkHeader() {
+export default function PostHeader() {
   return (
     <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
       <SubPageHeader
-        imageSrc={headerTalk}
+        imageSrc={headerPost}
         title="다짐 토크"
         description="다짐 토크에서 자유롭게 이야기해요 ╰(*°▽°*)╯"
       />

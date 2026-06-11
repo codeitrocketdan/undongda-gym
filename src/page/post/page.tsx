@@ -3,13 +3,13 @@ import IconButton from "@/shared/ui/button/IconButton";
 import { Plus } from "lucide-react";
 import HotPostSection from "./components/HotPostSection";
 import PostListSection from "./components/PostListSection";
-import TalkHeader from "./components/TalkHeader";
+import PostHeader from "./components/PostHeader";
 
-export default function TalkPage() {
+export default function PostPage() {
   return (
     <>
       <main className="inner mt-8 md:mt-10 lg:mt-12.75">
-        <TalkHeader />
+        <PostHeader />
         <HotPostSection />
         <PostListSection />
       </main>
