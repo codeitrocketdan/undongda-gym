@@ -1,11 +1,14 @@
 "use client";
 import Skeleton from "@/shared/ui/skeleton/Skeleton";
 import { useQuery } from "@tanstack/react-query";
+import { calculateDashboardStats } from "../lib/useDashboardCard";
 import { DashboardCard } from "./DashboardCard";
-import { calculateDashboardStats } from "./lib/useDashboardCard";
 
 export interface Meeting {
   id: number;
+  name: string;
+  type: string;
+  region: string;
   dateTime: string;
   isCompleted: boolean;
 }

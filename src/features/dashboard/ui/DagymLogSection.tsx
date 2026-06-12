@@ -1,10 +1,24 @@
 "use client";
 import { MonthlyCalendar, WeeklyCalendar } from "@/shared/ui/calendar";
 import { Modal, useModal } from "@/shared/ui/modal";
+import { useQuery } from "@tanstack/react-query";
 import { Bell, CalendarCheck } from "lucide-react";
+import type { Meeting } from "./DashboardCardSection";
+
+async function fetchJoinedMeetings(): Promise<{ data: Meeting[] }> {
+  const response = await fetch("/api/users/me/meetings");
+  if (!response.ok) throw new Error(`서버 에러 상태코드: ${response.status}`);
+  return response.json();
+}
 
 export default function MainContent() {
   const modal = useModal();
+
+  const { data } = useQuery({
+    queryKey: ["joinedMeetings"],
+    queryFn: fetchJoinedMeetings,
+  });
+
   return (
     <div className="relative mb-5 w-full">
       <div className="mb-6 flex items-center justify-between px-6">
@@ -29,7 +43,7 @@ export default function MainContent() {
           </button>
         </div>
       </div>
-      <WeeklyCalendar />
+      <WeeklyCalendar meetings={data?.data ?? []} />
 
       {modal.isOpen && (
         <Modal onClose={modal.close}>
@@ -44,7 +58,7 @@ export default function MainContent() {
             <Modal.CloseButton className="mb-2" />
           </Modal.Header>
           <div>
-            <MonthlyCalendar />
+            <MonthlyCalendar meetings={data?.data ?? []} />
           </div>
         </Modal>
       )}

@@ -1,51 +1,62 @@
 "use client";
 
-import { format, isSameDay } from "@/shared/lib/date";
-// import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useRef, useState } from "react";
+import { format } from "@/shared/lib/date";
+import { useMemo, useRef, useState } from "react";
 import type { Swiper as SwiperType } from "swiper";
 import "swiper/css";
 import { Swiper, SwiperSlide } from "swiper/react";
+import type { CalendarDagym } from "./types";
 
+import DagymBottomSheet from "./DagymBottomSheet";
 import DayItem from "./DayItem";
 import { useCalendar } from "./useCalendar";
 
 const WEEKDAYS = ["일", "월", "화", "수", "목", "금", "토"];
 
-const MOCK_WORKOUT_DATA = {
-  completedDays: new Set([
-    "2026-06-02",
-    "2026-06-04",
-    "2026-06-06",
-    "2026-06-09",
-  ]),
-  reservedDays: new Set([
-    "2026-06-04",
-    "2026-06-06",
-    "2026-06-09",
-    "2026-06-11",
-    "2026-06-15",
-    "2026-06-17",
-    "2026-06-23",
-    "2026-06-25",
-  ]),
-};
+interface WeeklyCalendarProps {
+  meetings?: CalendarDagym[];
+}
 
-export default function WeeklyCalendar() {
+export default function WeeklyCalendar({ meetings = [] }: WeeklyCalendarProps) {
   const pickerType = "week";
   const swiperRef = useRef<SwiperType | null>(null);
   const [today] = useState(() => new Date());
+  const [selectedDateKey, setSelectedDateKey] = useState<string | null>(null);
 
-  const {
-    calendarSlides,
-    currentStart,
-    activeIndex,
-    setActiveIndex,
-    selectedDate,
-    setSelectedDate,
-    canMovePrev,
-    canMoveNext,
-  } = useCalendar(today, pickerType);
+  const { calendarSlides, currentStart, activeIndex, setActiveIndex } =
+    useCalendar(today, pickerType);
+
+  const completedDays = useMemo(
+    () =>
+      new Set(
+        meetings
+          .filter((m) => m.isCompleted)
+          .map((m) => format(new Date(m.dateTime)))
+      ),
+    [meetings]
+  );
+
+  const reservedDays = useMemo(
+    () => new Set(meetings.map((m) => format(new Date(m.dateTime)))),
+    [meetings]
+  );
+
+  const selectedMeetings = useMemo(
+    () =>
+      selectedDateKey
+        ? meetings.filter(
+            (m) => format(new Date(m.dateTime)) === selectedDateKey
+          )
+        : [],
+    [selectedDateKey, meetings]
+  );
+
+  const handleDaySelect = (date: Date) => {
+    const key = format(date);
+    if (completedDays.has(key) || reservedDays.has(key)) {
+      setSelectedDateKey((prev) => (prev === key ? null : key));
+    }
+  };
 
   return (
     <>
@@ -54,44 +65,9 @@ export default function WeeklyCalendar() {
         <h2 className="text-2xl font-bold text-gray-800">
           {format(currentStart, "M월")} 다짐 기록
         </h2>
-        {/* <div className="flex items-center gap-2">
-          <button
-            type="button"
-            disabled={!canMovePrev}
-            onClick={() => {
-              //   moveWeek("prev");
-
-              swiperRef.current?.slidePrev();
-            }}
-            className={`rounded-full p-2 transition-colors ${
-              canMovePrev
-                ? "text-gray-600 hover:bg-gray-100"
-                : "cursor-not-allowed text-gray-300 opacity-30"
-            }`}
-          >
-            <ChevronLeft size={20} />
-          </button>
-
-          <button
-            type="button"
-            disabled={!canMoveNext}
-            onClick={() => {
-              //   moveWeek("next");
-
-              swiperRef.current?.slideNext();
-            }}
-            className={`rounded-full p-2 transition-colors ${
-              canMoveNext
-                ? "text-gray-600 hover:bg-gray-100"
-                : "cursor-not-allowed text-gray-300 opacity-30"
-            }`}
-          >
-            <ChevronRight size={20} />
-          </button>
-      </div> */}
       </div>
       <div className="mx-auto w-full max-w-3xl bg-white py-5">
-        {/* 요일 라벨 (Swiper 밖에서 고정) */}
+        {/* 요일 라벨 */}
         <div className="mb-3 grid grid-cols-7 border-b border-b-2 border-gray-100 pb-1 text-center">
           {WEEKDAYS.map((day) => (
             <span key={day} className="text-[12px] font-medium text-gray-400">
@@ -100,7 +76,7 @@ export default function WeeklyCalendar() {
           ))}
         </div>
 
-        {/* 날짜 그리드 (스와이프 전용) */}
+        {/* 날짜 그리드 */}
         <Swiper
           onSwiper={(swiper) => (swiperRef.current = swiper)}
           initialSlide={activeIndex}
@@ -113,9 +89,8 @@ export default function WeeklyCalendar() {
               <div className="grid grid-cols-7 justify-items-center">
                 {slide.days.map((date) => {
                   const dateKey = format(date, "yyyy-MM-dd");
-                  const isDone = MOCK_WORKOUT_DATA.completedDays.has(dateKey);
-                  const isReserved =
-                    MOCK_WORKOUT_DATA.reservedDays.has(dateKey);
+                  const isDone = completedDays.has(dateKey);
+                  const isReserved = reservedDays.has(dateKey);
 
                   return (
                     <div key={dateKey} className="w-full">
@@ -125,8 +100,8 @@ export default function WeeklyCalendar() {
                           dateKey,
                           dayNumber: format(date, "d"),
                         }}
-                        isSelected={isSameDay(date, selectedDate)}
-                        onSelect={setSelectedDate}
+                        isSelected={selectedDateKey === dateKey}
+                        onSelect={handleDaySelect}
                         isDone={isDone}
                         isReserved={isReserved}
                         pickerType={pickerType}
@@ -139,6 +114,15 @@ export default function WeeklyCalendar() {
           ))}
         </Swiper>
       </div>
+
+      {/* 바텀 시트 */}
+      {selectedDateKey && (
+        <DagymBottomSheet
+          selectedDateKey={selectedDateKey}
+          meetings={selectedMeetings}
+          onClose={() => setSelectedDateKey(null)}
+        />
+      )}
     </>
   );
 }

@@ -1,14 +1,16 @@
 import ScrollToTopButton from "@/shared/ui/button/ScrollTopButton";
 import { cookies } from "next/headers";
 
-import DashboardCardSection from "@/features/bashboard/DashboardSection";
-import ReservationCard from "@/features/bashboard/ReservationCard";
+import {
+  CreateDagym,
+  DagymLogSection,
+  DashboardCardSection,
+  ReservationCard,
+} from "@/features/dashboard";
 import bannerPc from "@/shared/assets/images/banner_1024.png";
 import bannerMobile from "@/shared/assets/images/banner_360.png";
 import bannerTablet from "@/shared/assets/images/banner_768.png";
 import Image from "next/image";
-import CreateDagym from "./components/CreateDagym";
-import DagymLog from "./components/DagymLogSection";
 import DagymSection from "./components/DagymSection";
 
 const HomePage = async () => {
@@ -23,7 +25,7 @@ const HomePage = async () => {
           {isLogin && (
             <div className="block md:hidden lg:mb-12">
               <ReservationCard isLogin={isLogin} />
-              <DagymLog />
+              <DagymLogSection />
               <DashboardCardSection isLogin={isLogin} />
             </div>
           )}
