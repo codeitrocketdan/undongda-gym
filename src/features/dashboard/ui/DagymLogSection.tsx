@@ -1,11 +1,16 @@
 "use client";
+
+import { format } from "@/shared/lib/date";
 import { MonthlyCalendar, WeeklyCalendar } from "@/shared/ui/calendar";
 import { Modal, useModal } from "@/shared/ui/modal";
 import { useQuery } from "@tanstack/react-query";
 import { Bell, CalendarCheck } from "lucide-react";
-import type { Meeting } from "./DashboardCardSection";
+import { useMemo, useState } from "react";
+import DagymBottomSheet from "./DagymBottomSheet";
+import DagymDetailPanel from "./DagymDetailPanel";
+import type { Dagym } from "../types";
 
-async function fetchJoinedMeetings(): Promise<{ data: Meeting[] }> {
+async function fetchJoinedMeetings(): Promise<{ data: Dagym[] }> {
   const response = await fetch("/api/users/me/meetings");
   if (!response.ok) throw new Error(`서버 에러 상태코드: ${response.status}`);
   return response.json();
@@ -13,27 +18,51 @@ async function fetchJoinedMeetings(): Promise<{ data: Meeting[] }> {
 
 export default function MainContent() {
   const modal = useModal();
+  const [weeklySelectedKey, setWeeklySelectedKey] = useState<string | null>(
+    null
+  );
 
   const { data } = useQuery({
-    queryKey: ["joinedMeetings"],
+    queryKey: ["joinedDagyms"],
     queryFn: fetchJoinedMeetings,
   });
+
+  const dagyms = data?.data ?? [];
+
+  const completedDays = useMemo(
+    () =>
+      new Set(
+        dagyms
+          .filter((dagym) => dagym.isCompleted)
+          .map((dagym) => format(new Date(dagym.dateTime)))
+      ),
+    [dagyms]
+  );
+
+  const reservedDays = useMemo(
+    () => new Set(dagyms.map((dagym) => format(new Date(dagym.dateTime)))),
+    [dagyms]
+  );
+
+  const weeklyDagyms = useMemo(
+    () =>
+      weeklySelectedKey
+        ? dagyms.filter(
+            (dagym) => format(new Date(dagym.dateTime)) === weeklySelectedKey
+          )
+        : [],
+    [weeklySelectedKey, dagyms]
+  );
 
   return (
     <div className="relative mb-5 w-full">
       <div className="mb-6 flex items-center justify-between px-6">
-        <h2 className="text-xl font-bold text-gray-900">
-          {/* {format(currentStart, "yyyy년 M월 eeee", { locale: ko })} */}
-        </h2>
+        <h2 className="text-xl font-bold text-gray-900" />
         <div className="mr-1 flex items-center gap-3">
           <button className="notice-wrap relative cursor-pointer">
-            {/* 알람이 있을 경우 - 추후 연결
-                  <BellDot/>
-                  <div className="absolute top-[3px] right-[3px] h-[6px] w-[6px] rounded-full bg-red-500" />
-                  */}
+            {/* 알람이 있을 경우 - 추후 연결 */}
             <Bell size={28} />
           </button>
-
           <button
             onClick={modal.open}
             aria-label="월간 달력 열기"
@@ -43,7 +72,20 @@ export default function MainContent() {
           </button>
         </div>
       </div>
-      <WeeklyCalendar meetings={data?.data ?? []} />
+
+      <WeeklyCalendar
+        completedDays={completedDays}
+        reservedDays={reservedDays}
+        onDateClick={(key) => setWeeklySelectedKey(key)}
+      />
+
+      {weeklySelectedKey && (
+        <DagymBottomSheet
+          selectedDateKey={weeklySelectedKey}
+          dagyms={weeklyDagyms}
+          onClose={() => setWeeklySelectedKey(null)}
+        />
+      )}
 
       {modal.isOpen && (
         <Modal onClose={modal.close}>
@@ -51,14 +93,28 @@ export default function MainContent() {
             <div>
               <h2 className="text-base-bold">나의 다짐 기록</h2>
               <p className="text-xs-regular -ml-2 rounded-xl bg-gray-100 px-2 py-1">
-                <span className="xs:inline-block hidden">이뤄낸 다짐과 </span>
-                &nbsp;예정된 다짐을 달력으로 확인할 수 있어요!
+                날짜를 클릭하면 다짐 정보를 볼 수 있어요!
               </p>
             </div>
             <Modal.CloseButton className="mb-2" />
           </Modal.Header>
           <div>
-            <MonthlyCalendar meetings={data?.data ?? []} />
+            <MonthlyCalendar
+              completedDays={completedDays}
+              reservedDays={reservedDays}
+              renderDetail={({ selectedDateKey, isActive, onBack }) => (
+                <DagymDetailPanel
+                  selectedDateKey={selectedDateKey}
+                  dagyms={dagyms.filter(
+                    (dagym) =>
+                      selectedDateKey &&
+                      format(new Date(dagym.dateTime)) === selectedDateKey
+                  )}
+                  onBack={onBack}
+                  isActive={isActive}
+                />
+              )}
+            />
           </div>
         </Modal>
       )}

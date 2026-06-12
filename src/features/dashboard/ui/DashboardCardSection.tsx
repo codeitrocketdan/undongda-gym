@@ -4,18 +4,11 @@ import { useQuery } from "@tanstack/react-query";
 import { calculateDashboardStats } from "../lib/useDashboardCard";
 import { DashboardCard } from "./DashboardCard";
 
-export interface Meeting {
-  id: number;
-  name: string;
-  type: string;
-  region: string;
-  dateTime: string;
-  isCompleted: boolean;
-}
+import type { Dagym } from "../types";
 
 // API 응답 데이터 전체를 받을 State 타입 정의
 interface ApiResponse {
-  data: Meeting[];
+  data: Dagym[];
 }
 
 function DashboardCardSkeleton() {
@@ -47,13 +40,13 @@ export default function DashboardCardSection({
   isLogin: boolean;
 }) {
   const { data, isLoading } = useQuery({
-    queryKey: ["joinedMeetings"],
+    queryKey: ["joinedDagyms"],
     queryFn: fetchJoinedMeetings,
     enabled: isLogin,
   });
 
   const stats = data?.data
-    ? calculateDashboardStats(data.data.filter((m) => m.isCompleted))
+    ? calculateDashboardStats(data.data.filter((dagym) => dagym.isCompleted))
     : { streak: 0, thisMonthCount: 0, totalHours: 0 };
 
   if (isLoading) {

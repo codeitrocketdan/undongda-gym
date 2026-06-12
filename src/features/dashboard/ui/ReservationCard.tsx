@@ -3,18 +3,10 @@ import bgCharacter from "@/shared/assets/images/bg_character.png";
 import { format } from "@/shared/lib/date";
 import Skeleton from "@/shared/ui/skeleton/Skeleton";
 import { useQuery } from "@tanstack/react-query";
-
-interface Meeting {
-  id: number;
-  name: string;
-  type: string;
-  region: string;
-  dateTime: string;
-  isCompleted: boolean;
-}
+import type { Dagym } from "../types";
 
 interface ApiResponse {
-  data: Meeting[];
+  data: Dagym[];
 }
 
 function ReservationCardSkeleton() {
@@ -41,22 +33,22 @@ async function fetchMeetings(): Promise<ApiResponse> {
 
 export default function ReservationCard({ isLogin }: { isLogin: boolean }) {
   const { data, isLoading } = useQuery({
-    queryKey: ["joinedMeetings"],
+    queryKey: ["joinedDagyms"],
     queryFn: fetchMeetings,
     enabled: isLogin,
   });
 
   const now = new Date();
-  const meeting =
+  const nextDagym =
     data?.data
-      ?.filter((m) => !m.isCompleted && new Date(m.dateTime) >= now)
+      ?.filter((dagym) => !dagym.isCompleted && new Date(dagym.dateTime) >= now)
       .sort(
-        (a, b) =>
-          new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime()
+        (earlier, later) =>
+          new Date(earlier.dateTime).getTime() - new Date(later.dateTime).getTime()
       )[0] ?? null;
 
   if (isLoading) return <ReservationCardSkeleton />;
-  if (!meeting) return null;
+  if (!nextDagym) return null;
 
   return (
     <div className="inner">
@@ -67,19 +59,19 @@ export default function ReservationCard({ isLogin }: { isLogin: boolean }) {
         <div className="mb-2 flex items-center gap-2">
           <span className="text-sm font-black text-gray-800">예약된 다짐</span>
           <span className="color-slate-800 rounded-xl bg-slate-200 px-2 py-1 text-sm">
-            {meeting.type}
+            {nextDagym.type}
           </span>
-          {/* <p className="text-base">- {meeting.name}</p> */}
+          {/* <p className="text-base">- {nextDagym.name}</p> */}
         </div>
         <div className="xs:flex-row xs:items-center flex flex-col items-start gap-x-2">
           <p className="flex flex-row flex-wrap items-center gap-x-2 text-lg font-black">
-            <span>{meeting.region}점</span>
+            <span>{nextDagym.region}점</span>
             <span>
-              {format(meeting.dateTime, "HH:mm")} ~{" "}
-              {format(meeting.dateTime, "HH:50")}
+              {format(nextDagym.dateTime, "HH:mm")} ~{" "}
+              {format(nextDagym.dateTime, "HH:50")}
             </span>
             <span className="text-sm font-medium">
-              {format(meeting.dateTime, "yyyy-MM-dd(eee)")}
+              {format(nextDagym.dateTime, "yyyy-MM-dd(eee)")}
             </span>
           </p>
         </div>

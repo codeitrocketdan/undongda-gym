@@ -3,17 +3,18 @@
 import { format } from "@/shared/lib/date";
 import { X } from "lucide-react";
 import { useRef, useState } from "react";
-import type { CalendarDagym } from "./types";
+import DagymItem from "./DagymItem";
+import type { Dagym } from "../types";
 
 interface DagymBottomSheetProps {
   selectedDateKey: string;
-  meetings: CalendarDagym[];
+  dagyms: Dagym[];
   onClose: () => void;
 }
 
 export default function DagymBottomSheet({
   selectedDateKey,
-  meetings,
+  dagyms,
   onClose,
 }: DagymBottomSheetProps) {
   const [dragY, setDragY] = useState(0);
@@ -49,7 +50,6 @@ export default function DagymBottomSheet({
         onTouchEnd={handleTouchEnd}
         className="fixed right-0 bottom-0 left-0 z-50 rounded-t-2xl bg-white px-5 pt-3 pb-8 shadow-xl"
       >
-        {/* 드래그 핸들 */}
         <div className="mb-3 flex justify-center">
           <div className="h-1 w-10 rounded-full bg-gray-200" />
         </div>
@@ -62,30 +62,8 @@ export default function DagymBottomSheet({
           </button>
         </div>
         <ul className="flex flex-col gap-3">
-          {meetings.map((m) => (
-            <li
-              key={m.id}
-              className="flex items-center justify-between rounded-xl bg-gray-50 px-4 py-3"
-            >
-              <div className="flex flex-col gap-0.5">
-                <span className="text-sm font-semibold text-gray-900">
-                  {m.name}
-                </span>
-                <span className="text-xs text-gray-400">
-                  {format(new Date(m.dateTime), "HH:mm")} ~{" "}
-                  {format(new Date(m.dateTime), "HH:50")}
-                </span>
-              </div>
-              <span
-                className={`rounded-full px-2.5 py-1 text-xs font-medium ${
-                  m.isCompleted
-                    ? "bg-blue-100 text-blue-700"
-                    : "bg-orange-100 text-orange-600"
-                }`}
-              >
-                {m.isCompleted ? "완료" : "예정"}
-              </span>
-            </li>
+          {dagyms.map((m) => (
+            <DagymItem key={m.id} dagym={m} />
           ))}
         </ul>
       </div>
