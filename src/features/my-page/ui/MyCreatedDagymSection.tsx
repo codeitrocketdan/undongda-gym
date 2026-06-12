@@ -8,6 +8,7 @@ import useInfiniteScroll from "@/shared/hooks/useInfiniteScroll";
 import { userMeetingQueries } from "@/shared/lib/queryKeys";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import Image from "next/image";
+import qs from "qs";
 import MyPageCard from "./MyPageCard";
 import MyPageCardSkeleton from "./MyPageCardSkeleton";
 
@@ -15,23 +16,30 @@ const LIMIT = 5;
 
 export default function MyCreatedDagymSection() {
   const { toggleFavorite } = useFavorite();
-  const { data, fetchNextPage, hasNextPage, isFetching, isLoading, isError } =
-    useInfiniteQuery<CreatedMeetingListResponse>({
+  const {
+    data: meetings = [],
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+    isLoading,
+    isError,
+  } = useInfiniteQuery<CreatedMeetingListResponse, Error, MeetingWithHostDTO[]>(
+    {
       queryKey: userMeetingQueries.created(),
       queryFn: async ({ pageParam }) => {
-        const params = new URLSearchParams({
+        const query = qs.stringify({
           type: "created",
-          size: String(LIMIT),
-          ...(pageParam ? { cursor: pageParam as string } : {}),
+          size: LIMIT,
+          cursor: (pageParam as string) ?? undefined,
         });
-        const res = await fetch(`/api/users/me/meetings?${params}`);
+        const res = await fetch(`/api/users/me/meetings?${query}`);
         return res.json();
       },
       getNextPageParam: (lastPage) => lastPage?.nextCursor ?? undefined,
       initialPageParam: null,
-    });
-
-  const meetings = data?.pages.flatMap((p) => p.data) ?? [];
+      select: (data) => data.pages.flatMap((p) => p.data),
+    }
+  );
 
   const observerRef = useInfiniteScroll({
     fetchNextPage,

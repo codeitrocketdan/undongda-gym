@@ -10,6 +10,7 @@ import useInfiniteScroll from "@/shared/hooks/useInfiniteScroll";
 import { userMeetingQueries } from "@/shared/lib/queryKeys";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import Image from "next/image";
+import qs from "qs";
 import MyPageCard from "./MyPageCard";
 import MyPageCardSkeleton from "./MyPageCardSkeleton";
 
@@ -21,12 +22,12 @@ export default function MyDagymSection() {
     useInfiniteQuery<MyMeetingListResponse>({
       queryKey: userMeetingQueries.joined(),
       queryFn: async ({ pageParam }) => {
-        const params = new URLSearchParams({
+        const query = qs.stringify({
           type: "joined",
-          size: String(LIMIT),
-          ...(pageParam ? { cursor: pageParam as string } : {}),
+          size: LIMIT,
+          cursor: (pageParam as string) ?? undefined,
         });
-        const res = await fetch(`/api/users/me/meetings?${params}`);
+        const res = await fetch(`/api/users/me/meetings?${query}`);
         return res.json();
       },
       getNextPageParam: (lastPage) => lastPage?.nextCursor ?? undefined,
