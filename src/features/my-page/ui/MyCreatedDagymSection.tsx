@@ -5,6 +5,7 @@ import { useFavorite } from "@/features/favorite/model/useFavorite";
 import { CreatedMeetingListResponse } from "@/features/my-page/types";
 import emptyImage from "@/shared/assets/images/empty.svg";
 import useInfiniteScroll from "@/shared/hooks/useInfiniteScroll";
+import { userMeetingQueries } from "@/shared/lib/queryKeys";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import MyPageCard from "./MyPageCard";
@@ -16,7 +17,7 @@ export default function MyCreatedDagymSection() {
   const { toggleFavorite } = useFavorite();
   const { data, fetchNextPage, hasNextPage, isFetching, isLoading, isError } =
     useInfiniteQuery<CreatedMeetingListResponse>({
-      queryKey: ["users/me/meetings/created"],
+      queryKey: userMeetingQueries.created(),
       queryFn: async ({ pageParam }) => {
         const params = new URLSearchParams({
           type: "created",

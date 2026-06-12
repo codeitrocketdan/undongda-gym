@@ -6,6 +6,7 @@ import { useMeetingTypes } from "@/features/dagym/model/useMeetingTypes";
 import { useFavorite } from "@/features/favorite/model/useFavorite";
 import { FavoriteListResponse } from "@/features/favorite/types";
 import useInfiniteScroll from "@/shared/hooks/useInfiniteScroll";
+import { favoriteQueries } from "@/shared/lib/queryKeys";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { parseAsString, useQueryState } from "nuqs";
 
@@ -41,7 +42,12 @@ export function useFavoriteSectionViewModel() {
 
   const { data, fetchNextPage, hasNextPage, isFetching, isLoading, isError } =
     useInfiniteQuery<FavoriteListResponse>({
-      queryKey: ["favorites", selectedCategory, region, sortBy, sortOrder],
+      queryKey: favoriteQueries.list({
+        type: selectedCategory,
+        region,
+        sortBy,
+        sortOrder,
+      }),
       queryFn: async ({ pageParam }) => {
         const params = new URLSearchParams();
         if (selectedCategory) params.set("type", selectedCategory);

@@ -13,6 +13,7 @@ import { MeetingListResponse, MeetingTypeDTO } from "@/features/dagym/types";
 import { useFavorite } from "@/features/favorite/model/useFavorite";
 import emptyImage from "@/shared/assets/images/empty.svg";
 import useInfiniteScroll from "@/shared/hooks/useInfiniteScroll";
+import { meetingQueries } from "@/shared/lib/queryKeys";
 import Filter from "@/shared/ui/filter/Filter";
 import PillTabs from "@/shared/ui/tab/PillTabs";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
@@ -71,7 +72,12 @@ export default function DagymSection() {
   // queryKey에 필터값이 포함되어 있어서 필터 변경 시 자동으로 처음부터 다시 fetch
   const { data, fetchNextPage, hasNextPage, isFetching, isLoading, isError } =
     useInfiniteQuery<MeetingListResponse>({
-      queryKey: ["meetings", selectedCategory, region, sortBy, sortOrder],
+      queryKey: meetingQueries.list({
+        type: selectedCategory,
+        region,
+        sortBy,
+        sortOrder,
+      }),
       queryFn: async ({ pageParam }) => {
         const query = serialize({
           type: selectedCategory || null,
