@@ -57,7 +57,7 @@ export default function PostDetailPage() {
         post={post}
         isOwner={user?.id === post.authorId}
         onLike={() => like.mutate({ isLiked: post.isLiked })}
-        onEdit={() => {}} // TODO: 게시글 수정 페이지 라우팅
+        onEdit={() => router.push(`/post/${id}/edit`)}
         onDelete={() => {}} // TODO: 삭제 후 /post 이동
       />
       <CommentList
