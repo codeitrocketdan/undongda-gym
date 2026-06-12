@@ -96,7 +96,7 @@ export default function MainContent() {
             <div>
               <h2 className="text-base-bold">나의 다짐 기록</h2>
               <p className="text-xs-regular -ml-2 rounded-xl bg-gray-100 px-2 py-1">
-                날짜를 클릭하면 다짐 정보를 볼 수 있어요!
+                날짜를 클릭하면 내 다짐 정보를 볼 수 있어요
               </p>
             </div>
             <Modal.CloseButton className="mb-2" />
