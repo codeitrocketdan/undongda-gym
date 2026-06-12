@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 
 import { UserRound } from "lucide-react";
-// import LogoutModal from "../Modal/LogoutModal";
+// import LogoutModal from "../modal/LogoutModal";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import ProfileMenu from "./ProfileMenu";
