@@ -1,4 +1,4 @@
-import { CircleUserRound } from "lucide-react";
+import avatarImage from "@/shared/assets/images/avatar.svg";
 import Image from "next/image";
 import { twMerge } from "tailwind-merge";
 
@@ -16,13 +16,15 @@ export default function Author({ image, name, className }: AuthorProps) {
         className
       )}
     >
-      {image ? (
-        <div className="relative h-6 w-6 overflow-hidden rounded-full">
-          <Image src={image} alt="" fill className="object-cover" />
-        </div>
-      ) : (
-        <CircleUserRound className="h-6 w-6 text-slate-400" />
-      )}
+      <div className="h-6 w-6 shrink-0 overflow-hidden rounded-full border border-slate-200 bg-white">
+        <Image
+          src={image ?? avatarImage}
+          alt="사용자 이미지"
+          width={24}
+          height={24}
+          className="object-cover"
+        />
+      </div>
       <span>{name}</span>
     </div>
   );
