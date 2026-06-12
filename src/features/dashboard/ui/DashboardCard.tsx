@@ -9,7 +9,7 @@ function cn(...inputs: ClassValue[]): string {
 }
 
 const cardVariants = cva(
-  "flex flex-col xs:flex-row items-center justi md:p-4 md:gap-4 bg-white rounded-2xl shadow-xs w-full p-2 gap-2"
+  "flex flex-col xs:flex-row items-center md:p-4 md:gap-4 bg-white rounded-2xl shadow-xs w-full p-2 gap-2"
 );
 
 type CardType = "streak" | "count" | "time";

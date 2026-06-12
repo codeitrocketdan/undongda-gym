@@ -25,7 +25,7 @@ export default async function jestConfig() {
   const makeConfig = createJestConfig(config);
   const finalConfig = await makeConfig();
 
-  finalConfig.transformIgnorePatterns = [];
+  finalConfig.transformIgnorePatterns = ["/node_modules/(?!(swiper|dom7)/)"];
 
   return finalConfig;
 }

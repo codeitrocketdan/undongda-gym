@@ -42,7 +42,7 @@ export default function WeeklyCalendar({
     <>
       <div className="absolute top-0 left-0 flex items-center justify-between px-6">
         <h2 className="text-2xl font-bold text-gray-800">
-          {format(currentStart, "M월")} 다짐 기록
+          {format(today, "M월")} 다짐 기록
         </h2>
       </div>
       <div className="mx-auto w-full max-w-3xl bg-white py-5">

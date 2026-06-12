@@ -20,7 +20,7 @@ export default function ProfileIcon({ className }: { className?: string }) {
         <Image
           src={avatar}
           alt="기본 이미지"
-          className={(twMerge("rounded-full"), className)}
+          className={twMerge("rounded-full", className)}
         />
       )}
     </Link>
