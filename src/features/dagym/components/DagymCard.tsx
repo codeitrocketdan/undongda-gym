@@ -31,7 +31,7 @@ export default function DagymCard({
   onJoin,
 }: DagymCardProps) {
   return (
-    <Link href={`/meetings/${id}`}>
+    <Link href={`/dagym-detail/${id}`}>
       <FeedCard className="overflow-hidden rounded-3xl md:rounded-4xl">
         {/* 모바일 레이아웃 */}
         <div className="flex flex-col md:hidden">
