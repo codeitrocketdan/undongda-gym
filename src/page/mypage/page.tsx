@@ -1,10 +1,13 @@
 "use client";
-import UnderlineTabs from "@/shared/ui/tab/UnderlineTabs";
-import { parseAsString, useQueryState } from "nuqs";
 import MyCreatedDagymSection from "@/features/my-page/ui/MyCreatedDagymSection";
 import MyDagymSection from "@/features/my-page/ui/MyDagymSection";
+import MyPageCardSkeleton from "@/features/my-page/ui/MyPageCardSkeleton";
 import MyReviewSection from "@/features/my-page/ui/MyReviewSection";
 import ProfileSection from "@/features/my-page/ui/ProfileSection";
+import { ErrorBoundary } from "@/shared/ui/ErrorBoundary";
+import UnderlineTabs from "@/shared/ui/tab/UnderlineTabs";
+import { parseAsString, useQueryState } from "nuqs";
+import { Suspense } from "react";
 
 const TABS = [
   { id: 0, name: "나의 다짐" },
@@ -36,9 +39,48 @@ export default function MyPage() {
             onChange={setActiveTab}
           />
         </div>
+        {/* TODO 나의다짐, 나의리뷰도 ErrorBoundary, Suspense 사용 예정
+        // AsyncTabSection.tsx
+        function AsyncTabSection({ children }) {
+          return (
+            <ErrorBoundary fallback={<에러UI />}>
+              <Suspense fallback={<스켈레톤 />}>
+                {children}
+              </Suspense>
+            </ErrorBoundary>
+          );
+        }
+
+        // page.tsx
+        <AsyncTabSection>
+          {validTab === "나의 다짐" && <MyDagymSection />}
+          {validTab === "나의 리뷰" && <MyReviewSection />}
+          {validTab === "내가 만든 다짐" && <MyCreatedDagymSection />}
+        </AsyncTabSection>
+        */}
         {validTab === "나의 다짐" && <MyDagymSection />}
         {validTab === "나의 리뷰" && <MyReviewSection />}
-        {validTab === "내가 만든 다짐" && <MyCreatedDagymSection />}
+        {validTab === "내가 만든 다짐" && (
+          <ErrorBoundary
+            fallback={
+              <p className="py-20 text-center text-sm text-slate-400">
+                불러오는 중 문제가 발생했어요
+              </p>
+            }
+          >
+            <Suspense
+              fallback={
+                <div className="flex flex-col gap-4 lg:gap-6">
+                  {Array.from({ length: 3 }).map((_, i) => (
+                    <MyPageCardSkeleton key={i} />
+                  ))}
+                </div>
+              }
+            >
+              <MyCreatedDagymSection />
+            </Suspense>
+          </ErrorBoundary>
+        )}
       </div>
     </div>
   );
