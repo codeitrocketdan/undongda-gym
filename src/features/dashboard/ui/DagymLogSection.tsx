@@ -4,7 +4,7 @@ import { format } from "@/shared/lib/date";
 import { MonthlyCalendar, WeeklyCalendar } from "@/shared/ui/calendar";
 import { Modal, useModal } from "@/shared/ui/modal";
 import { useQuery } from "@tanstack/react-query";
-import { Bell, CalendarCheck } from "lucide-react";
+import { CalendarCheck } from "lucide-react";
 import { useMemo, useState } from "react";
 import type { Dagym } from "../types";
 import DagymBottomSheet from "./DagymBottomSheet";
@@ -59,13 +59,6 @@ export default function MainContent() {
       <div className="mb-6 flex items-center justify-between px-6">
         <h2 className="text-xl font-bold text-gray-900" />
         <div className="mr-1 flex items-center gap-3">
-          <button
-            className="notice-wrap relative cursor-pointer"
-            aria-label="새 알람 피드 열기"
-          >
-            {/* 알람이 있을 경우 - 추후 연결 */}
-            <Bell size={28} />
-          </button>
           <button
             onClick={modal.open}
             aria-label="월간 달력 열기"
