@@ -73,8 +73,8 @@ export default function DagymSection() {
   const { data, fetchNextPage, hasNextPage, isFetching, isLoading, isError } =
     useInfiniteQuery<MeetingListResponse>({
       queryKey: meetingQueries.list({
-        type: selectedCategory,
-        region,
+        type: selectedCategory || undefined,
+        region: region || undefined,
         sortBy,
         sortOrder,
       }),

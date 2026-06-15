@@ -41,7 +41,7 @@ export default function MyCreatedDagymSection() {
       lastPage?.nextCursor ?? undefined,
     initialPageParam: null,
     select: (data) =>
-      data.pages.flatMap((p: CreatedMeetingListResponse) => p.data),
+      data.pages.flatMap((p: CreatedMeetingListResponse) => p.data ?? []),
   });
 
   const observerRef = useInfiniteScroll({
