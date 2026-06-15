@@ -1,6 +1,6 @@
 "use client";
 
-import { format, isSameMonth } from "@/shared/lib/date";
+import { DATE_FORMAT, format, isSameMonth } from "@/shared/lib/date";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { type ReactNode, useRef, useState } from "react";
 import type { Swiper as SwiperType } from "swiper";
@@ -67,7 +67,7 @@ export default function MonthlyCalendar({
     >
       <div className="mb-6 flex items-center justify-between px-2">
         <h2 className="text-xl font-bold text-gray-900">
-          {format(currentMonthStart, "yyyy년 M월")}
+          {format(currentMonthStart, DATE_FORMAT.YEAR_MONTH)}
         </h2>
         <div className="flex items-center gap-2">
           <button
@@ -121,7 +121,7 @@ export default function MonthlyCalendar({
             <SwiperSlide key={slide.id}>
               <div className="grid grid-cols-7 justify-items-center gap-y-3">
                 {slide.days.map((date) => {
-                  const dateKey = format(date, "yyyy-MM-dd");
+                  const dateKey = format(date, DATE_FORMAT.DATE);
                   const isCurrentMonth = isSameMonth(date, slide.baseDate);
                   const isDone = completedDays.has(dateKey);
                   const isReserved = reservedDays.has(dateKey);
@@ -132,7 +132,7 @@ export default function MonthlyCalendar({
                       className={`w-full ${isCurrentMonth ? "opacity-100" : "opacity-25"}`}
                     >
                       <DayItem
-                        day={{ date, dateKey, dayNumber: format(date, "d") }}
+                        day={{ date, dateKey, dayNumber: format(date, DATE_FORMAT.DAY) }}
                         isSelected={selectedDateKey === dateKey}
                         isDone={isDone}
                         isReserved={isReserved}
@@ -150,7 +150,6 @@ export default function MonthlyCalendar({
     </div>
   );
 
-  // renderDetail이 없으면 캘린더만 렌더링
   if (!renderDetail) {
     return (
       <div className="relative mx-auto w-full rounded-2xl bg-white">
@@ -159,7 +158,6 @@ export default function MonthlyCalendar({
     );
   }
 
-  // renderDetail이 있으면 슬라이드 전환 레이아웃
   return (
     <div className="relative mx-auto w-full overflow-hidden rounded-2xl bg-white">
       <div
