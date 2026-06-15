@@ -1,4 +1,4 @@
-import Header from "@/shared/ui/header/Header";
+import { Header } from "@/shared/ui/header";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import Script from "next/script";
