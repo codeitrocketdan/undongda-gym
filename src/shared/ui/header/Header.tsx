@@ -7,7 +7,6 @@ import { buttonVariants } from "../button/Button";
 import MobileMenu from "./MobileMenu";
 import NavLinks from "./NavLinks";
 import NotificationBell from "./NotificationBell";
-import ProfileDropdown from "./ProfileDropdown";
 import ProfileIcon from "./ProfileIcon";
 
 const NAV_ITEMS = [
@@ -27,7 +26,7 @@ export default async function Header() {
         <div className="flex items-center gap-4">
           {isLogin && (
             <div className="md:hidden">
-              <ProfileIcon />
+              <ProfileIcon asLink />
             </div>
           )}
           <Link href="/" className="hidden md:block">
