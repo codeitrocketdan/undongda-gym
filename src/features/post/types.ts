@@ -46,6 +46,46 @@ export interface PostCardProps {
   commentCount: number;
 }
 
+// GET /{teamId}/posts/{postId} 응답 (PostWithComments)
+export interface PostDetailDTO {
+  id: number;
+  teamId: string;
+  title: string;
+  content: string;
+  image: string | null;
+  authorId: number;
+  viewCount: number;
+  likeCount: number;
+  isLiked: boolean;
+  createdAt: string | null;
+  updatedAt: string | null;
+  author: {
+    id: number;
+    name: string;
+    image: string | null;
+    email: string;
+  };
+  comments: CommentDTO[];
+}
+
+// Comment 스키마 1대1 대응 DTO
+export interface CommentDTO {
+  id: number;
+  teamId: string;
+  postId: number;
+  authorId: number;
+  author: {
+    id: number;
+    name: string;
+    image: string | null;
+  };
+  content: string;
+  likeCount: number;
+  isLiked: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
 // HotPostCard 컴포넌트 props
 export interface HotPostCardProps {
   id: number;

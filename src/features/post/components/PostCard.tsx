@@ -16,7 +16,7 @@ export default function PostCard({
   createdAt,
 }: PostCardProps) {
   return (
-    <Link href={`/posts/${id}`}>
+    <Link href={`/post/${id}`}>
       <FeedCard className="flex h-full w-full md:flex-row md:gap-8">
         <FeedCard.Image src={image} className="hidden h-50 w-50 shrink-0 rounded-2xl md:block" />
         <div className="flex flex-1 flex-col border-b border-slate-200 pt-2 pb-6 md:pt-4">
