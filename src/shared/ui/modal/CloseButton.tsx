@@ -7,12 +7,11 @@ interface Props {
 }
 
 export default function CloseButton({ className }: Props) {
-  // 내부 컴포넌트에서는 context 사용
   const { onClose } = useModalContext();
   return (
     <button
       type="button"
-      className={twMerge("cursor-pointer self-end", className)}
+      className={twMerge("cursor-pointer", className)}
       onClick={onClose}
     >
       <X />

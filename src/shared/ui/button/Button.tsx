@@ -23,7 +23,7 @@ export const sizes: Record<SizeType, string> = {
 };
 
 // 버튼 variant 관리
-const buttonVariants = cva(
+export const buttonVariants = cva(
   "flex w-full items-center justify-center cursor-pointer",
   {
     variants: {

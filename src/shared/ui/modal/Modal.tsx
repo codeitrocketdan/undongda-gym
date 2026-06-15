@@ -15,10 +15,8 @@ interface ModalComponent extends React.FC<ModalProps> {
   CloseButton: typeof CloseButton;
 }
 
-// 1. 모달의 기능을 공유할 컨텍스트 생성
 const ModalContext = createContext<{ onClose: () => void } | null>(null);
 
-// 2. 자식컴포넌트에서 꺼내 쓸 수 있는 커스텀 훅
 export const useModalContext = () => {
   const context = useContext(ModalContext);
   if (!context)
@@ -50,7 +48,7 @@ const Modal = ({ children, onClose, isClickToClose }: ModalProps) => {
             if (e.key === "Escape") onClose();
           }}
           onClick={(e) => e.stopPropagation()}
-          className="w-full max-w-136 rounded-xl bg-white p-6 sm:p-12"
+          className="xs:p-12 w-full max-w-136 rounded-xl bg-white px-6 py-8"
         >
           {children}
         </div>

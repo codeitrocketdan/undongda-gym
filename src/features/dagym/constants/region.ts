@@ -1,3 +1,5 @@
+import { CENTER_KEYS } from "@/shared/constants/centers";
+
 const REGIONS = [
   "강남구",
   "강동구",
@@ -30,4 +32,9 @@ const REGIONS = [
 export const REGION_OPTIONS = [
   { label: "전체", value: "" },
   ...REGIONS.map((r) => ({ label: r, value: r })),
+];
+
+export const BRANCH_OPTIONS = [
+  { label: "전체", value: "" },
+  ...CENTER_KEYS.map((key) => ({ label: `${key}점`, value: `${key}점` })),
 ];

@@ -2,6 +2,7 @@
 import { Modal } from "@/shared/ui/modal";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import { CAPACITY_MIN, TOTAL_STEPS } from "../constants";
 import { uploadImageToStorage } from "../lib/uploadImage";
 import SetCategories from "./SetCategories";
 import SetDate from "./SetDate";
@@ -30,7 +31,6 @@ interface DagymFormData {
 export default function CreateDagymForm({ onClose }: useModalTypeProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [step, setStep] = useState(1);
-  const totalSteps = 4;
 
   const methods = useForm<DagymFormData>({
     defaultValues: {
@@ -45,7 +45,7 @@ export default function CreateDagymForm({ onClose }: useModalTypeProps) {
       description: "",
       dateTime: undefined,
       registrationEnd: undefined,
-      capacity: 3,
+      capacity: CAPACITY_MIN,
     },
   });
   const { watch } = methods;
@@ -82,7 +82,7 @@ export default function CreateDagymForm({ onClose }: useModalTypeProps) {
   };
 
   const handleNext = async () => {
-    if (step < totalSteps) {
+    if (step < TOTAL_STEPS) {
       setStep((prev) => prev + 1);
     }
   };
@@ -130,7 +130,7 @@ export default function CreateDagymForm({ onClose }: useModalTypeProps) {
       }
       const result = await response.json();
       console.log("다짐 생성 최종 성공!", result);
-      onClose(); // 성공 시 모달 닫기 추가
+      onClose();
     } catch (error) {
       console.error("최종 생성 실패:", error);
       alert("다짐 생성 중 오류가 발생했습니다.");
@@ -144,7 +144,7 @@ export default function CreateDagymForm({ onClose }: useModalTypeProps) {
         <Modal.Header className="flex-row justify-between">
           <p className="text-lg-bold">
             다짐 만들기 <span className="text-gray-800">{step}</span>
-            <span className="text-gray-600">/ {totalSteps}</span>
+            <span className="text-gray-600">/ {TOTAL_STEPS}</span>
           </p>
           <Modal.CloseButton />
         </Modal.Header>
@@ -163,7 +163,7 @@ export default function CreateDagymForm({ onClose }: useModalTypeProps) {
           <StepButtons
             formId="meeting-multi-step-form"
             currentStep={step}
-            totalSteps={totalSteps}
+            totalSteps={TOTAL_STEPS}
             onPrev={handlePrev}
             onNext={handleNext}
             onClose={onClose}

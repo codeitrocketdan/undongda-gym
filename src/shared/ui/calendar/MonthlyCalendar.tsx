@@ -1,8 +1,8 @@
 "use client";
 
-import { format, isSameDay, isSameMonth } from "@/shared/lib/date";
+import { DATE_FORMAT, format, isSameMonth } from "@/shared/lib/date";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useRef, useState } from "react";
+import { type ReactNode, useRef, useState } from "react";
 import type { Swiper as SwiperType } from "swiper";
 import "swiper/css";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -11,57 +11,71 @@ import DayItem from "./DayItem";
 import { useCalendar } from "./useCalendar";
 
 const WEEKDAYS = ["일", "월", "화", "수", "목", "금", "토"];
-const MOCK_WORKOUT_DATA = {
-  completedDays: new Set([
-    "2026-04-29",
-    "2026-05-18",
-    "2026-05-19",
-    "2026-05-15",
-    "2026-05-25",
-  ]),
-  reservedDays: new Set([
-    "2026-05-21",
-    "2026-05-23",
-    "2026-05-25",
-    "2026-05-28",
-  ]),
-};
 
-export default function MonthlyCalendar() {
+interface DetailRenderProps {
+  selectedDateKey: string | null;
+  isActive: boolean;
+  onBack: () => void;
+}
+
+interface MonthlyCalendarProps {
+  completedDays?: Set<string>;
+  reservedDays?: Set<string>;
+  /*
+  - renderDetail(Panel)       : 슬라이드 상세 패널 (모달 등 슬라이드 전환이 필요한 경우)
+  - onDateClick(bottom sheet) : 슬라이드 없이 날짜 클릭만 알릴 때 (바텀시트 등 외부에서 처리)
+  둘 중 하나만 넘기면 되고, renderDetail이 있으면 onDateClick은 무시됩니다.
+  */
+  renderDetail?: (props: DetailRenderProps) => ReactNode;
+  onDateClick?: (dateKey: string) => void;
+}
+
+export default function MonthlyCalendar({
+  completedDays = new Set(),
+  reservedDays = new Set(),
+  renderDetail,
+  onDateClick,
+}: MonthlyCalendarProps) {
   const pickerType = "month";
   const swiperRef = useRef<SwiperType | null>(null);
   const [today] = useState(() => new Date());
+  const [selectedDateKey, setSelectedDateKey] = useState<string | null>(null);
 
   const {
     calendarSlides,
     currentStart: currentMonthStart,
     activeIndex,
     setActiveIndex,
-    selectedDate,
-    setSelectedDate,
     canMovePrev,
     canMoveNext,
   } = useCalendar(today, pickerType);
 
-  const handleTransitionEnd = (swiper: SwiperType) => {
-    setActiveIndex(swiper.activeIndex);
+  const handleDaySelect = (date: Date) => {
+    const key = format(date);
+    if (completedDays.has(key) || reservedDays.has(key)) {
+      if (renderDetail) {
+        setSelectedDateKey(key);
+      } else {
+        onDateClick?.(key);
+      }
+    }
   };
 
-  return (
-    <div className="relative mx-auto w-full max-w-md rounded-2xl bg-white p-5">
-      {/* 연도 및 월 표시, 이동 버튼 */}
+  const calendarPanel = (
+    <div
+      className={renderDetail && selectedDateKey ? "pointer-events-none" : ""}
+    >
       <div className="mb-6 flex items-center justify-between px-2">
         <h2 className="text-xl font-bold text-gray-900">
-          {format(currentMonthStart, "yyyy년 M월")}
+          {format(currentMonthStart, DATE_FORMAT.YEAR_MONTH)}
         </h2>
-
         <div className="flex items-center gap-2">
           <button
             type="button"
             aria-label="이전 달로 이동"
             onClick={() => swiperRef.current?.slidePrev()}
             disabled={!canMovePrev}
-            className={`rounded-full p-2 transition-colors ${
+            className={`cursor-pointer rounded-full p-2 transition-colors ${
               canMovePrev
                 ? "text-gray-600 hover:bg-gray-100"
                 : "cursor-not-allowed text-gray-200 opacity-30"
@@ -74,7 +88,7 @@ export default function MonthlyCalendar() {
             aria-label="다음 달로 이동"
             onClick={() => swiperRef.current?.slideNext()}
             disabled={!canMoveNext}
-            className={`rounded-full p-2 transition-colors ${
+            className={`cursor-pointer rounded-full p-2 transition-colors ${
               canMoveNext
                 ? "text-gray-600 hover:bg-gray-100"
                 : "cursor-not-allowed text-gray-200 opacity-30"
@@ -85,7 +99,6 @@ export default function MonthlyCalendar() {
         </div>
       </div>
 
-      {/* 요일 라벨 (고정) */}
       <div className="mb-4 grid grid-cols-7 border-b border-gray-50 pb-2 text-center">
         {WEEKDAYS.map((day) => (
           <span key={day} className="text-[12px] font-medium text-gray-400">
@@ -94,7 +107,6 @@ export default function MonthlyCalendar() {
         ))}
       </div>
 
-      {/* 월간 그리드 Swiper */}
       <div className="relative w-full">
         <Swiper
           onSwiper={(swiper) => (swiperRef.current = swiper)}
@@ -103,18 +115,16 @@ export default function MonthlyCalendar() {
           centeredSlides={true}
           spaceBetween={12}
           speed={400}
-          onSlideChangeTransitionEnd={handleTransitionEnd}
+          onSlideChangeTransitionEnd={(s) => setActiveIndex(s.activeIndex)}
         >
           {calendarSlides.map((slide) => (
             <SwiperSlide key={slide.id}>
               <div className="grid grid-cols-7 justify-items-center gap-y-3">
                 {slide.days.map((date) => {
-                  const dateKey = format(date, "yyyy-MM-dd");
+                  const dateKey = format(date, DATE_FORMAT.DATE);
                   const isCurrentMonth = isSameMonth(date, slide.baseDate);
-
-                  const isDone = MOCK_WORKOUT_DATA.completedDays.has(dateKey);
-                  const isReserved =
-                    MOCK_WORKOUT_DATA.reservedDays.has(dateKey);
+                  const isDone = completedDays.has(dateKey);
+                  const isReserved = reservedDays.has(dateKey);
 
                   return (
                     <div
@@ -122,15 +132,11 @@ export default function MonthlyCalendar() {
                       className={`w-full ${isCurrentMonth ? "opacity-100" : "opacity-25"}`}
                     >
                       <DayItem
-                        day={{
-                          date,
-                          dateKey,
-                          dayNumber: format(date, "d"),
-                        }}
-                        isSelected={isSameDay(date, selectedDate)}
+                        day={{ date, dateKey, dayNumber: format(date, DATE_FORMAT.DAY) }}
+                        isSelected={selectedDateKey === dateKey}
                         isDone={isDone}
                         isReserved={isReserved}
-                        onSelect={setSelectedDate}
+                        onSelect={handleDaySelect}
                         pickerType={pickerType}
                       />
                     </div>
@@ -140,6 +146,33 @@ export default function MonthlyCalendar() {
             </SwiperSlide>
           ))}
         </Swiper>
+      </div>
+    </div>
+  );
+
+  if (!renderDetail) {
+    return (
+      <div className="relative mx-auto w-full rounded-2xl bg-white">
+        {calendarPanel}
+      </div>
+    );
+  }
+
+  return (
+    <div className="relative mx-auto w-full overflow-hidden rounded-2xl bg-white">
+      <div
+        className="flex transition-transform duration-300 ease-in-out"
+        style={{
+          width: "200%",
+          transform: selectedDateKey ? "translateX(-50%)" : "translateX(0)",
+        }}
+      >
+        <div className="w-1/2">{calendarPanel}</div>
+        {renderDetail({
+          selectedDateKey,
+          isActive: !!selectedDateKey,
+          onBack: () => setSelectedDateKey(null),
+        })}
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 import {
   addMonths as _addMonths,
   addWeeks as _addWeeks,
+  differenceInCalendarWeeks as _differenceInCalendarWeeks,
   endOfMonth as _endOfMonth,
   endOfWeek as _endOfWeek,
   format as _format,
@@ -17,6 +18,17 @@ interface WeekOptions {
   weekStartsOn?: WeekStartsOn;
 }
 
+export const DATE_FORMAT = {
+  DATE: "yyyy-MM-dd",
+  DATE_WITH_DAY: "yyyy-MM-dd(eee)",
+  YEAR_MONTH: "yyyy년 M월",
+  MONTH: "M월",
+  MONTH_DAY: "M월 d일",
+  DAY: "d",
+  TIME: "HH:mm",
+  TIME_END: "HH:50",
+} as const;
+
 // 1. 날짜 포맷팅 (매번 ko를 넘기지 않아도 기본 적용되도록 설정)
 export function format(
   date: Date | number | string,
@@ -25,7 +37,7 @@ export function format(
   return _format(new Date(date), formatStr, { locale: ko });
 }
 
-// 2. 날짜 비교 함수 (기존 이름 유지)
+// 2. 날짜 비교 함수
 export function isSameDay(
   dateLeft: Date | number,
   dateRight: Date | number
@@ -40,7 +52,7 @@ export function isSameMonth(
   return _isSameMonth(new Date(dateLeft), new Date(dateRight));
 }
 
-// 3. 날짜 계산 함수 (기존 이름 유지)
+// 3. 날짜 계산 함수
 export function subDays(date: Date | number, amount: number): Date {
   return _subDays(new Date(date), amount);
 }
@@ -53,7 +65,7 @@ export function addWeeks(date: Date | number, amount: number): Date {
   return _addWeeks(new Date(date), amount);
 }
 
-// 4. 시작일 / 종료일 계산 함수 (기존 이름 유지)
+// 4. 시작일 / 종료일 계산 함수
 export function startOfMonth(date: Date | number): Date {
   return _startOfMonth(new Date(date));
 }
@@ -68,4 +80,16 @@ export function startOfWeek(date: Date | number, options?: WeekOptions): Date {
 
 export function endOfWeek(date: Date | number, options?: WeekOptions): Date {
   return _endOfWeek(new Date(date), options);
+}
+
+export function differenceInCalendarWeeks(
+  dateLeft: Date | number,
+  dateRight: Date | number,
+  options?: WeekOptions
+): number {
+  return _differenceInCalendarWeeks(
+    new Date(dateLeft),
+    new Date(dateRight),
+    options
+  );
 }

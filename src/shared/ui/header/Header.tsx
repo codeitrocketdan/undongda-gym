@@ -1,16 +1,16 @@
-"use client";
-import { useAuth } from "@/app/providers/AuthClientProvider";
-import logo from "@/shared/assets/images/logo_dagym.png";
+import { buttonVariants } from "../button/Button";
+import logo from "@/shared/assets/images/logo.png";
 import { Bell } from "lucide-react";
+import { cookies } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
-import Button from "../button/Button";
+import { twMerge } from "tailwind-merge";
 import MobileMenu from "./MobileMenu";
 import NavLinks from "./NavLinks";
 import ProfileDropdown from "./ProfileDropdown";
 import ProfileIcon from "./ProfileIcon";
 
-export default function Header() {
+export default async function Header() {
   const NAV_ITEMS = [
     { label: "다짐 보기", href: "/dagym" },
     { label: "찜한 다짐", href: "/favorite" },
@@ -18,13 +18,14 @@ export default function Header() {
     { label: "다짐 토크", href: "/talk" },
   ];
 
-  const { isAuthenticated } = useAuth();
+  const cookieStore = await cookies();
+  const isLogin = !!cookieStore.get("accessToken")?.value;
   return (
     <>
       <header className="relative md:mb-7">
         <div className="mx-auto flex w-full max-w-7xl items-center justify-between p-6">
           <div className="header-wrap md:hidden">
-            {isAuthenticated && <ProfileIcon />}
+            {isLogin && <ProfileIcon />}
           </div>
           <div className="header-wrap flex items-center">
             <Link
@@ -43,11 +44,10 @@ export default function Header() {
           </div>
           <div className="header-wrap">
             <div className="pc-menu hidden items-center gap-3 md:flex">
-              {isAuthenticated ? (
+              {isLogin ? (
                 <>
                   <Bell />
-                  {/* <ProfileIcon /> */}
-                  <ProfileDropdown />
+                  <ProfileIcon className="scale-x-[-1]" />
                 </>
               ) : (
                 <>
@@ -57,14 +57,12 @@ export default function Header() {
                   >
                     회원가입
                   </Link>
-                  <Button
-                    variant="primary"
-                    size="md"
-                    onClick={() => console.log("test")}
-                    className="flex gap-1.5 rounded-xl px-6 py-3"
+                  <Link
+                    href="/login"
+                    className={twMerge(buttonVariants({ variant: "primary", size: "md" }), "flex gap-1.5 rounded-xl px-6 py-3")}
                   >
-                    <Link href="/login">로그인</Link>
-                  </Button>
+                    로그인
+                  </Link>
                 </>
               )}
             </div>
