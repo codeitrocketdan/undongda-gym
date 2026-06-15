@@ -8,7 +8,7 @@ interface BottomSheetProps {
 }
 
 export default function BottomSheet({ onClose, children }: BottomSheetProps) {
-  const { dragY, handleTouchStart, handleTouchMove, handleTouchEnd } =
+  const { dragY, handleTouchStart, handleTouchMove, handleTouchEnd, handleTouchCancel } =
     useSwipeToClose(onClose);
 
   return (
@@ -22,6 +22,7 @@ export default function BottomSheet({ onClose, children }: BottomSheetProps) {
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
+        onTouchCancel={handleTouchCancel}
         className="fixed right-0 bottom-0 left-0 z-50 rounded-t-2xl bg-white px-5 pt-3 pb-8 shadow-xl"
       >
         <div className="mb-3 flex justify-center">

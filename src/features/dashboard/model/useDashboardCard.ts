@@ -14,23 +14,19 @@ export function calculateTotalHours(meetings: Dagym[]): number {
 }
 
 export function calculateStreak(meetings: Dagym[]): number {
-  const uniqueDates = Array.from(
-    new Set(meetings.map((m) => format(new Date(m.dateTime))))
-  ).sort((a, b) => new Date(b).getTime() - new Date(a).getTime());
+  const uniqueDates = new Set(meetings.map((m) => format(new Date(m.dateTime))));
 
-  if (uniqueDates.length === 0) return 0;
+  if (uniqueDates.size === 0) return 0;
 
   const now = new Date();
   const todayStr = format(now);
-  const yesterdayStr = format(subDays(now, 1));
 
-  const startDateStr = uniqueDates.includes(todayStr) ? todayStr : yesterdayStr;
-  let currentCheck = new Date(startDateStr);
+  let currentCheck = uniqueDates.has(todayStr) ? now : subDays(now, 1);
   let streak = 0;
 
   while (true) {
     const dateStr = format(currentCheck);
-    if (uniqueDates.includes(dateStr)) {
+    if (uniqueDates.has(dateStr)) {
       streak++;
       currentCheck = subDays(currentCheck, 1);
     } else {

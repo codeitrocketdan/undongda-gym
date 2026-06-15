@@ -9,7 +9,17 @@ import { useKakaoPostcode } from "../lib/useKaKaoPostcode";
 import UploadImage from "./UploadImage";
 
 // Todo: 임시 목 데이터 관리 방안 논의, 메인에 지역 필터링과 통일
-const centerLists = ["강남", "판교", "마곡", "광교", "동탄", "성수", "용산"];
+const CENTER_INFO: Record<string, { address: string; latitude: number; longitude: number }> = {
+  강남: { address: "서울특별시 강남구 강남대로 396", latitude: 37.4979, longitude: 127.0276 },
+  판교: { address: "경기도 성남시 분당구 판교역로 160", latitude: 37.3948, longitude: 127.1112 },
+  마곡: { address: "서울특별시 강서구 마곡중앙8로 71", latitude: 37.5599, longitude: 126.8302 },
+  광교: { address: "경기도 수원시 영통구 광교호수공원로 80", latitude: 37.2910, longitude: 127.0450 },
+  동탄: { address: "경기도 화성시 동탄순환대로 537", latitude: 37.2007, longitude: 127.0734 },
+  성수: { address: "서울특별시 성동구 아차산로 113", latitude: 37.5447, longitude: 127.0559 },
+  용산: { address: "서울특별시 용산구 한강대로 405", latitude: 37.5298, longitude: 126.9648 },
+};
+
+const centerLists = Object.keys(CENTER_INFO);
 
 export default function SetInfo() {
   const { register, setValue, watch } = useFormContext();
@@ -19,6 +29,23 @@ export default function SetInfo() {
   const debugLng = watch("longitude");
 
   const { onScriptLoad } = useKakaoMap();
+
+  const handleRegionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const region = e.target.value;
+    setValue("region", region);
+    setValue("addressDetail", "");
+
+    const center = CENTER_INFO[region];
+    if (center) {
+      setValue("address", center.address);
+      setValue("latitude", center.latitude);
+      setValue("longitude", center.longitude);
+    } else {
+      setValue("address", "");
+      setValue("latitude", undefined);
+      setValue("longitude", undefined);
+    }
+  };
 
   const {
     isPostcodeOpen,
@@ -56,7 +83,7 @@ export default function SetInfo() {
         <select
           id="dagymCenter"
           value={currentRegion}
-          onChange={(e) => setValue("region", e.target.value)}
+          onChange={handleRegionChange}
           className={clsx(
             "w-full rounded-xl border border-transparent bg-gray-50 p-3 outline-none focus:border-blue-500",
             currentRegion === "default" ? "text-gray-400" : "text-inherit"

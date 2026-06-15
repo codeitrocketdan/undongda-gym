@@ -7,6 +7,9 @@ export function useKakaoMap() {
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
+    setValue("latitude", undefined);
+    setValue("longitude", undefined);
+
     if (!address || !isLoaded || !window.kakao?.maps) return;
 
     window.kakao.maps.load(() => {
@@ -14,7 +17,7 @@ export function useKakaoMap() {
 
       const geocoder = new window.kakao.maps.services.Geocoder();
       geocoder.addressSearch(address, (result, status) => {
-        if (status === window.kakao.maps.services.Status.OK) {
+        if (status === window.kakao.maps.services.Status.OK && result[0]) {
           setValue("latitude", parseFloat(result[0].y));
           setValue("longitude", parseFloat(result[0].x));
         }

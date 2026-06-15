@@ -23,5 +23,9 @@ export function useSwipeToClose(onClose: () => void) {
     }
   };
 
-  return { dragY, handleTouchStart, handleTouchMove, handleTouchEnd };
+  const handleTouchCancel = () => {
+    setDragY(0);
+  };
+
+  return { dragY, handleTouchStart, handleTouchMove, handleTouchEnd, handleTouchCancel };
 }

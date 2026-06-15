@@ -11,7 +11,7 @@ export function useJoinedMeetings<TData = JoinedMeetingsResponse>(
   enabled = true,
   options?: Omit<
     UseQueryOptions<JoinedMeetingsResponse, Error, TData, JoinedMeetingsQueryKey>,
-    "queryKey" | "queryFn"
+    "queryKey" | "queryFn" | "enabled"
   >
 ) {
   return useQuery({
