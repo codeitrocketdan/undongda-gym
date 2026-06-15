@@ -1,26 +1,34 @@
-import { serverFetcher } from "@/shared/lib/auth/serverFetcher";
-import { HydrationBoundary, QueryClient, dehydrate } from "@tanstack/react-query";
+import { User } from "@/entities/user";
+import { serverFetcher } from "@/shared/api/serverFetcher";
+import { ApiError } from "@/shared/api/types";
+import {
+  HydrationBoundary,
+  QueryClient,
+  dehydrate,
+} from "@tanstack/react-query";
 
-interface User {
-  id: number;
-  teamId: string;
-  email: string;
-  name: string;
-  companyName: string;
-  image: string | null;
-  createAt: string;
-  updateAt: string;
-}
-
-export default async function AuthHydration({ children }: { children: React.ReactNode }) {
+export default async function AuthHydration({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const queryClient = new QueryClient();
 
-  const user = await serverFetcher<User>("/users/me");
-
-  await queryClient.prefetchQuery({
-    queryKey: ["user"],
-    queryFn: () => user,
-  });
-
-  return <HydrationBoundary state={dehydrate(queryClient)}>{children}</HydrationBoundary>;
+  try {
+    await queryClient.prefetchQuery({
+      queryKey: ["user"],
+      queryFn: () => serverFetcher.get<User>("/users/me"),
+    });
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 401) {
+      queryClient.setQueryData<User | null>(["user"], null);
+    } else {
+      throw error;
+    }
+  }
+  return (
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      {children}
+    </HydrationBoundary>
+  );
 }

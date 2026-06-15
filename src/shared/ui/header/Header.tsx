@@ -7,6 +7,7 @@ import { buttonVariants } from "../button/Button";
 import MobileMenu from "./MobileMenu";
 import NavLinks from "./NavLinks";
 import NotificationBell from "./NotificationBell";
+import ProfileDropdown from "./ProfileDropdown";
 import ProfileIcon from "./ProfileIcon";
 
 const NAV_ITEMS = [

@@ -10,6 +10,7 @@ import Input from "@/shared/ui/input/Input";
 import InputField from "@/shared/ui/input/InputFiled";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
+import { CAPACITY_MAX, CAPACITY_MIN } from "../constants";
 
 export default function SetDate() {
   const { register, setValue } = useFormContext();
@@ -21,12 +22,12 @@ export default function SetDate() {
   const handleCapacityBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     const value = Number(e.target.value);
 
-    if (value < 3) {
-      setValue("capacity", 3);
-      setCapacityMessage("모집 정원은 최소 3명 부터 설정 가능합니다.");
-    } else if (value > 20) {
-      setValue("capacity", 20);
-      setCapacityMessage("모집 정원은 최대 20명까지 설정 가능합니다.");
+    if (value < CAPACITY_MIN) {
+      setValue("capacity", CAPACITY_MIN);
+      setCapacityMessage(`모집 정원은 최소 ${CAPACITY_MIN}명 부터 설정 가능합니다.`);
+    } else if (value > CAPACITY_MAX) {
+      setValue("capacity", CAPACITY_MAX);
+      setCapacityMessage(`모집 정원은 최대 ${CAPACITY_MAX}명까지 설정 가능합니다.`);
     } else {
       setValue("capacity", value);
       setCapacityMessage("");
@@ -62,8 +63,8 @@ export default function SetDate() {
           type="number"
           id="capacity"
           placeholder="숫자만 입력해주세요."
-          min="3"
-          max="20"
+          min={CAPACITY_MIN}
+          max={CAPACITY_MAX}
           {...register("capacity", {
             valueAsNumber: true,
             onBlur: handleCapacityBlur,

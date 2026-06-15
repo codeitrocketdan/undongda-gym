@@ -15,7 +15,13 @@ export default function ProfileIcon({ className }: { className?: string }) {
       aria-label="마이페이지"
     >
       {profile?.image ? (
-        <Image src={profile.image} alt={profile.name} width={40} height={40} />
+        <Image
+          src={profile.image}
+          alt={profile.name}
+          width={40}
+          height={40}
+          className="rounded-full"
+        />
       ) : (
         <Image
           src={avatar}

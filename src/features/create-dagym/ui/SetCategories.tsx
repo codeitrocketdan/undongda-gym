@@ -1,16 +1,7 @@
 "use client";
 import Image from "next/image";
 import { useFormContext } from "react-hook-form";
-import imgBusiness from "../assets/category-ex.png";
-
-const mockOptions = [
-  { imgUrl: imgBusiness, name: "맨몸운동" },
-  { imgUrl: imgBusiness, name: "기구운동" },
-  { imgUrl: imgBusiness, name: "런닝" },
-  { imgUrl: imgBusiness, name: "클라이밍" },
-  { imgUrl: imgBusiness, name: "파워리프팅" },
-  { imgUrl: imgBusiness, name: "기타" },
-];
+import { mockOptions } from "../constants";
 export default function SetCategories() {
   const { register, watch } = useFormContext();
   const selectedValue = watch("type");

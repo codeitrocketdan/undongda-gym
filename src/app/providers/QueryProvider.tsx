@@ -12,8 +12,7 @@ export default function QueryProvider({
       new QueryClient({
         defaultOptions: {
           queries: {
-            // 서버 사이드에서 불필요한 재요청을 줄이기 위해 기본 staleTime 설정을 권장합니다.
-            staleTime: 60 * 1000,
+            staleTime: 1000 * 60 * 15,
           },
         },
       })

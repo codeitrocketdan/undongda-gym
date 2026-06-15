@@ -1,26 +1,50 @@
+import { serverFetcher } from "@/shared/api/serverFetcher";
+import { ApiError } from "@/shared/api/types";
 import { setAuthCookies } from "@/shared/lib/auth/cookies";
-import { post } from "@/shared/lib/fetch";
 import { NextResponse } from "next/server";
 
-export async function POST(request: Request) {
-  const body = await request.json();
+interface LoginRequest {
+  email?: string;
+  password?: string;
+}
 
-  const res = await post("/auth/login", body);
-  console.log(res);
-  if (!res.ok) {
+interface LoginResponse {
+  accessToken: string;
+  refreshToken: string;
+}
+
+export async function POST(request: Request) {
+  try {
+    const body: LoginRequest = await request.json();
+
+    const data = await serverFetcher.post<LoginRequest, LoginResponse>(
+      "/auth/login",
+      body,
+      { isPublic: true }
+    );
+
+    const { accessToken, refreshToken } = data;
+
+    // 쿠키 저장
+    await setAuthCookies(accessToken, refreshToken);
+
     return NextResponse.json(
-      { message: "로그인에 실패하셨습니다." },
-      { status: 401 }
+      { message: "로그인에 성공하셨습니다." },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error(error);
+
+    if (error instanceof ApiError) {
+      return NextResponse.json(
+        { message: error.message || "로그인에 실패하셨습니다." },
+        { status: error.status || 401 }
+      );
+    }
+
+    return NextResponse.json(
+      { message: "서버 오류가 발생했습니다." },
+      { status: 500 }
     );
   }
-
-  const { accessToken, refreshToken } = await res.json();
-
-  // 쿠키 저장
-  await setAuthCookies(accessToken, refreshToken);
-
-  return NextResponse.json(
-    { message: "로그인에 성공하셨습니다." },
-    { status: 200 }
-  );
 }
