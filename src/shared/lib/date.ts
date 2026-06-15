@@ -18,6 +18,17 @@ interface WeekOptions {
   weekStartsOn?: WeekStartsOn;
 }
 
+export const DATE_FORMAT = {
+  DATE: "yyyy-MM-dd",
+  DATE_WITH_DAY: "yyyy-MM-dd(eee)",
+  YEAR_MONTH: "yyyy년 M월",
+  MONTH: "M월",
+  MONTH_DAY: "M월 d일",
+  DAY: "d",
+  TIME: "HH:mm",
+  TIME_END: "HH:50",
+} as const;
+
 // 1. 날짜 포맷팅 (매번 ko를 넘기지 않아도 기본 적용되도록 설정)
 export function format(
   date: Date | number | string,

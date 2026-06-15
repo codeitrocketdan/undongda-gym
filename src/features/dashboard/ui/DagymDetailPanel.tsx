@@ -3,7 +3,7 @@
 import { format } from "@/shared/lib/date";
 import { ChevronLeft } from "lucide-react";
 import DagymItem from "./DagymItem";
-import type { Dagym } from "../types";
+import type { Dagym } from "@/entities/meeting/types";
 
 interface DagymDetailPanelProps {
   selectedDateKey: string | null;

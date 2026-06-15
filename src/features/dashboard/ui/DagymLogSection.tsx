@@ -1,20 +1,13 @@
 "use client";
 
+import { useJoinedMeetings } from "@/entities/meeting/lib/useJoinedMeetings";
 import { format } from "@/shared/lib/date";
 import { MonthlyCalendar, WeeklyCalendar } from "@/shared/ui/calendar";
 import { Modal, useModal } from "@/shared/ui/modal";
-import { useQuery } from "@tanstack/react-query";
-import { Bell, CalendarCheck } from "lucide-react";
+import { CalendarCheck } from "lucide-react";
 import { useMemo, useState } from "react";
-import type { Dagym } from "../types";
 import DagymBottomSheet from "./DagymBottomSheet";
 import DagymDetailPanel from "./DagymDetailPanel";
-
-async function fetchJoinedMeetings(): Promise<{ data: Dagym[] }> {
-  const response = await fetch("/api/users/me/meetings");
-  if (!response.ok) throw new Error(`서버 에러 상태코드: ${response.status}`);
-  return response.json();
-}
 
 export default function MainContent() {
   const modal = useModal();
@@ -22,12 +15,9 @@ export default function MainContent() {
     null
   );
 
-  const { data } = useQuery({
-    queryKey: ["joinedDagyms"],
-    queryFn: fetchJoinedMeetings,
+  const { data: dagyms = [] } = useJoinedMeetings(true, {
+    select: (res) => res.data,
   });
-
-  const dagyms = data?.data ?? [];
 
   const completedDays = useMemo(
     () =>
@@ -56,16 +46,8 @@ export default function MainContent() {
 
   return (
     <div className="relative mb-5 w-full">
-      <div className="mb-6 flex items-center justify-between px-6">
-        <h2 className="text-xl font-bold text-gray-900" />
+      <div className="mb-6 flex items-center justify-end px-6">
         <div className="mr-1 flex items-center gap-3">
-          <button
-            className="notice-wrap relative cursor-pointer"
-            aria-label="새 알람 피드 열기"
-          >
-            {/* 알람이 있을 경우 - 추후 연결 */}
-            <Bell size={28} />
-          </button>
           <button
             onClick={modal.open}
             aria-label="월간 달력 열기"
