@@ -24,17 +24,17 @@ const CARD_CONFIGS: Record<CardType, CardStyleConfig> = {
   streak: {
     icon: Flame,
     iconClass: "text-red-500 bg-red-50",
-    valueClass: "text-[#FF669C]",
+    valueClass: "text-red-500",
   },
   count: {
     icon: Calendar,
     iconClass: "text-blue-500 bg-blue-50",
-    valueClass: "text-cyan-400",
+    valueClass: "text-blue-500",
   },
   time: {
     icon: Clock,
     iconClass: "text-purple-500 bg-purple-50",
-    valueClass: "text-[#8481FF]",
+    valueClass: "text-purple-500",
   },
 };
 
@@ -60,12 +60,10 @@ export function DashboardCard({
 
   return (
     <div className={cn(cardVariants(), className)} {...props}>
-      {/* 아이콘 컨테이너 */}
       <div className={cn("rounded-xl p-2", config.iconClass)}>
         <IconComponent className="h-6 w-6" />
       </div>
 
-      {/* 텍스트 컨테이너 */}
       <div className="flex flex-col gap-1">
         <span className="text-sm font-semibold text-gray-700">{title}</span>
         <div className="flex items-baseline gap-1">

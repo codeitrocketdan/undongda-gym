@@ -5,7 +5,6 @@ import { useModal } from "@/shared/ui/modal";
 export default function CreateDagym({ isLogin }: { isLogin: boolean }) {
   const modal = useModal();
   const handleOpenModal = () => {
-    console.log("isLogin", isLogin);
     if (!isLogin) {
       alert("로그인이 필요합니다.");
       return;
