@@ -1,30 +1,42 @@
+import { X } from "lucide-react";
+import Image from "next/image";
 import { ChangeEvent, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
 
 export default function UploadImage() {
-  const { register, setValue } = useFormContext();
+  const { register, setValue, getValues } = useFormContext();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(() => {
+    const existingFile = getValues("image");
+    if (existingFile instanceof File) {
+      return URL.createObjectURL(existingFile);
+    }
+    return null;
+  });
 
-  // 회색 박스 클릭 시
   const handleBoxClick = () => {
     fileInputRef.current?.click();
   };
 
-  // 이미지 파일이 선택되었을 때 실행되는 함수
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      setValue("image", file);
-      setImagePreview(URL.createObjectURL(file));
-    }
+    if (!file) return;
+    if (imagePreview?.startsWith("blob:")) URL.revokeObjectURL(imagePreview);
+    setValue("image", file);
+    setImagePreview(URL.createObjectURL(file));
+    e.target.value = "";
   };
 
-  const { ref: registerRef } = register("image"); // 추후 저장된 이미지 url로 변경 예정
+  const handleRemove = () => {
+    if (imagePreview?.startsWith("blob:")) URL.revokeObjectURL(imagePreview);
+    setValue("image", null);
+    setImagePreview(null);
+  };
+
+  const { ref: registerRef } = register("image");
 
   return (
     <div className="flex flex-col gap-2">
-      {/* 실제 파일 인풋 */}
       <input
         id="dagymImage"
         type="file"
@@ -37,22 +49,35 @@ export default function UploadImage() {
         className="hidden"
       />
 
-      {/* 회색 클릭 영역 */}
-      <div
-        onClick={handleBoxClick}
-        className="relative flex h-[150px] w-[150px] cursor-pointer flex-col items-center justify-center overflow-hidden rounded-2xl border border-gray-200 bg-gray-50"
-      >
-        {imagePreview ? (
-          // 미리보기가 있을 때
-          <img src={imagePreview} alt="미리보기" className="h-full w-full object-cover" />
-        ) : (
-          // 미리보기가 없을 때
+      {imagePreview ? (
+        <div className="relative w-fit">
+          <Image
+            src={imagePreview}
+            alt="첨부 이미지"
+            width={150}
+            height={150}
+            unoptimized
+            className="h-37.5 w-37.5 rounded-xl object-cover"
+          />
+          <button
+            type="button"
+            onClick={handleRemove}
+            className="absolute -top-2 -right-2 flex h-5 w-5 cursor-pointer items-center justify-center rounded-full bg-slate-600 text-white"
+          >
+            <X className="h-3 w-3" />
+          </button>
+        </div>
+      ) : (
+        <div
+          onClick={handleBoxClick}
+          className="flex h-[150px] w-[150px] cursor-pointer flex-col items-center justify-center rounded-2xl border border-gray-200 bg-gray-50"
+        >
           <div className="flex flex-col items-center gap-1 text-gray-400">
             <span className="text-2xl">🖼️</span>
             <span className="text-xs">파일 첨부</span>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
