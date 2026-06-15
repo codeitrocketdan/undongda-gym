@@ -1,8 +1,9 @@
 import { cva } from "class-variance-authority";
 import { clsx, type ClassValue } from "clsx";
-import { Calendar, Clock, Flame, LucideIcon } from "lucide-react";
+import { LucideIcon } from "lucide-react";
 import React from "react";
 import { twMerge } from "tailwind-merge";
+import { CARD_CONFIGS, type CardType } from "../constants";
 
 function cn(...inputs: ClassValue[]): string {
   return twMerge(clsx(inputs));
@@ -11,32 +12,6 @@ function cn(...inputs: ClassValue[]): string {
 const cardVariants = cva(
   "flex flex-col xs:flex-row items-center md:p-4 md:gap-4 bg-white rounded-2xl shadow-xs w-full p-2 gap-2"
 );
-
-type CardType = "streak" | "count" | "time";
-
-interface CardStyleConfig {
-  icon: LucideIcon;
-  iconClass: string;
-  valueClass: string;
-}
-
-const CARD_CONFIGS: Record<CardType, CardStyleConfig> = {
-  streak: {
-    icon: Flame,
-    iconClass: "text-red-500 bg-red-50",
-    valueClass: "text-red-500",
-  },
-  count: {
-    icon: Calendar,
-    iconClass: "text-blue-500 bg-blue-50",
-    valueClass: "text-blue-500",
-  },
-  time: {
-    icon: Clock,
-    iconClass: "text-purple-500 bg-purple-50",
-    valueClass: "text-purple-500",
-  },
-};
 
 interface DashboardCardProps extends React.HTMLAttributes<HTMLDivElement> {
   type?: CardType;

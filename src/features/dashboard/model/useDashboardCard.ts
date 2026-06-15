@@ -1,5 +1,6 @@
 import type { Dagym } from "@/entities/meeting/types";
 import { format, isSameMonth, subDays } from "@/shared/lib/date";
+import { MEETING_HOURS_PER_SESSION } from "../constants";
 
 export function calculateThisMonthCount(meetings: Dagym[]): number {
   const now = new Date();
@@ -9,7 +10,6 @@ export function calculateThisMonthCount(meetings: Dagym[]): number {
 }
 
 export function calculateTotalHours(meetings: Dagym[]): number {
-  const MEETING_HOURS_PER_SESSION = 1;
   return calculateThisMonthCount(meetings) * MEETING_HOURS_PER_SESSION;
 }
 
