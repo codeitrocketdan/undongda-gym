@@ -1,4 +1,4 @@
-import { serverFetcher } from "@/shared/lib/auth/serverFetcher";
+import { serverFetcher } from "@/shared/api/serverFetcher";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(
@@ -6,9 +6,7 @@ export async function POST(
   { params }: { params: Promise<{ meetingId: string }> }
 ) {
   const { meetingId } = await params;
-  const data = await serverFetcher(`/meetings/${meetingId}/favorites`, {
-    method: "POST",
-  });
+  const data = await serverFetcher.post(`/meetings/${meetingId}/favorites`);
   return NextResponse.json(data);
 }
 
@@ -17,6 +15,6 @@ export async function DELETE(
   { params }: { params: Promise<{ meetingId: string }> }
 ) {
   const { meetingId } = await params;
-  await serverFetcher(`/meetings/${meetingId}/favorites`, { method: "DELETE" });
+  await serverFetcher.delete(`/meetings/${meetingId}/favorites`);
   return new NextResponse(null, { status: 204 });
 }

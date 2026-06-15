@@ -1,3 +1,4 @@
+"use client";
 import SocialLoginButton from "@/shared/ui/button/SocialLoginButton";
 import { useGoogleLogin } from "../model/useGoogleLogin";
 import { useKakaoLogin } from "../model/useKakaoLogin";

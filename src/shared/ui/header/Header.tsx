@@ -7,6 +7,7 @@ import Link from "next/link";
 import { twMerge } from "tailwind-merge";
 import MobileMenu from "./MobileMenu";
 import NavLinks from "./NavLinks";
+import ProfileDropdown from "./ProfileDropdown";
 import ProfileIcon from "./ProfileIcon";
 
 export default async function Header() {
