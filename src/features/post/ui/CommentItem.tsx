@@ -35,6 +35,11 @@ export default function CommentItem({
     setIsEditing(false);
   };
 
+  const handleStartEdit = () => {
+    setEditValue(comment.content);
+    setIsEditing(true);
+  };
+
   return (
     <div className="flex flex-col border-b border-slate-200 py-4 last:border-none">
       {/* 작성자 + 날짜 */}
@@ -53,12 +58,10 @@ export default function CommentItem({
         {isOwner && !isEditing && (
           <Dropdown>
             <Dropdown.Trigger>
-              <MoreHorizontal className="h-4 w-4 text-slate-400 cursor-pointer hover:text-slate-600" />
+              <MoreHorizontal className="h-4 w-4 cursor-pointer text-slate-400 hover:text-slate-600" />
             </Dropdown.Trigger>
             <Dropdown.Menu>
-              <Dropdown.Item onClick={() => setIsEditing(true)}>
-                수정
-              </Dropdown.Item>
+              <Dropdown.Item onClick={handleStartEdit}>수정</Dropdown.Item>
               <Dropdown.Item onClick={() => onDelete(comment.id)}>
                 삭제
               </Dropdown.Item>

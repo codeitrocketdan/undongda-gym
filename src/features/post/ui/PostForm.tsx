@@ -35,11 +35,15 @@ export default function PostForm({
     initialData?.image ?? null
   );
   const imageInputRef = useRef<HTMLInputElement>(null);
+  const blobUrlRef = useRef<string | null>(null);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    setImagePreview(URL.createObjectURL(file));
+    // 기존 blob URL 해제
+    if (blobUrlRef.current) URL.revokeObjectURL(blobUrlRef.current);
+    blobUrlRef.current = URL.createObjectURL(file);
+    setImagePreview(blobUrlRef.current);
     e.target.value = "";
   };
 
@@ -54,14 +58,25 @@ export default function PostForm({
   });
 
   // 에디터 텍스트 변경 시에만 리렌더링 (매 키 입력마다 리렌더링 방지)
-  const { contentText } = useEditorState({
+  const { contentText, contentHTML } = useEditorState({
     editor,
     selector: (ctx) => ({
       contentText: ctx.editor?.getText() ?? "",
+      contentHTML: ctx.editor?.getHTML() ?? "",
     }),
-  }) ?? { contentText: "" };
+  }) ?? { contentText: "", contentHTML: "" };
 
-  const isDirty = title.trim() !== "" || contentText.trim() !== "";
+  // 수정 모드: 초기값과 비교 / 작성 모드: 내용이 있는지만 확인
+  const isDirty = initialData
+    ? title !== (initialData.title ?? "") || contentHTML !== (initialData.content ?? "")
+    : title.trim() !== "" || contentText.trim() !== "";
+
+  // 언마운트 시 blob URL 해제
+  useEffect(() => {
+    return () => {
+      if (blobUrlRef.current) URL.revokeObjectURL(blobUrlRef.current);
+    };
+  }, []);
 
   // TODO: 추후 공통 Modal 컴포넌트로 교체 (현재는 브라우저 기본 confirm 사용)
   useEffect(() => {
@@ -97,7 +112,7 @@ export default function PostForm({
           size="sm"
           className="w-auto shrink-0 disabled:cursor-default"
           onClick={handleSubmit}
-          isDisabled={isSubmitting || !title.trim()}
+          isDisabled={isSubmitting || !title.trim() || !contentText.trim()}
         >
           {isSubmitting ? `${submitLabel} 중...` : submitLabel}
         </Button>
@@ -134,7 +149,13 @@ export default function PostForm({
             />
             <button
               type="button"
-              onClick={() => setImagePreview(null)}
+              onClick={() => {
+                if (blobUrlRef.current) {
+                  URL.revokeObjectURL(blobUrlRef.current);
+                  blobUrlRef.current = null;
+                }
+                setImagePreview(null);
+              }}
               className="absolute -top-2 -right-2 flex h-5 w-5 cursor-pointer items-center justify-center rounded-full bg-slate-600 text-white"
             >
               <X className="h-3 w-3" />
