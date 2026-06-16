@@ -1,50 +1,45 @@
 "use client";
 
-import useScrollLock from "@/shared/hooks/useScrollLock";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu } from "lucide-react";
-import { usePathname } from "next/navigation";
-import { useState } from "react";
 import { MobileMenuContent } from "./MobileMenuContent";
+import NotificationBell from "./NotificationBell";
 import { NavItem } from "./types";
+import { useMobileMenu } from "./useMobileMenu";
 
 interface MobileMenuProps {
   navItems: NavItem[];
+  isLogin: boolean;
 }
 
-export default function MobileMenu({ navItems }: MobileMenuProps) {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const pathname = usePathname();
-  useScrollLock(isMenuOpen);
+export default function MobileMenu({ navItems, isLogin }: MobileMenuProps) {
+  const { isOpen, open, close } = useMobileMenu();
 
   return (
     <div className="md:hidden">
-      {/* 햄버거 버튼 */}
+      {isLogin && <NotificationBell />}
       <button
-        onClick={() => setIsMenuOpen(true)}
+        onClick={open}
         className="cursor-pointer p-1"
         aria-label="메뉴 열기"
       >
-        <Menu />
+        <Menu size={22} />
       </button>
 
-      {/* 모바일 사이드바 모션 */}
       <AnimatePresence>
-        {isMenuOpen && (
+        {isOpen && (
           <>
-            {/* 배경 어두워지는 딤드(Overlay) 처리 추가하면 더 자연스러워요 */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 0.4 }}
               exit={{ opacity: 0 }}
-              onClick={() => setIsMenuOpen(false)}
+              onClick={close}
               className="fixed inset-0 z-40 bg-black"
             />
-
             <MobileMenuContent
               navItems={navItems}
-              pathname={pathname}
-              onClose={() => setIsMenuOpen(false)}
+              isLogin={isLogin}
+              onClose={close}
             />
           </>
         )}

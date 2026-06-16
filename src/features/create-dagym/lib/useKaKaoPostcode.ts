@@ -6,18 +6,14 @@ interface UseKakaoPostcodeProps {
 
 export function useKakaoPostcode({ onCompleteAddress }: UseKakaoPostcodeProps) {
   const [isPostcodeOpen, setIsPostcodeOpen] = useState(false);
-  const [isScriptLoaded, setIsScriptLoaded] = useState(false);
   const [address, setAddress] = useState("");
   const postcodeContainerRef = useRef(null);
 
-  // 스크립트가 성공적으로 로드되었을 때 실행할 함수
-  const handleScriptLoad = () => {
-    setIsScriptLoaded(true);
-  };
+  const handleScriptLoad = () => {};
 
   // 주소 검색 창 열기
   const openPostcode = () => {
-    if (!isScriptLoaded || !window.daum) {
+    if (typeof window === "undefined" || !window.daum) {
       alert("주소 서비스가 아직 준비되지 않았습니다. 잠시 후 다시 시도해주세요.");
       return;
     }

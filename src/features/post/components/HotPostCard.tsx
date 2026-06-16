@@ -13,7 +13,7 @@ export default function HotPostCard({
   createdAt,
 }: HotPostCardProps) {
   return (
-    <Link href={`/posts/${id}`}>
+    <Link href={`/post/${id}`}>
       <FeedCard className="bg-f6f7f9 flex w-40.5 flex-col gap-2.5 rounded-xl md:w-72.5 md:gap-3.5 md:rounded-3xl">
         <FeedCard.Image
           src={image}
