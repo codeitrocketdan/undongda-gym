@@ -1,10 +1,8 @@
 "use client";
 
 import { useNewFavoritesCount } from "@/shared/hooks/useNewFavoritesCount";
-import { resetFavoritesCount } from "@/shared/hooks/useNewFavoritesCount";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect } from "react";
 import { NavItem } from "./types";
 
 interface NavLinksProps {
@@ -14,12 +12,6 @@ interface NavLinksProps {
 export default function NavLinks({ navItems }: NavLinksProps) {
   const pathname = usePathname();
   const newCount = useNewFavoritesCount();
-
-  useEffect(() => {
-    if (pathname === "/favorite") {
-      resetFavoritesCount();
-    }
-  }, [pathname]);
 
   return (
     <ul className="hidden gap-2 md:flex">

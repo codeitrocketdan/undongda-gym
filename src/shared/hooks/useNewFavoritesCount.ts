@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 
 const KEY = "new_favorites_count";
 const EVENT = "new-favorites-updated";
@@ -33,6 +34,13 @@ export function resetFavoritesCount(): void {
 
 export function useNewFavoritesCount(): number {
   const [count, setCount] = useState(() => get());
+  const pathname = usePathname();
+
+  useEffect(() => {
+    if (pathname === "/favorite") {
+      resetFavoritesCount();
+    }
+  }, [pathname]);
 
   useEffect(() => {
     const handler = () => setCount(get());
