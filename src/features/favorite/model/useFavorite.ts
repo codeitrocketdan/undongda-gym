@@ -1,14 +1,18 @@
+import {
+  favoriteQueries,
+  meetingQueries,
+  userMeetingQueries,
+} from "@/shared/lib/queryKeys";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export function useFavorite() {
   const queryClient = useQueryClient();
 
   const invalidateAll = () => {
-    queryClient.invalidateQueries({ queryKey: ["favorites"] });
-    queryClient.invalidateQueries({ queryKey: ["meetings"] });
-    queryClient.invalidateQueries({ queryKey: ["users/me/meetings/joined"] });
-    queryClient.invalidateQueries({ queryKey: ["users/me/meetings/created"] });
-    queryClient.invalidateQueries({ queryKey: ["users/me/meetings/writable"] });
+    // 구조화된 쿼리키 — userMeetingQueries.all 하나로 joined/created/writable 전부 무효화
+    queryClient.invalidateQueries({ queryKey: favoriteQueries.all });
+    queryClient.invalidateQueries({ queryKey: meetingQueries.all });
+    queryClient.invalidateQueries({ queryKey: userMeetingQueries.all });
   };
 
   const { mutate: add } = useMutation({

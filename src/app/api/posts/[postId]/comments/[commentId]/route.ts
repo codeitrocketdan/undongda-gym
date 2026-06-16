@@ -1,17 +1,16 @@
-import { serverFetcher } from "@/shared/lib/auth/serverFetcher";
+import { serverFetcher } from "@/shared/api/serverFetcher";
 import { NextRequest, NextResponse } from "next/server";
 
-// TODO: serverFetcher 머지시 변경
 export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ postId: string; commentId: string }> }
 ) {
   const { postId, commentId } = await params;
   const body = await request.json();
-  const data = await serverFetcher(`/posts/${postId}/comments/${commentId}`, {
-    method: "PATCH",
-    body: JSON.stringify(body),
-  });
+  const data = await serverFetcher.patch(
+    `/posts/${postId}/comments/${commentId}`,
+    body
+  );
   return NextResponse.json(data);
 }
 
@@ -20,8 +19,6 @@ export async function DELETE(
   { params }: { params: Promise<{ postId: string; commentId: string }> }
 ) {
   const { postId, commentId } = await params;
-  await serverFetcher(`/posts/${postId}/comments/${commentId}`, {
-    method: "DELETE",
-  });
+  await serverFetcher.delete(`/posts/${postId}/comments/${commentId}`);
   return new NextResponse(null, { status: 204 });
 }

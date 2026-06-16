@@ -1,13 +1,12 @@
-import { serverFetcher } from "@/shared/lib/auth/serverFetcher";
+import { serverFetcher } from "@/shared/api/serverFetcher";
 import { NextRequest, NextResponse } from "next/server";
 
-// TODO: serverFetcher 머지시 변경
 export async function POST(
   _: NextRequest,
   { params }: { params: Promise<{ postId: string }> }
 ) {
   const { postId } = await params;
-  const data = await serverFetcher(`/posts/${postId}/like`, { method: "POST" });
+  const data = await serverFetcher.post(`/posts/${postId}/like`);
   return NextResponse.json(data);
 }
 
@@ -16,6 +15,6 @@ export async function DELETE(
   { params }: { params: Promise<{ postId: string }> }
 ) {
   const { postId } = await params;
-  await serverFetcher(`/posts/${postId}/like`, { method: "DELETE" });
+  await serverFetcher.delete(`/posts/${postId}/like`);
   return new NextResponse(null, { status: 204 });
 }

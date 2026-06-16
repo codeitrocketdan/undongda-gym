@@ -1,14 +1,16 @@
 "use client";
 
+import { useFavorite } from "@/features/favorite/model/useFavorite";
 import {
   JoinedMeetingDTO,
   MyMeetingListResponse,
 } from "@/features/my-page/types";
-import { useFavorite } from "@/features/favorite/model/useFavorite";
 import emptyImage from "@/shared/assets/images/empty.svg";
 import useInfiniteScroll from "@/shared/hooks/useInfiniteScroll";
+import { userMeetingQueries } from "@/shared/lib/queryKeys";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import Image from "next/image";
+import qs from "qs";
 import MyPageCard from "./MyPageCard";
 import MyPageCardSkeleton from "./MyPageCardSkeleton";
 
@@ -18,14 +20,14 @@ export default function MyDagymSection() {
   const { toggleFavorite } = useFavorite();
   const { data, fetchNextPage, hasNextPage, isFetching, isLoading, isError } =
     useInfiniteQuery<MyMeetingListResponse>({
-      queryKey: ["users/me/meetings/joined"],
+      queryKey: userMeetingQueries.joined(),
       queryFn: async ({ pageParam }) => {
-        const params = new URLSearchParams({
+        const query = qs.stringify({
           type: "joined",
-          size: String(LIMIT),
-          ...(pageParam ? { cursor: pageParam as string } : {}),
+          size: LIMIT,
+          cursor: (pageParam as string) ?? undefined,
         });
-        const res = await fetch(`/api/users/me/meetings?${params}`);
+        const res = await fetch(`/api/users/me/meetings?${query}`);
         return res.json();
       },
       getNextPageParam: (lastPage) => lastPage?.nextCursor ?? undefined,
@@ -86,7 +88,9 @@ export default function MyDagymSection() {
           dateTime={meeting.dateTime}
           participantCount={meeting.participantCount}
           capacity={meeting.capacity}
-          onToggleFavorite={() => toggleFavorite(meeting.id, meeting.isFavorited ?? false)}
+          onToggleFavorite={() =>
+            toggleFavorite(meeting.id, meeting.isFavorited ?? false)
+          }
           onClick={() => {}}
         />
       ))}
