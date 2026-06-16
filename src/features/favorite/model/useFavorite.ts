@@ -3,6 +3,10 @@ import {
   meetingQueries,
   userMeetingQueries,
 } from "@/shared/lib/queryKeys";
+import {
+  decrementFavoritesCount,
+  incrementFavoritesCount,
+} from "@/shared/hooks/useNewFavoritesCount";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export function useFavorite() {
@@ -21,7 +25,10 @@ export function useFavorite() {
         if (!r.ok) throw new Error("찜 추가에 실패했어요");
         return r.json();
       }),
-    onSuccess: invalidateAll,
+    onSuccess: () => {
+      invalidateAll();
+      incrementFavoritesCount();
+    },
     // TODO: 에러 처리 통일 후 적용
     onError: (error) => console.error("찜 추가 실패:", error),
   });
@@ -31,7 +38,10 @@ export function useFavorite() {
       fetch(`/api/meetings/${id}/favorites`, { method: "DELETE" }).then((r) => {
         if (!r.ok) throw new Error("찜 취소에 실패했어요");
       }),
-    onSuccess: invalidateAll,
+    onSuccess: () => {
+      invalidateAll();
+      decrementFavoritesCount();
+    },
     // TODO: 에러 처리 통일 후 적용
     onError: (error) => console.error("찜 취소 실패:", error),
   });
