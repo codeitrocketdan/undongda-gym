@@ -1,13 +1,11 @@
 "use client";
 
 import { useNewFavoritesCount } from "@/shared/hooks/useNewFavoritesCount";
-import { resetFavoritesCount } from "@/shared/hooks/useNewFavoritesCount";
 import { useFocusTrap } from "@/shared/lib/useFocusTrap";
 import { motion } from "framer-motion";
 import { X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect } from "react";
 import { twMerge } from "tailwind-merge";
 import { buttonVariants } from "../button/Button";
 import { NavItem } from "./types";
@@ -26,12 +24,6 @@ export function MobileMenuContent({
   const trapRef = useFocusTrap<HTMLDivElement>();
   const pathname = usePathname();
   const newCount = useNewFavoritesCount();
-
-  useEffect(() => {
-    if (pathname === "/favorite") {
-      resetFavoritesCount();
-    }
-  }, [pathname]);
 
   return (
     <motion.div

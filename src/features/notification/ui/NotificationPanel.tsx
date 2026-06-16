@@ -1,5 +1,6 @@
 "use client";
 
+import { useFocusTrap } from "@/shared/lib/useFocusTrap";
 import { motion } from "framer-motion";
 import { X } from "lucide-react";
 import NotificationContent from "./NotificationContent";
@@ -9,6 +10,8 @@ interface Props {
 }
 
 export default function NotificationPanel({ onClose }: Props) {
+  const trapRef = useFocusTrap<HTMLDivElement>();
+
   return (
     <>
       <motion.div
@@ -19,6 +22,17 @@ export default function NotificationPanel({ onClose }: Props) {
         className="fixed inset-0 z-40 bg-black"
       />
       <motion.div
+        ref={trapRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label="알림"
+        tabIndex={-1}
+        onKeyDown={(e) => {
+          if (e.key === "Escape") {
+            e.stopPropagation();
+            onClose();
+          }
+        }}
         initial={{ x: "100%" }}
         animate={{ x: 0 }}
         exit={{ x: "100%" }}
@@ -30,6 +44,7 @@ export default function NotificationPanel({ onClose }: Props) {
             onClick={onClose}
             className="cursor-pointer p-1"
             aria-label="알림 닫기"
+            autoFocus
           >
             <X size={18} />
           </button>

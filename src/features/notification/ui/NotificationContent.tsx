@@ -19,7 +19,7 @@ interface Props {
 export default function NotificationContent({ onClose }: Props) {
   const [tab, setTab] = useState<Tab>("unread");
 
-  const { data: notifications, isLoading } = useEnrichedNotifications();
+  const { data: notifications, isLoading, isError } = useEnrichedNotifications();
   const { mutate: markRead } = useMarkRead();
   const { mutate: markAllRead } = useMarkAllRead();
   const { mutate: deleteOne } = useDeleteNotification();
@@ -60,7 +60,7 @@ export default function NotificationContent({ onClose }: Props) {
             }`}
             onClick={() => setTab(t)}
           >
-            {t === "unread" ? "읽지않음" : "전체"}
+            {t === "unread" ? "읽지 않음" : "전체"}
           </button>
         ))}
       </div>
@@ -69,6 +69,10 @@ export default function NotificationContent({ onClose }: Props) {
         {isLoading ? (
           <p className="py-12 text-center text-sm text-slate-400">
             불러오는 중...
+          </p>
+        ) : isError ? (
+          <p className="py-12 text-center text-sm text-red-400">
+            알림을 불러오지 못했습니다
           </p>
         ) : filtered.length === 0 ? (
           <p className="py-12 text-center text-sm text-slate-400">
