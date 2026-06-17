@@ -40,7 +40,7 @@ export default function NotificationItem({
       ? notification.data.image
       : null;
 
-  const handleClick = () => {
+  const markReadAndNavigate = () => {
     if (!notification.isRead) onRead(notification.id);
     const href = getHref(notification);
     if (href) {
@@ -51,11 +51,19 @@ export default function NotificationItem({
 
   return (
     <div
+      role="button"
+      tabIndex={0}
       className={twMerge(
         "flex cursor-pointer items-start gap-3 px-4 py-3 transition-colors hover:bg-slate-50",
         !notification.isRead && "bg-blue-50/40 hover:bg-blue-50"
       )}
-      onClick={handleClick}
+      onClick={markReadAndNavigate}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          markReadAndNavigate();
+        }
+      }}
     >
       {isComment ? (
         <div className="mt-0.5 h-10 w-10 shrink-0 overflow-hidden rounded-full border border-slate-200">
