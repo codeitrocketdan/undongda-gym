@@ -1,5 +1,3 @@
-"use client";
-
 import { CommentDTO } from "@/features/post/types";
 import { clientFetcher } from "@/shared/api/clientFetcher";
 import {
@@ -13,13 +11,14 @@ import {
   NotificationListResponse,
   UnreadCountResponse,
 } from "../types";
+import {
+  NOTIFICATION_QUERY_KEYS as KEYS,
+  UNREAD_COUNT_POLLING_INTERVAL,
+} from "../constants";
 
-const KEYS = {
-  all: ["notifications"] as const,
-  unreadCount: ["notifications", "unread-count"] as const,
-  postComments: (postId: number) =>
-    ["posts", String(postId), "comments"] as const,
-};
+// setQueryData 콜백 내 변수 약어 규칙:
+//   c = cached  (현재 캐시 값)
+//   n = notification (개별 알림 항목)
 
 function useNotificationList() {
   return useQuery<NotificationListResponse>({
@@ -32,8 +31,8 @@ export function useUnreadCount() {
   return useQuery<UnreadCountResponse>({
     queryKey: KEYS.unreadCount,
     queryFn: () => clientFetcher.get<UnreadCountResponse>("/api/notifications/unread-count"),
-    refetchInterval: 60_000,
-    staleTime: 60_000,
+    refetchInterval: UNREAD_COUNT_POLLING_INTERVAL,
+    staleTime: UNREAD_COUNT_POLLING_INTERVAL,
   });
 }
 
@@ -59,8 +58,8 @@ export function useEnrichedNotifications() {
   const authorMap = new Map<number, { name: string; image: string | null }>();
   commentQueries.forEach((query) => {
     const comments = (query.data as { data: CommentDTO[] } | undefined)?.data ?? [];
-    comments.forEach((c) => {
-      authorMap.set(c.id, { name: c.author.name, image: c.author.image });
+    comments.forEach((comment) => {
+      authorMap.set(comment.id, { name: comment.author.name, image: comment.author.image });
     });
   });
 
@@ -81,20 +80,18 @@ export function useMarkRead() {
     mutationFn: (notificationId: number) =>
       clientFetcher.put(`/api/notifications/${notificationId}/read`, undefined),
     onSuccess: (_, notificationId) => {
-      queryClient.setQueryData<NotificationListResponse>(KEYS.all, (cached) => {
-        if (!cached) return cached;
+      queryClient.setQueryData<NotificationListResponse>(KEYS.all, (c) => {
+        if (!c) return c;
         return {
-          ...cached,
-          data: cached.data.map((notification) =>
-            notification.id === notificationId
-              ? { ...notification, isRead: true }
-              : notification
+          ...c,
+          data: c.data.map((n) =>
+            n.id === notificationId ? { ...n, isRead: true } : n
           ),
         };
       });
-      queryClient.setQueryData<UnreadCountResponse>(KEYS.unreadCount, (cached) => {
-        if (!cached) return cached;
-        return { count: Math.max(0, cached.count - 1) };
+      queryClient.setQueryData<UnreadCountResponse>(KEYS.unreadCount, (c) => {
+        if (!c) return c;
+        return { count: Math.max(0, c.count - 1) };
       });
     },
   });
@@ -105,8 +102,11 @@ export function useMarkAllRead() {
   return useMutation({
     mutationFn: () => clientFetcher.put("/api/notifications/read-all", undefined),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: KEYS.all });
-      queryClient.invalidateQueries({ queryKey: KEYS.unreadCount });
+      queryClient.setQueryData<NotificationListResponse>(KEYS.all, (c) => {
+        if (!c) return c;
+        return { ...c, data: c.data.map((n) => ({ ...n, isRead: true })) };
+      });
+      queryClient.setQueryData<UnreadCountResponse>(KEYS.unreadCount, { count: 0 });
     },
   });
 }
@@ -116,9 +116,19 @@ export function useDeleteNotification() {
   return useMutation({
     mutationFn: (notificationId: number) =>
       clientFetcher.delete<void>(`/api/notifications/${notificationId}`),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: KEYS.all });
-      queryClient.invalidateQueries({ queryKey: KEYS.unreadCount });
+    onSuccess: (_, notificationId) => {
+      const snapshot = queryClient.getQueryData<NotificationListResponse>(KEYS.all);
+      const deleted = snapshot?.data.find((n) => n.id === notificationId);
+      queryClient.setQueryData<NotificationListResponse>(KEYS.all, (c) => {
+        if (!c) return c;
+        return { ...c, data: c.data.filter((n) => n.id !== notificationId) };
+      });
+      if (deleted && !deleted.isRead) {
+        queryClient.setQueryData<UnreadCountResponse>(KEYS.unreadCount, (c) => {
+          if (!c) return c;
+          return { count: Math.max(0, c.count - 1) };
+        });
+      }
     },
   });
 }
@@ -128,8 +138,11 @@ export function useDeleteAllNotifications() {
   return useMutation({
     mutationFn: () => clientFetcher.delete<void>("/api/notifications"),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: KEYS.all });
-      queryClient.invalidateQueries({ queryKey: KEYS.unreadCount });
+      queryClient.setQueryData<NotificationListResponse>(KEYS.all, (c) => {
+        if (!c) return c;
+        return { ...c, data: [] };
+      });
+      queryClient.setQueryData<UnreadCountResponse>(KEYS.unreadCount, { count: 0 });
     },
   });
 }
