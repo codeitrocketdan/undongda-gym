@@ -1,17 +1,30 @@
 "use client";
 
-import NotificationDropdown from "@/features/notification/ui/NotificationDropdown";
+import NotificationContent from "@/features/notification/ui/NotificationContent";
 import NotificationPanel from "@/features/notification/ui/NotificationPanel";
 import { useUnreadCount } from "@/features/notification/model/useNotifications";
 import { AnimatePresence } from "framer-motion";
 import { Bell } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { XS_BREAKPOINT } from "@/shared/constants/breakpoints";
+
+function subscribeToMediaQuery(callback: () => void) {
+  const mq = window.matchMedia(XS_BREAKPOINT);
+  mq.addEventListener("change", callback);
+  return () => mq.removeEventListener("change", callback);
+}
 
 export default function NotificationBell() {
   const [isOpen, setIsOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const { data } = useUnreadCount();
   const count = data?.count ?? 0;
+
+  const isDesktop = useSyncExternalStore(
+    subscribeToMediaQuery,
+    () => window.matchMedia(XS_BREAKPOINT).matches,
+    () => false
+  );
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -39,14 +52,17 @@ export default function NotificationBell() {
         )}
       </button>
 
-      <div className="xs:hidden">
+      {isDesktop ? (
+        isOpen && (
+          <div className="absolute top-full right-0 z-50 mt-2 w-80 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-lg">
+            <NotificationContent onClose={close} />
+          </div>
+        )
+      ) : (
         <AnimatePresence>
           {isOpen && <NotificationPanel onClose={close} />}
         </AnimatePresence>
-      </div>
-      <div className="max-xs:hidden">
-        {isOpen && <NotificationDropdown onClose={close} />}
-      </div>
+      )}
     </div>
   );
 }
