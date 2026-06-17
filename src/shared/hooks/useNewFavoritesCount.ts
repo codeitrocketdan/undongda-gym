@@ -1,19 +1,31 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useSyncExternalStore } from "react";
 import { usePathname } from "next/navigation";
-
-const KEY = "new_favorites_count";
-const EVENT = "new-favorites-updated";
+import {
+  FAVORITES_STORAGE_KEY as KEY,
+  FAVORITES_UPDATE_EVENT as EVENT,
+} from "@/shared/constants/favorites";
 
 function get(): number {
-  if (typeof window === "undefined") return 0;
   return parseInt(localStorage.getItem(KEY) ?? "0", 10);
 }
 
+function getServerSnapshot(): number {
+  return 0;
+}
+
+function subscribe(callback: () => void): () => void {
+  window.addEventListener(EVENT, callback);
+  window.addEventListener("storage", callback); // cross-tab sync
+  return () => {
+    window.removeEventListener(EVENT, callback);
+    window.removeEventListener("storage", callback);
+  };
+}
+
 export function incrementFavoritesCount(): void {
-  const next = get() + 1;
-  localStorage.setItem(KEY, String(next));
+  localStorage.setItem(KEY, String(get() + 1));
   window.dispatchEvent(new Event(EVENT));
 }
 
@@ -33,7 +45,6 @@ export function resetFavoritesCount(): void {
 }
 
 export function useNewFavoritesCount(): number {
-  const [count, setCount] = useState(() => get());
   const pathname = usePathname();
 
   useEffect(() => {
@@ -42,11 +53,5 @@ export function useNewFavoritesCount(): number {
     }
   }, [pathname]);
 
-  useEffect(() => {
-    const handler = () => setCount(get());
-    window.addEventListener(EVENT, handler);
-    return () => window.removeEventListener(EVENT, handler);
-  }, []);
-
-  return count;
+  return useSyncExternalStore(subscribe, get, getServerSnapshot);
 }
