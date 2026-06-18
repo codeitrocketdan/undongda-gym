@@ -1,37 +1,27 @@
+import { clientFetcher } from "@/shared/api/clientFetcher";
+import { postQueries } from "@/shared/lib/queryKeys";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-// TODO: serverFetcher 머지시 변경
 export function useCommentActions(postId: string) {
   const queryClient = useQueryClient();
   const invalidate = () =>
-    queryClient.invalidateQueries({ queryKey: ["posts", postId] });
+    queryClient.invalidateQueries({ queryKey: postQueries.detail(postId) });
 
   const submit = useMutation({
-    mutationFn: async (content: string) => {
-      await fetch(`/api/posts/${postId}/comments`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ content }),
-      });
-    },
+    mutationFn: (content: string) =>
+      clientFetcher.post(`/api/posts/${postId}/comments`, { content }),
     onSuccess: invalidate,
   });
 
   const edit = useMutation({
-    mutationFn: async ({ id, content }: { id: number; content: string }) => {
-      await fetch(`/api/posts/${postId}/comments/${id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ content }),
-      });
-    },
+    mutationFn: ({ id, content }: { id: number; content: string }) =>
+      clientFetcher.patch(`/api/posts/${postId}/comments/${id}`, { content }),
     onSuccess: invalidate,
   });
 
   const remove = useMutation({
-    mutationFn: async (id: number) => {
-      await fetch(`/api/posts/${postId}/comments/${id}`, { method: "DELETE" });
-    },
+    mutationFn: (id: number) =>
+      clientFetcher.delete(`/api/posts/${postId}/comments/${id}`),
     onSuccess: invalidate,
   });
 
