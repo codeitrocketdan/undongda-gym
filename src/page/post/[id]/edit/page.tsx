@@ -1,15 +1,24 @@
 "use client";
 
-import { usePostDetail } from "@/features/post/model/usePostDetail";
+import {
+  usePostDetail,
+  useUpdatePost,
+} from "@/features/post/model/usePostDetail";
 import PostForm, { PostFormData } from "@/features/post/ui/PostForm";
-import { useParams } from "next/navigation";
+import { ErrorModal, useModal } from "@/shared/ui/modal";
+import { useParams, useRouter } from "next/navigation";
 
 export default function PostEditPage() {
   const { id } = useParams<{ id: string }>();
-  const { data: post, isLoading, isError } = usePostDetail(id);
+  const router = useRouter();
+  const errorModal = useModal();
+  const { data: post, isLoading, isError } = usePostDetail(id, {
+    onError: errorModal.open,
+  });
+  const update = useUpdatePost(id);
 
   const handleSubmit = (data: PostFormData) => {
-    console.log(data); // TODO: PATCH /api/posts/{id} 연동
+    update.mutate(data, { onSuccess: () => router.push("/post") });
   };
 
   if (isLoading)
@@ -29,12 +38,16 @@ export default function PostEditPage() {
     );
 
   return (
-    <main className="inner mx-auto mt-6 max-w-215 md:mt-8 lg:mt-9">
-      <PostForm
-        initialData={{ title: post.title, content: post.content, image: post.image }}
-        onSubmit={handleSubmit}
-        submitLabel="수정"
-      />
-    </main>
+    <>
+      <main className="inner mx-auto mt-6 max-w-215 md:mt-8 lg:mt-9">
+        <PostForm
+          initialData={{ title: post.title, content: post.content, image: post.image }}
+          onSubmit={handleSubmit}
+          isSubmitting={update.isPending}
+          submitLabel="수정"
+        />
+      </main>
+      {errorModal.isOpen && <ErrorModal onClose={errorModal.close} />}
+    </>
   );
 }

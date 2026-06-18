@@ -1,8 +1,9 @@
 "use client";
 
-import { useUserProfile } from "@/features/my-page/model/useUserProfile";
+import { useUser } from "@/shared/hooks/useUser";
 import { useCommentActions } from "@/features/post/model/useCommentActions";
 import {
+  useDeletePost,
   usePostDetail,
   usePostLike,
 } from "@/features/post/model/usePostDetail";
@@ -12,16 +13,28 @@ import CommentList, {
 import PostDetailSection, {
   PostDetailSectionSkeleton,
 } from "@/features/post/ui/PostDetailSection";
+import { LoginModal, ErrorModal, useModal } from "@/shared/ui/modal";
 import { useParams, useRouter } from "next/navigation";
 
 export default function PostDetailPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
 
-  const { data: post, isLoading, isError } = usePostDetail(id);
-  const { data: user } = useUserProfile();
+  const errorModal = useModal();
+  const { data: post, isLoading, isError } = usePostDetail(id, { onError: errorModal.open });
+  const { user } = useUser();
   const like = usePostLike(id);
+  const del = useDeletePost();
   const { submit, edit, remove } = useCommentActions(id);
+  const loginModal = useModal();
+
+  const requireLogin = (action: () => void) => {
+    if (!user?.id) {
+      loginModal.open();
+      return;
+    }
+    action();
+  };
 
   if (isLoading)
     return (
@@ -56,17 +69,19 @@ export default function PostDetailPage() {
       <PostDetailSection
         post={post}
         isOwner={user?.id === post.authorId}
-        onLike={() => like.mutate({ isLiked: post.isLiked })}
+        onLike={() => requireLogin(() => like.mutate({ isLiked: post.isLiked }))}
         onEdit={() => router.push(`/post/${id}/edit`)}
-        onDelete={() => {}} // TODO: 삭제 후 /post 이동
+        onDelete={() => del.mutate(id, { onSuccess: () => router.push("/post") })}
       />
       <CommentList
         comments={post.comments}
         currentUserId={user?.id ?? null}
-        onSubmit={(content) => submit.mutate(content)}
+        onSubmit={(content) => requireLogin(() => submit.mutate(content))}
         onEdit={(commentId, content) => edit.mutate({ id: commentId, content })}
         onDelete={(commentId) => remove.mutate(commentId)}
       />
+      {loginModal.isOpen && <LoginModal onClose={loginModal.close} />}
+      {errorModal.isOpen && <ErrorModal onClose={errorModal.close} />}
     </main>
   );
 }
