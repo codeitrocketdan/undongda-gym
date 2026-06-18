@@ -55,8 +55,12 @@ export interface DagymCardProps {
   image: string | null;
   isFavorited: boolean;
   confirmedAt: string | null;
+  canceledAt: string | null;
+  isJoined: boolean;
+  isOwner?: boolean;
   title: string;
   region: string;
+  address?: string | null;
   type: string;
   dateTime: string | null;
   registrationEnd: string | null;
@@ -71,6 +75,7 @@ export interface DagymDetailCardProps {
   confirmedAt: string | null;
   title: string;
   region: string;
+  address?: string | null;
   type: string;
   dateTime: string | null;
   registrationEnd: string | null;
@@ -88,6 +93,7 @@ export interface FeatureDagymCardProps {
   registrationEnd: string | null;
   title: string;
   region: string;
+  address?: string | null;
   type: string;
   onToggleFavorite: () => void;
 }
