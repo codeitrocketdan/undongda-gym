@@ -20,7 +20,7 @@ export async function GET(
 
   try {
     const backendData = await serverFetcher.get<BackendReviewResponse>(
-      `/meetings/${meetingId}/reviews`,
+      `/meetings/${meetingId}/reviews?${cursor}`,
       { isPublic: true }
     );
 
