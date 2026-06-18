@@ -37,10 +37,10 @@ export function useDagymFilter() {
 
   // 탭이 바뀔 때만 카테고리/지역 필터를 초기화한다 (selectedCategoryValue, regionValue를
   // deps에 넣으면 필터 값이 바뀔 때도 effect가 재실행되어 의도가 깨진다)
-   
   useEffect(() => {
     if (selectedCategoryValue) setSelectedCategory(null);
     if (regionValue) setRegion(null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tab]);
 
   const regionFilter =
