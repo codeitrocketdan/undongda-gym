@@ -48,9 +48,11 @@ const Modal = ({ children, onClose, isClickToClose }: ModalProps) => {
             if (e.key === "Escape") onClose();
           }}
           onClick={(e) => e.stopPropagation()}
-          className="xs:p-12 w-full max-w-136 rounded-xl bg-white px-6 py-8"
+          className="flex w-full max-w-136 max-h-[90vh] flex-col overflow-hidden rounded-xl bg-white"
         >
-          {children}
+          <div className="xs:p-12 min-h-0 flex-1 overflow-y-auto px-6 py-8">
+            {children}
+          </div>
         </div>
       </ModalBackground>
     </ModalContext.Provider>,
