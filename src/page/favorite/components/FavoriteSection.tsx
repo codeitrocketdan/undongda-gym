@@ -7,7 +7,7 @@ import DagymFilterBar, {
   DagymSortBy,
   DagymSortOrder,
 } from "@/features/dagym/components/DagymFilterBar";
-import { REGION_OPTIONS } from "@/features/dagym/constants/region";
+import { BRANCH_OPTIONS } from "@/features/dagym/constants/region";
 import emptyImage from "@/shared/assets/images/empty.svg";
 import Filter from "@/shared/ui/filter/Filter";
 import PillTabs from "@/shared/ui/tab/PillTabs";
@@ -48,7 +48,7 @@ export default function FavoriteSection() {
             onChange={() => {}}
           />
           <Filter.Center
-            options={REGION_OPTIONS}
+            options={BRANCH_OPTIONS}
             value={regionFilter}
             onChange={(option) => setRegion(option.value)}
           />
@@ -94,6 +94,8 @@ export default function FavoriteSection() {
               image={meeting.image}
               isFavorited={true}
               confirmedAt={meeting.confirmedAt}
+              canceledAt={meeting.canceledAt}
+              isJoined={meeting.isJoined}
               title={meeting.name}
               region={meeting.region}
               type={meeting.type}

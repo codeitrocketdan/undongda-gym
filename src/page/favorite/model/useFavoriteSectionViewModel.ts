@@ -1,7 +1,7 @@
 "use client";
 
 import { DagymSort } from "@/features/dagym/components/DagymFilterBar";
-import { REGION_OPTIONS } from "@/features/dagym/constants/region";
+import { BRANCH_OPTIONS } from "@/features/dagym/constants/region";
 import { useMeetingTypes } from "@/features/dagym/model/useMeetingTypes";
 import { useFavorite } from "@/features/favorite/model/useFavorite";
 import { FavoriteListResponse } from "@/features/favorite/types";
@@ -29,7 +29,7 @@ export function useFavoriteSectionViewModel() {
   );
 
   const regionFilter =
-    REGION_OPTIONS.find((r) => r.value === region) ?? REGION_OPTIONS[0];
+    BRANCH_OPTIONS.find((r) => r.value === region) ?? BRANCH_OPTIONS[0];
 
   const handleSortChange = (sort: DagymSort) => {
     setSortBy(sort.sortBy);
