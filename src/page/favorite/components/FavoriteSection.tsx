@@ -1,40 +1,67 @@
 "use client";
 
-import DagymCard, {
-  DagymCardSkeleton,
-} from "@/features/dagym/components/DagymCard";
 import DagymFilterBar, {
   DagymSortBy,
   DagymSortOrder,
 } from "@/features/dagym/components/DagymFilterBar";
-import { BRANCH_OPTIONS } from "@/features/dagym/constants/region";
-import emptyImage from "@/shared/assets/images/empty.svg";
+import AsyncBoundary from "@/shared/ui/AsyncBoundary";
+import { formatDate } from "@/shared/ui/datePicker/utils";
 import Filter from "@/shared/ui/filter/Filter";
+import MeetingCategoryTabs from "@/shared/ui/tab/MeetingCategoryTabs";
 import PillTabs from "@/shared/ui/tab/PillTabs";
-import Image from "next/image";
-import { useFavoriteSectionViewModel } from "../model/useFavoriteSectionViewModel";
+import { useDagymFilter } from "@/features/dagym/model/useDagymFilter";
+import { useUser } from "@/shared/hooks/useUser";
+import { useRouter } from "next/navigation";
+import FavoriteList, { FavoriteListSkeleton } from "./FavoriteList";
+
+function FavoriteListError() {
+  return (
+    <div className="mt-6 flex flex-col items-center justify-center gap-4 py-20">
+      <p className="text-sm text-slate-400">불러오는 중 문제가 발생했어요</p>
+    </div>
+  );
+}
 
 export default function FavoriteSection() {
+  const { user } = useUser();
+  const router = useRouter();
+
   const {
-    selectedCategory,
+    tab,
+    tabs,
+    date,
+    centerOptions,
     regionFilter,
     sortBy,
     sortOrder,
-    tabs,
-    meetings,
-    isLoading,
-    isError,
-    observerRef,
     setSelectedCategory,
+    setDate,
     setRegion,
     handleSortChange,
-    toggleFavorite,
-  } = useFavoriteSectionViewModel();
+  } = useDagymFilter();
+
+  if (!user) {
+    return (
+      <div className="mt-6 flex flex-col items-center justify-center gap-4 py-20">
+        <p className="text-sm text-slate-400">
+          로그인 후 찜한 다짐을 확인할 수 있어요
+        </p>
+        <button
+          onClick={() => router.push("/login")}
+          className="cursor-pointer text-sm font-semibold text-blue-500 underline"
+        >
+          로그인하러 가기
+        </button>
+      </div>
+    );
+  }
 
   return (
     <section className="mt-8">
+      <MeetingCategoryTabs />
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <PillTabs
+          key={tab}
           tabs={tabs}
           defaultValue="전체"
           onChange={(value) =>
@@ -42,13 +69,12 @@ export default function FavoriteSection() {
           }
         />
         <div className="flex shrink-0 items-center gap-2">
-          <Filter.Center
-            options={[{ label: "날짜 전체", value: "" }]}
-            value={{ label: "날짜 전체", value: "" }}
-            onChange={() => {}}
+          <Filter.Date
+            value={date ? new Date(date) : undefined}
+            onChange={(d) => setDate(d ? formatDate(d) : "")}
           />
           <Filter.Center
-            options={BRANCH_OPTIONS}
+            options={centerOptions}
             value={regionFilter}
             onChange={(option) => setRegion(option.value)}
           />
@@ -62,54 +88,12 @@ export default function FavoriteSection() {
         </div>
       </div>
 
-      {isLoading ? (
-        <div className="mt-6 grid grid-cols-1 gap-4 xl:grid-cols-2">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <DagymCardSkeleton key={i} />
-          ))}
-        </div>
-      ) : isError ? (
-        <div className="mt-6 flex flex-col items-center justify-center gap-4 py-20">
-          <p className="text-sm text-slate-400">
-            불러오는 중 문제가 발생했어요
-          </p>
-        </div>
-      ) : meetings.length === 0 ? (
-        <div className="mt-6 flex flex-col items-center justify-center gap-4 py-20">
-          <Image
-            src={emptyImage}
-            alt="찜한 다짐이 없습니다"
-            className="h-50 w-50"
-          />
-          <p className="text-center text-sm text-slate-400">
-            아직 찜한 다짐이 없어요 <br /> 마음에 드는 다짐을 찜해보세요!
-          </p>
-        </div>
-      ) : (
-        <div className="mt-6 grid grid-cols-1 gap-4 xl:grid-cols-2">
-          {meetings.map((meeting) => (
-            <DagymCard
-              key={meeting.id}
-              id={meeting.id}
-              image={meeting.image}
-              isFavorited={true}
-              confirmedAt={meeting.confirmedAt}
-              canceledAt={meeting.canceledAt}
-              isJoined={meeting.isJoined}
-              title={meeting.name}
-              region={meeting.region}
-              type={meeting.type}
-              dateTime={meeting.dateTime}
-              registrationEnd={meeting.registrationEnd}
-              participantCount={meeting.participantCount}
-              capacity={meeting.capacity}
-              onToggleFavorite={() => toggleFavorite(meeting.id, true)}
-              onJoin={() => {}}
-            />
-          ))}
-        </div>
-      )}
-      <div ref={observerRef} />
+      <AsyncBoundary
+        fallback={<FavoriteListSkeleton />}
+        errorFallback={<FavoriteListError />}
+      >
+        <FavoriteList />
+      </AsyncBoundary>
     </section>
   );
 }
