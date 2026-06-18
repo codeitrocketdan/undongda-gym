@@ -1,7 +1,7 @@
 import { formatDate } from "@/shared/lib/formatDate";
 import Author from "@/shared/ui/author/Author";
 import Rating from "@/shared/ui/rating/Rating";
-import { Dagym } from "../model/types";
+import { Dagym } from "../../model/types";
 
 interface Props {
   dagym: Dagym;

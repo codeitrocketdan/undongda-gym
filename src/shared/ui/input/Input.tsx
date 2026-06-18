@@ -3,13 +3,19 @@ import { twMerge } from "tailwind-merge";
 
 // InputHTMLAttributes<HTMLInputElement>를 사용해서 input의 속성을 받습니다.
 interface PropsType extends InputHTMLAttributes<HTMLInputElement> {
-  type: "text" | "password" | "submit" | "reset" | "number" | "email";
+  type?: "text" | "password" | "submit" | "reset" | "number" | "email";
   id: string;
   className?: string;
   error?: boolean;
 }
 
-const Input = ({ type, id, className, error, ...props }: PropsType) => {
+const Input = ({
+  type = "text",
+  id,
+  className,
+  error,
+  ...props
+}: PropsType) => {
   return (
     <input
       type={type}

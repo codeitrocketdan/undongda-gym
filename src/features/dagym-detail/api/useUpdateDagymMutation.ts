@@ -1,0 +1,19 @@
+import { clientFetcher } from "@/shared/api/clientFetcher";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { DagymUpdateForm } from "../model/types";
+
+export function useUpdateDagymMutation(meetingId: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (body: DagymUpdateForm) => {
+      return clientFetcher.patch(`/api/meetings/${meetingId}`, body);
+    },
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["dagym", "detail", meetingId],
+      });
+    },
+  });
+}

@@ -8,6 +8,6 @@ interface PageProps {
 
 export default async function Page({ params }: PageProps) {
   const { id } = await params;
-  console.log(id);
+
   return <DagymDetailPage id={id} />;
 }
