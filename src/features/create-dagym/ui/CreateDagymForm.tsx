@@ -1,5 +1,6 @@
 "use client";
-import { Modal } from "@/shared/ui/modal";
+import { clientFetcher } from "@/shared/api/clientFetcher";
+import { ErrorModal, Modal, useModal } from "@/shared/ui/modal";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { CAPACITY_MIN, TOTAL_STEPS } from "../constants";
@@ -31,6 +32,7 @@ interface DagymFormData {
 export default function CreateDagymForm({ onClose }: useModalTypeProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [step, setStep] = useState(1);
+  const errorModal = useModal();
 
   const methods = useForm<DagymFormData>({
     defaultValues: {
@@ -110,68 +112,60 @@ export default function CreateDagymForm({ onClose }: useModalTypeProps) {
         addressDetail: data.addressDetail,
         latitude: data.latitude ? Number(data.latitude) : 37.4979,
         longitude: data.longitude ? Number(data.longitude) : 127.0276,
-        image: finalImageUrl, // File 객체 대신 최종 발급받은 publicUrl 주소 대입
+        image: finalImageUrl,
         description: data.description,
         dateTime: data.dateTime,
         registrationEnd: data.registrationEnd,
         capacity: data.capacity,
       };
 
-      const response = await fetch("/api/meetings", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json", // JSON 전송 명시
-        },
-        body: JSON.stringify(submitData),
-      });
-
-      if (!response.ok) {
-        throw new Error(`서버 에러 발생: ${response.status}`);
-      }
-      const result = await response.json();
+      const result = await clientFetcher.post("/api/meetings", submitData);
       console.log("다짐 생성 최종 성공!", result);
       onClose();
     } catch (error) {
-      console.error("최종 생성 실패:", error);
-      alert("다짐 생성 중 오류가 발생했습니다.");
+      console.error("다짐 생성 실패:", error);
+      errorModal.open();
     } finally {
       setIsSubmitting(false);
     }
   };
   return (
-    <FormProvider {...methods}>
-      <Modal onClose={onClose}>
-        <Modal.Header className="flex-row justify-between">
-          <p className="text-lg-bold">
-            다짐 만들기 <span className="text-gray-800">{step}</span>
-            <span className="text-gray-600">/ {TOTAL_STEPS}</span>
-          </p>
-          <Modal.CloseButton />
-        </Modal.Header>
-        <main>
-          <form
-            id="meeting-multi-step-form"
-            onSubmit={methods.handleSubmit(onSubmit)}
-          >
-            {step === 1 && <SetCategories />}
-            {step === 2 && <SetInfo />}
-            {step === 3 && <SetDescription />}
-            {step === 4 && <SetDate />}
-          </form>
-        </main>
-        <Modal.Footer>
-          <StepButtons
-            formId="meeting-multi-step-form"
-            currentStep={step}
-            totalSteps={TOTAL_STEPS}
-            onPrev={handlePrev}
-            onNext={handleNext}
-            onClose={onClose}
-            isNextDisabled={isNextDisabled()}
-            onSubmit={methods.handleSubmit(onSubmit)}
-          />
-        </Modal.Footer>
-      </Modal>
-    </FormProvider>
+    <>
+      <FormProvider {...methods}>
+        <Modal onClose={onClose}>
+          <Modal.Header className="flex-row justify-between">
+            <p className="text-lg-bold">
+              다짐 만들기 <span className="text-gray-800">{step}</span>
+              <span className="text-gray-600">/ {TOTAL_STEPS}</span>
+            </p>
+            <Modal.CloseButton />
+          </Modal.Header>
+          <main>
+            <form
+              id="meeting-multi-step-form"
+              onSubmit={methods.handleSubmit(onSubmit)}
+            >
+              {step === 1 && <SetCategories />}
+              {step === 2 && <SetInfo />}
+              {step === 3 && <SetDescription />}
+              {step === 4 && <SetDate />}
+            </form>
+          </main>
+          <Modal.Footer>
+            <StepButtons
+              formId="meeting-multi-step-form"
+              currentStep={step}
+              totalSteps={TOTAL_STEPS}
+              onPrev={handlePrev}
+              onNext={handleNext}
+              onClose={onClose}
+              isNextDisabled={isNextDisabled()}
+              onSubmit={methods.handleSubmit(onSubmit)}
+            />
+          </Modal.Footer>
+        </Modal>
+      </FormProvider>
+      {errorModal.isOpen && <ErrorModal onClose={errorModal.close} />}
+    </>
   );
 }
