@@ -1,5 +1,6 @@
 "use client";
 
+import { clientFetcher } from "@/shared/api/clientFetcher";
 import Button from "@/shared/ui/button/Button";
 import ImageExtension from "@tiptap/extension-image";
 import TextAlign from "@tiptap/extension-text-align";
@@ -34,6 +35,8 @@ export default function PostForm({
   const [imagePreview, setImagePreview] = useState<string | null>(
     initialData?.image ?? null
   );
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
   const imageInputRef = useRef<HTMLInputElement>(null);
   const blobUrlRef = useRef<string | null>(null);
 
@@ -43,13 +46,14 @@ export default function PostForm({
     // 기존 blob URL 해제
     if (blobUrlRef.current) URL.revokeObjectURL(blobUrlRef.current);
     blobUrlRef.current = URL.createObjectURL(file);
+    setImageFile(file);
     setImagePreview(blobUrlRef.current);
     e.target.value = "";
   };
 
   const editor = useEditor({
     extensions: [
-      StarterKit, // Bold, Italic, 단락, 실행취소 등 기본 기능 묶음
+      StarterKit.configure({ underline: false }), // Bold, Italic, 단락, 실행취소 등 기본 기능 묶음
       Underline,
       TextAlign.configure({ types: ["heading", "paragraph"] }), // 텍스트 정렬 (StarterKit 미포함)
       ImageExtension, // 이미지 삽입 (StarterKit 미포함)
@@ -66,9 +70,15 @@ export default function PostForm({
     }),
   }) ?? { contentText: "", contentHTML: "" };
 
+  // useEditorState가 초기화 전 ""를 반환할 수 있으므로 editor.getText()를 직접 fallback
+  const hasContent = editor
+    ? contentText.trim() !== "" || editor.getText().trim() !== ""
+    : (initialData?.content?.trim() ?? "") !== "";
+
   // 수정 모드: 초기값과 비교 / 작성 모드: 내용이 있는지만 확인
   const isDirty = initialData
-    ? title !== (initialData.title ?? "") || contentHTML !== (initialData.content ?? "")
+    ? title !== (initialData.title ?? "") ||
+      contentHTML !== (initialData.content ?? "")
     : title.trim() !== "" || contentText.trim() !== "";
 
   // 언마운트 시 blob URL 해제
@@ -78,24 +88,51 @@ export default function PostForm({
     };
   }, []);
 
-  // TODO: 추후 공통 Modal 컴포넌트로 교체 (현재는 브라우저 기본 confirm 사용)
+  // 새로고침/탭 닫기 방지
   useEffect(() => {
-    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      if (!isDirty) return;
+    if (!isDirty) return;
+    const handler = (e: BeforeUnloadEvent) => {
       e.preventDefault();
-      e.returnValue = "";
     };
-    window.addEventListener("beforeunload", handleBeforeUnload);
-    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+    window.addEventListener("beforeunload", handler);
+    return () => window.removeEventListener("beforeunload", handler);
   }, [isDirty]);
 
-  // TODO: API 기능 개발시 사용
-  const handleSubmit = () => {};
+  const handleSubmit = async () => {
+    let imageUrl = imagePreview;
+
+    if (imageFile) {
+      setIsUploading(true);
+      try {
+        const { presignedUrl, publicUrl } = await clientFetcher.post<
+          { fileName: string; contentType: string; folder: string },
+          { presignedUrl: string; publicUrl: string }
+        >("/api/images", {
+          fileName: imageFile.name,
+          contentType: imageFile.type,
+          folder: "posts",
+        });
+
+        await fetch(presignedUrl, {
+          method: "PUT",
+          headers: { "Content-Type": imageFile.type },
+          body: imageFile,
+        });
+
+        imageUrl = publicUrl;
+      } finally {
+        setIsUploading(false);
+      }
+    }
+
+    const content = editor?.getHTML() ?? contentHTML;
+    onSubmit({ title, content, image: imageUrl });
+  };
 
   return (
     <div>
-      {/* 제목 + 글자수 + 등록 버튼 */}
-      <div className="mb-4 flex items-center gap-3">
+        {/* 제목 + 글자수 + 등록 버튼 */}
+        <div className="mb-4 flex items-center gap-3">
         <div className="mx-2 flex flex-1 items-center gap-2 border-b border-slate-200 pb-1">
           <input
             type="text"
@@ -112,9 +149,11 @@ export default function PostForm({
           size="sm"
           className="w-auto shrink-0 disabled:cursor-default"
           onClick={handleSubmit}
-          isDisabled={isSubmitting || !title.trim() || !contentText.trim()}
+          isDisabled={
+            isSubmitting || isUploading || !title.trim() || !hasContent
+          }
         >
-          {isSubmitting ? `${submitLabel} 중...` : submitLabel}
+          {isUploading ? "이미지 업로드 중..." : submitLabel}
         </Button>
       </div>
 
@@ -133,8 +172,6 @@ export default function PostForm({
         />
         <EditorContent
           editor={editor}
-          // [&_.ProseMirror]:min-h-125 — 빈 영역도 클릭 가능하도록 ProseMirror 최소 높이 고정
-          // [&_.ProseMirror]:outline-none — 포커스 시 브라우저 기본 테두리 제거
           className="custom-scrollbar my-4 max-h-125 min-h-125 overflow-y-auto text-sm text-slate-700 [&_.ProseMirror]:min-h-125 [&_.ProseMirror]:outline-none"
         />
         {imagePreview && (
@@ -154,6 +191,7 @@ export default function PostForm({
                   URL.revokeObjectURL(blobUrlRef.current);
                   blobUrlRef.current = null;
                 }
+                setImageFile(null);
                 setImagePreview(null);
               }}
               className="absolute -top-2 -right-2 flex h-5 w-5 cursor-pointer items-center justify-center rounded-full bg-slate-600 text-white"
