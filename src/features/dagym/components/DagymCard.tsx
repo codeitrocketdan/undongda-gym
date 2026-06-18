@@ -4,6 +4,8 @@ import {
   formatMonthDay,
   formatTime,
 } from "@/shared/lib/formatDate";
+import { formatRegion } from "@/shared/lib/formatRegion";
+import { getOverlayText } from "@/shared/lib/getMeetingStatus";
 import Button from "@/shared/ui/button/Button";
 import FeedCard from "@/shared/ui/feed-card/FeedCard";
 import { HeartButton } from "@/shared/ui/heart-button/HeartButton";
@@ -15,13 +17,97 @@ import { MapPin, User } from "lucide-react";
 import Link from "next/link";
 import { DagymCardProps } from "../types";
 
+function JoinButton({
+  isOwner,
+  canceledAt,
+  isJoined,
+  registrationEnd,
+  participantCount,
+  capacity,
+  onJoin,
+}: Pick<
+  DagymCardProps,
+  | "isOwner"
+  | "canceledAt"
+  | "isJoined"
+  | "registrationEnd"
+  | "participantCount"
+  | "capacity"
+  | "onJoin"
+>) {
+  if (isOwner) return null;
+
+  const isExpired = registrationEnd
+    ? new Date(registrationEnd) < new Date()
+    : false;
+  const isFull = participantCount >= capacity;
+
+  const handleClick = (e?: React.MouseEvent<HTMLButtonElement>) => {
+    e?.preventDefault();
+    e?.stopPropagation();
+    onJoin();
+  };
+
+  if (canceledAt) {
+    return (
+      <Button variant="secondary" size="sm" isDisabled>
+        취소됨
+      </Button>
+    );
+  }
+
+  if (isJoined) {
+    return (
+      <Button
+        variant="secondary"
+        size="sm"
+        className="border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white"
+        onClick={handleClick}
+      >
+        예약 취소하기
+      </Button>
+    );
+  }
+
+  if (isExpired) {
+    return (
+      <Button size="sm" isDisabled>
+        모집 마감
+      </Button>
+    );
+  }
+
+  if (isFull) {
+    return (
+      <Button size="sm" isDisabled>
+        정원 마감
+      </Button>
+    );
+  }
+
+  return (
+    <Button
+      variant="secondary"
+      size="sm"
+      className="border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white"
+      onClick={handleClick}
+    >
+      참여하기
+    </Button>
+  );
+}
+
 export default function DagymCard({
   id,
   image,
   isFavorited,
   confirmedAt,
+  canceledAt,
+  isJoined,
+  isOwner = false,
   title,
   region,
+  address = null,
   type,
   dateTime,
   registrationEnd,
@@ -30,6 +116,23 @@ export default function DagymCard({
   onToggleFavorite,
   onJoin,
 }: DagymCardProps) {
+  const joinButtonProps = {
+    isOwner,
+    canceledAt,
+    isJoined,
+    registrationEnd,
+    participantCount,
+    capacity,
+    onJoin,
+  };
+
+  const overlayText = getOverlayText(
+    canceledAt,
+    registrationEnd,
+    participantCount,
+    capacity
+  );
+
   return (
     <Link href={`/meetings/${id}`}>
       <FeedCard className="overflow-hidden rounded-3xl md:rounded-4xl">
@@ -37,12 +140,21 @@ export default function DagymCard({
         <div className="flex flex-col md:hidden">
           <div className="relative">
             <FeedCard.Image src={image} className="h-48 w-full" />
-            <div className="absolute top-3 right-3">
-              <HeartButton
-                isFavorited={isFavorited}
-                onClick={onToggleFavorite}
-              />
-            </div>
+            {overlayText && (
+              <div className="absolute inset-0 flex items-center justify-center bg-black/60">
+                <span className="text-xl font-bold text-white">
+                  {overlayText}
+                </span>
+              </div>
+            )}
+            {!isOwner && (
+              <div className="absolute top-3 right-3 z-10">
+                <HeartButton
+                  isFavorited={isFavorited}
+                  onClick={onToggleFavorite}
+                />
+              </div>
+            )}
           </div>
           <div className="flex flex-col gap-3 p-4">
             <div>
@@ -51,12 +163,12 @@ export default function DagymCard({
                   title={title}
                   className="text-base-semibold min-w-0 truncate"
                 />
-                {confirmedAt && <StatusLabel />}
+                {confirmedAt && !canceledAt && <StatusLabel />}
               </div>
               <div className="flex items-center gap-1 text-sm text-slate-600">
                 <MapPin className="h-3 w-3 shrink-0" />
                 <span className="truncate">
-                  {region} · {type}
+                  {formatRegion(region, address)} · {type}
                 </span>
               </div>
             </div>
@@ -78,17 +190,7 @@ export default function DagymCard({
                 </div>
               </div>
               <div className="shrink-0">
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  className="border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white"
-                  onClick={(e) => {
-                    e?.preventDefault();
-                    onJoin();
-                  }}
-                >
-                  참여하기
-                </Button>
+                <JoinButton {...joinButtonProps} />
               </div>
             </div>
           </div>
@@ -96,10 +198,16 @@ export default function DagymCard({
 
         {/* 태블릿/데스크탑 레이아웃 */}
         <div className="relative hidden h-55 p-6 md:flex">
-          <FeedCard.Image
-            src={image}
-            className="h-42.5 w-42.5 shrink-0 rounded-3xl"
-          />
+          <div className="relative h-42.5 w-42.5 shrink-0">
+            <FeedCard.Image src={image} className="h-42.5 w-42.5 rounded-3xl" />
+            {overlayText && (
+              <div className="absolute inset-0 flex items-center justify-center rounded-3xl bg-black/60">
+                <span className="text-xl font-bold text-white">
+                  {overlayText}
+                </span>
+              </div>
+            )}
+          </div>
           <div className="flex min-w-0 flex-1 flex-col justify-between py-4 pl-4">
             <div className="flex items-start gap-2">
               <div className="flex min-w-0 flex-1 flex-col gap-1">
@@ -108,21 +216,23 @@ export default function DagymCard({
                     title={title}
                     className="text-xl-semibold min-w-0 truncate"
                   />
-                  {confirmedAt && <StatusLabel />}
+                  {confirmedAt && !canceledAt && <StatusLabel />}
                 </div>
                 <div className="flex items-center gap-1 text-sm text-slate-600">
                   <MapPin className="h-3 w-3 shrink-0" />
                   <span className="truncate">
-                    {region} · {type}
+                    {formatRegion(region, address)} · {type}
                   </span>
                 </div>
               </div>
-              <div className="absolute top-4 right-4 z-10 hidden md:block">
-                <HeartButton
-                  isFavorited={isFavorited}
-                  onClick={onToggleFavorite}
-                />
-              </div>
+              {!isOwner && (
+                <div className="absolute top-4 right-4 z-10 hidden md:block">
+                  <HeartButton
+                    isFavorited={isFavorited}
+                    onClick={onToggleFavorite}
+                  />
+                </div>
+              )}
             </div>
             <div className="flex items-end gap-3">
               <div className="flex min-w-0 flex-1 flex-col gap-2">
@@ -147,17 +257,7 @@ export default function DagymCard({
                 </div>
               </div>
               <div className="shrink-0">
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  className="border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white"
-                  onClick={(e) => {
-                    e?.preventDefault();
-                    onJoin();
-                  }}
-                >
-                  참여하기
-                </Button>
+                <JoinButton {...joinButtonProps} />
               </div>
             </div>
           </div>

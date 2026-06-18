@@ -4,6 +4,7 @@ import {
   formatMonthDay,
   formatTime,
 } from "@/shared/lib/formatDate";
+import { formatRegion } from "@/shared/lib/formatRegion";
 import Button from "@/shared/ui/button/Button";
 import FeedCard from "@/shared/ui/feed-card/FeedCard";
 import { HeartButton } from "@/shared/ui/heart-button/HeartButton";
@@ -14,6 +15,7 @@ import { DagymDetailCardProps } from "../types";
 export default function DagymDetailCard({
   title,
   region,
+  address = null,
   type,
   dateTime,
   registrationEnd,
@@ -38,7 +40,7 @@ export default function DagymDetailCard({
         <div className="md:text-base-medium text-sm-medium flex items-center gap-1 text-slate-500">
           <MapPin className="h-3 w-3 shrink-0" />
           <span className="truncate">
-            {region} · {type}
+            {formatRegion(region, address)} · {type}
           </span>
         </div>
       </div>
