@@ -46,6 +46,7 @@ export default function CommentInput({
           size="sm"
           className="m-0.5 h-10 w-auto shrink-0"
           onClick={handleSubmit}
+          isDisabled={!value.trim()}
         >
           등록
         </Button>
