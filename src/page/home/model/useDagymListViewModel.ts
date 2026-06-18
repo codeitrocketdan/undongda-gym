@@ -15,7 +15,7 @@ export function useDagymListViewModel({
   const { selectedCategory, date, region, sortBy, sortOrder, typeList } =
     useListQueryParams();
 
-  const { toggleFavorite } = useFavorite();
+  const { toggleFavorite } = useFavorite({ onError });
   const { toggleJoin } = useJoinMeeting({ onError });
 
   const now = new Date();
