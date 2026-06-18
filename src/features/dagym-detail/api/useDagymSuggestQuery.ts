@@ -10,7 +10,7 @@ export const useDagymSuggestQuery = (region: string) => {
 
     queryFn: async () => {
       return clientFetcher.get<MeetingListResponse>(
-        `/api/meetings?region=${region}`
+        `/api/meetings?region=${region}&size=6`
       );
     },
   });

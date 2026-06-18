@@ -16,11 +16,20 @@ interface PropsType {
   dagym: Dagym;
 }
 
-const DagymSuggest = ({ dagym }: PropsType) => {
+const DagymSuggest = ({ dagym, meetingId }: PropsType) => {
   const { data, isLoading, isError } = useDagymSuggestQuery(dagym.region);
 
-  const meetings = data?.data ?? [];
+  const meetings =
+    data?.data
+      ?.filter((meeting) => meeting.id.toString() !== meetingId)
+      .sort((a, b) => {
+        const aScore = Number(a.type === dagym.type);
+        const bScore = Number(b.type === dagym.type);
 
+        return bScore - aScore;
+      })
+      .slice(0, 6) ?? [];
+  console.log(meetings);
   if (isLoading) {
     return (
       <div className="py-10 text-center text-slate-400">
@@ -47,10 +56,23 @@ const DagymSuggest = ({ dagym }: PropsType) => {
         breakpoints={{
           0: {
             slidesPerView: 2,
-            grid: { rows: 2, fill: "row" },
+            grid: {
+              rows: 2,
+              fill: "row",
+            },
           },
-          640: { slidesPerView: 2.5 },
-          768: { slidesPerView: 4 },
+          640: {
+            slidesPerView: 2.5,
+            grid: {
+              rows: 1,
+            },
+          },
+          768: {
+            slidesPerView: 4,
+            grid: {
+              rows: 1,
+            },
+          },
         }}
       >
         {meetings.map((meeting) => (
