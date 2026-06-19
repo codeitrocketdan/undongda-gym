@@ -1,10 +1,11 @@
 "use client";
 import Image from "next/image";
 import { useFormContext } from "react-hook-form";
-import { mockOptions } from "../constants";
+import { useCategoryOptions } from "../model/useCategoryOptions";
 export default function SetCategories() {
   const { register, watch } = useFormContext();
   const selectedValue = watch("type");
+  const categoryOptions = useCategoryOptions();
 
   return (
     <div className="select-category">
@@ -13,8 +14,8 @@ export default function SetCategories() {
           이 모임은 어떤 종류인가요?
         </legend>
 
-        <div className="my-3 grid grid-cols-3 gap-5">
-          {mockOptions.map((item) => {
+        <div className="my-3 grid grid-cols-3 gap-2 md:gap-5">
+          {categoryOptions.map((item) => {
             return (
               <label key={item.name} className="cursor-pointer">
                 <input
@@ -24,8 +25,8 @@ export default function SetCategories() {
                   {...register("type")}
                   className="peer sr-only"
                 />
-                <div className="flex h-34 w-34 flex-col items-center justify-center gap-2 rounded-xl border-gray-200 bg-gray-100 peer-checked:border-blue-400 peer-checked:bg-blue-200">
-                  <Image src={item.imgUrl} alt="" />
+                <div className="flex h-34 w-full flex-col items-center justify-center gap-2 rounded-xl border-gray-200 bg-gray-100 peer-checked:border-blue-400 peer-checked:bg-blue-200 md:w-34">
+                  <Image src={item.imgUrl} alt="" width={66} height={66} />
                   <p>{item.name}</p>
                 </div>
               </label>
