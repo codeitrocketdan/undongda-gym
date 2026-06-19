@@ -11,16 +11,17 @@ interface BackendReviewResponse {
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { meetingId: string } }
+  { params }: { params: Promise<{ meetingId: string }> }
 ) {
   const { meetingId } = await params;
   const { searchParams } = new URL(request.url);
 
-  const cursor = searchParams.get("cursor") || "";
+  const cursor = searchParams.get("cursor");
 
   try {
+    const query = cursor ? `?cursor=${encodeURIComponent(cursor)}` : "";
     const backendData = await serverFetcher.get<BackendReviewResponse>(
-      `/meetings/${meetingId}/reviews?${cursor}`,
+      `/meetings/${meetingId}/reviews${query}`,
       { isPublic: true }
     );
 

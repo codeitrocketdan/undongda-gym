@@ -42,11 +42,16 @@ export default function DagymUpdateModal({ id, onClose }: PropsType) {
         finalImageUrl = await uploadImageToStorage({ file: imageFile });
       }
 
+      if (values.latitude == null || values.longitude == null) {
+        alert("위치 좌표를 확인해 주세요.");
+        return;
+      }
+
       const finalPayload = {
         ...values,
         image: finalImageUrl,
-        latitude: values.latitude ?? 0,
-        longitude: values.longitude ?? 0,
+        latitude: values.latitude,
+        longitude: values.longitude,
         addressDetail: values.addressDetail,
       };
       console.log(values, "<====values");

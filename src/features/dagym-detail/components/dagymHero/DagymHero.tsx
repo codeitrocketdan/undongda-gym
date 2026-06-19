@@ -21,12 +21,12 @@ import DagymHostMenu from "./DagymHostMenu";
 import { DagymParticipants } from "./DagymParticipants";
 import DagymUpdateModal from "./DagymUpdateModal";
 
-interface Props {
+interface PropsType {
   id: string;
   dagym: Dagym;
 }
 
-export default function DagymHero({ id, dagym }: Props) {
+export default function DagymHero({ id, dagym }: PropsType) {
   const { user } = useAuth();
   const modal = useModal();
 
@@ -89,7 +89,7 @@ export default function DagymHero({ id, dagym }: Props) {
         <div className="flex flex-col gap-5 sm:h-[332px] sm:flex-row md:h-[433px]">
           <div className="relative h-[241px] w-full sm:h-full md:w-1/2">
             <Image
-              src={dagym.image ?? ""}
+              src={dagym.image}
               alt={dagym.name}
               fill
               className="w-full rounded-4xl object-cover"

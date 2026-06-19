@@ -1,6 +1,7 @@
 import { clientFetcher } from "@/shared/api/clientFetcher";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Dagym } from "../model/types";
+import { dagymQueries } from "./queries";
 
 export function useFavoriteMutation(meetingId: string) {
   const queryClient = useQueryClient();
@@ -16,7 +17,7 @@ export function useFavoriteMutation(meetingId: string) {
 
     onMutate: async (isFavorited) => {
       await queryClient.cancelQueries({
-        queryKey: ["dagym", "detail", meetingId],
+        queryKey: dagymQueries.detail(meetingId),
       });
 
       const previousDetail = queryClient.getQueryData<Dagym>([
@@ -25,7 +26,7 @@ export function useFavoriteMutation(meetingId: string) {
         meetingId,
       ]);
 
-      queryClient.setQueryData<Dagym>(["dagym", "detail", meetingId], (old) => {
+      queryClient.setQueryData<Dagym>(dagymQueries.detail(meetingId), (old) => {
         if (!old) return old;
 
         return {
@@ -37,25 +38,23 @@ export function useFavoriteMutation(meetingId: string) {
       return { previousDetail };
     },
 
-    // rollback
     onError: (_error, _variables, context) => {
       if (context?.previousDetail) {
         queryClient.setQueryData(
-          ["dagym", "detail", meetingId],
+          dagymQueries.detail(meetingId),
           context.previousDetail
         );
       }
     },
 
-    // 🔥 핵심: 2개 query 정확히 invalidate
     onSettled: async () => {
       await Promise.all([
         queryClient.invalidateQueries({
-          queryKey: ["dagym", "detail", meetingId],
+          queryKey: dagymQueries.detail(meetingId),
         }),
 
         queryClient.invalidateQueries({
-          queryKey: ["dagym", "suggest"],
+          queryKey: dagymQueries.suggests(),
         }),
       ]);
     },

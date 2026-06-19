@@ -26,9 +26,16 @@ export default function DagymBasicInfo() {
     });
 
   const handleCenterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setValue("region", e.target.value);
-  };
+    const nextRegion = e.target.value;
+    setValue("region", nextRegion, { shouldDirty: true });
 
+    if (nextRegion !== "지점 외 장소") {
+      setValue("address", "", { shouldDirty: true });
+      setValue("addressDetail", "", { shouldDirty: true });
+      setValue("latitude", 0, { shouldDirty: true });
+      setValue("longitude", 0, { shouldDirty: true });
+    }
+  };
   return (
     <>
       <Script

@@ -2,11 +2,9 @@
 import { clientFetcher } from "@/shared/api/clientFetcher";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Dagym } from "../model/types";
-
+import { dagymQueries } from "./queries";
 export const useJoinMutation = (meetingId: string | number) => {
   const queryClient = useQueryClient();
-
-  const queryKey = ["dagym-detail", meetingId];
 
   return useMutation({
     mutationFn: async (isJoined: boolean) => {
@@ -18,11 +16,15 @@ export const useJoinMutation = (meetingId: string | number) => {
     },
 
     onMutate: async (isJoined: boolean) => {
-      await queryClient.cancelQueries({ queryKey });
+      await queryClient.cancelQueries({
+        queryKey: dagymQueries.detail(meetingId),
+      });
 
-      const previousDagym = queryClient.getQueryData<Dagym>(queryKey);
+      const previousDagym = queryClient.getQueryData<Dagym>(
+        dagymQueries.detail(meetingId)
+      );
 
-      queryClient.setQueryData<Dagym>(queryKey, (old) => {
+      queryClient.setQueryData<Dagym>(dagymQueries.detail(meetingId), (old) => {
         if (!old) return old;
         return {
           ...old,
@@ -39,17 +41,20 @@ export const useJoinMutation = (meetingId: string | number) => {
     onError: (err, variables, context) => {
       console.error("참여 상태 변경 실패:", err);
       if (context?.previousDagym) {
-        queryClient.setQueryData(queryKey, context.previousDagym);
+        queryClient.setQueryData(
+          dagymQueries.detail(meetingId),
+          context.previousDagym
+        );
       }
     },
 
     onSettled: () => {
       queryClient.invalidateQueries({
-        queryKey: ["dagym-detail", meetingId],
+        queryKey: dagymQueries.detail(meetingId),
       });
 
       queryClient.invalidateQueries({
-        queryKey: ["dagym-detail", meetingId, "participants"],
+        queryKey: dagymQueries.participants(meetingId),
       });
     },
   });

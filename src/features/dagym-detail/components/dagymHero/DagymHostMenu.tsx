@@ -21,7 +21,7 @@ export default function DagymHostMenu({ onEdit, onDelete }: Props) {
   return (
     <div ref={ref}>
       <button onClick={() => setIsOpen((prev) => !prev)}>
-        <Ellipsis color="#62748e" className="cursor-pointer" />
+        <Ellipsis type="button" color="#62748e" className="cursor-pointer" />
       </button>
 
       {isOpen && (

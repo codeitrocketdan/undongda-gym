@@ -6,11 +6,11 @@ import { Pagination } from "@/shared/ui/pagination/Pagination";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { Dagym, Review } from "../../model/types";
+import { dagymQueries } from "../../api/queries";
+import { Review } from "../../model/types";
 import ReviewItem from "./ReviewItem";
 
 interface Props {
-  dagym: Dagym;
   meetingId: string;
 }
 
@@ -20,7 +20,7 @@ interface ApiResponse {
   hasMore: boolean;
 }
 
-const DagymReviews = ({ dagym, meetingId }: Props) => {
+const DagymReviews = ({ meetingId }: Props) => {
   const [currentPage, setCurrentPage] = useState(1);
 
   const cursorMapRef = useRef<Record<number, string>>({
@@ -28,11 +28,13 @@ const DagymReviews = ({ dagym, meetingId }: Props) => {
   });
 
   const { data, isLoading, isError } = useQuery<ApiResponse>({
-    queryKey: ["dagymReviews", meetingId, currentPage],
+    queryKey: dagymQueries.reviewPage(meetingId, currentPage),
 
     queryFn: async () => {
+      const cursor = cursorMapRef.current[currentPage] ?? "";
+      const query = cursor ? `?cursor=${encodeURIComponent(cursor)}` : "";
       return clientFetcher.get<ApiResponse>(
-        `/api/meetings/${meetingId}/reviews`
+        `/api/meetings/${meetingId}/reviews${query}`
       );
     },
   });
@@ -76,7 +78,9 @@ const DagymReviews = ({ dagym, meetingId }: Props) => {
             {reviews.map((review) => (
               <ReviewItem
                 key={review.id}
-                dagym={dagym}
+                name={review.user.name}
+                image={review.user.image}
+                createdAt={review.createdAt}
                 rating={review.score}
                 content={review.comment}
               />
@@ -101,7 +105,7 @@ const DagymReviews = ({ dagym, meetingId }: Props) => {
           hasNext={hasMore}
           goTo={(page) => setCurrentPage(page)}
           goPrev={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-          goNext={() => setCurrentPage((p) => p + 1)}
+          goNext={() => setCurrentPage((p) => (hasMore ? p + 1 : p))}
         />
       </div>
     </section>

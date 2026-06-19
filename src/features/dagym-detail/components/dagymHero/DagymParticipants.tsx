@@ -3,6 +3,7 @@ import { clientFetcher } from "@/shared/api/clientFetcher";
 import avatar from "@/shared/assets/images/avatar.svg";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
+import { dagymQueries } from "../../api/queries";
 import { ParticipantsResponse } from "../../model/types";
 
 interface Props {
@@ -11,7 +12,7 @@ interface Props {
 
 export const DagymParticipants = ({ meetingId }: Props) => {
   const { data: participants = [] } = useQuery({
-    queryKey: ["dagym-detail", meetingId, "participants"],
+    queryKey: dagymQueries.participants(meetingId),
     queryFn: async () => {
       const { data } = await clientFetcher.get<ParticipantsResponse>(
         `/api/meetings/${meetingId}/participants`

@@ -1,4 +1,5 @@
 import { serverFetcher } from "@/shared/api/serverFetcher";
+import { ApiError } from "@/shared/api/types";
 import { NextRequest, NextResponse } from "next/server";
 
 interface Props {
@@ -26,15 +27,16 @@ export async function PATCH(request: NextRequest, { params }: Props) {
     return NextResponse.json(data);
   } catch (error) {
     console.error("모임 수정 실패", error);
-
-    return NextResponse.json(
-      {
-        message: "모임 수정에 실패했습니다.",
-      },
-      {
-        status: 500,
-      }
-    );
+    if (error instanceof ApiError) {
+      return NextResponse.json(
+        {
+          message: error.message,
+        },
+        {
+          status: error.status,
+        }
+      );
+    }
   }
 }
 

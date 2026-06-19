@@ -54,7 +54,7 @@ export interface Dagym {
   registrationEnd: string;
 
   capacity: number;
-  image: string | null;
+  image: string;
   description: string;
 
   isFavorited: boolean;
