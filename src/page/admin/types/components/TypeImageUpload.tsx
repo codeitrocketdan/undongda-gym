@@ -14,7 +14,15 @@ export default function TypeImageUpload({
 
   return (
     <div
+      role="button"
+      tabIndex={0}
       onClick={() => inputRef.current?.click()}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          inputRef.current?.click();
+        }
+      }}
       className="relative flex h-40 w-full cursor-pointer items-center justify-center overflow-hidden rounded-xl border border-gray-200 bg-gray-50 transition-colors hover:bg-gray-100"
     >
       <input
@@ -29,7 +37,11 @@ export default function TypeImageUpload({
       />
       {preview ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={preview} alt="미리보기" className="h-full w-full object-cover" />
+        <img
+          src={preview}
+          alt="미리보기"
+          className="h-full w-full object-cover"
+        />
       ) : (
         <div className="flex flex-col items-center gap-2 text-gray-400">
           <ImageIcon size={24} strokeWidth={1.5} />

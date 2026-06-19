@@ -9,13 +9,13 @@
 
 ## 구현된 페이지 목록
 
-| 라우트 | 상태 |
-|--------|------|
-| `/admin` | ✅ `/admin/dashboard` 리다이렉트 |
-| `/admin/dashboard` | ✅ 완료 (v1) |
-| `/admin/types` | ✅ 완료 (v1) |
-| `/admin/create` | ✅ 완료 (v2 신규) |
-| `/admin/meetings` | ✅ 완료 (v2 신규) |
+| 라우트             | 상태                             |
+| ------------------ | -------------------------------- |
+| `/admin`           | ✅ `/admin/dashboard` 리다이렉트 |
+| `/admin/dashboard` | ✅ 완료 (v1)                     |
+| `/admin/types`     | ✅ 완료 (v1)                     |
+| `/admin/create`    | ✅ 완료 (v2 신규)                |
+| `/admin/meetings`  | ✅ 완료 (v2 신규)                |
 
 기획서(`src/docs/specs/2026_06_17_admin_doyun.md`)의 요구사항은 변경 없음 — v1에서 정의된 요구사항을 그대로 구현했습니다. 별도 spec v2는 작성하지 않았습니다.
 
@@ -23,7 +23,7 @@
 
 ## 폴더 구조 (v2에서 추가된 부분)
 
-```
+```text
 src/
 ├── page/admin/
 │   ├── create/

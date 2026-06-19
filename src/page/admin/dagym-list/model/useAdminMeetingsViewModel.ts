@@ -1,7 +1,10 @@
 "use client";
 
 import { useMeetingTypes } from "@/features/dagym/model/useMeetingTypes";
-import { MeetingListResponse, MeetingWithHostDTO } from "@/features/dagym/types";
+import {
+  MeetingListResponse,
+  MeetingWithHostDTO,
+} from "@/features/dagym/types";
 import { useUserProfile } from "@/features/my-page/model/useUserProfile";
 import { CreatedMeetingListResponse } from "@/features/my-page/types";
 import { clientFetcher } from "@/shared/api/clientFetcher";
@@ -47,7 +50,13 @@ export function useAdminMeetingsViewModel() {
       params.set("size", "10");
       if (pageParam) params.set("cursor", pageParam as string);
       const res = await fetch(`/api/users/me/meetings?${params}`);
-      return res.json();
+      if (!res.ok) {
+        const error = await res
+          .json()
+          .catch(() => ({ message: "요청에 실패했습니다." }));
+        throw new Error(error.message ?? "요청에 실패했습니다.");
+      }
+      return (await res.json()) as CreatedMeetingListResponse;
     },
     getNextPageParam: (lastPage) => lastPage?.nextCursor ?? undefined,
     initialPageParam: null,
@@ -62,7 +71,13 @@ export function useAdminMeetingsViewModel() {
       params.set("size", "10");
       if (pageParam) params.set("cursor", pageParam as string);
       const res = await fetch(`/api/meetings?${params}`);
-      return res.json();
+      if (!res.ok) {
+        const error = await res
+          .json()
+          .catch(() => ({ message: "요청에 실패했습니다." }));
+        throw new Error(error.message ?? "요청에 실패했습니다.");
+      }
+      return (await res.json()) as MeetingListResponse;
     },
     getNextPageParam: (lastPage) => lastPage?.nextCursor ?? undefined,
     initialPageParam: null,
@@ -107,14 +122,16 @@ export function useAdminMeetingsViewModel() {
   });
 
   const detailModal = useModal();
-  const [selectedMeeting, setSelectedMeeting] = useState<MeetingWithHostDTO | null>(null);
+  const [selectedMeeting, setSelectedMeeting] =
+    useState<MeetingWithHostDTO | null>(null);
   const handleRowClick = (meeting: MeetingWithHostDTO) => {
     setSelectedMeeting(meeting);
     detailModal.open();
   };
 
   const editModal = useModal();
-  const [editingMeeting, setEditingMeeting] = useState<MeetingWithHostDTO | null>(null);
+  const [editingMeeting, setEditingMeeting] =
+    useState<MeetingWithHostDTO | null>(null);
   const handleEdit = (meeting: MeetingWithHostDTO) => {
     setEditingMeeting(meeting);
     editModal.open();
@@ -125,7 +142,8 @@ export function useAdminMeetingsViewModel() {
   };
 
   const deleteModal = useModal();
-  const [deletingMeeting, setDeletingMeeting] = useState<MeetingWithHostDTO | null>(null);
+  const [deletingMeeting, setDeletingMeeting] =
+    useState<MeetingWithHostDTO | null>(null);
   const handleOpenDeleteModal = (meeting: MeetingWithHostDTO) => {
     setDeletingMeeting(meeting);
     deleteModal.open();
@@ -153,7 +171,10 @@ export function useAdminMeetingsViewModel() {
     try {
       await navigator.clipboard.writeText(url);
       setSharedMeetingId(meeting.id);
-      setTimeout(() => setSharedMeetingId((prev) => (prev === meeting.id ? null : prev)), 2000);
+      setTimeout(
+        () => setSharedMeetingId((prev) => (prev === meeting.id ? null : prev)),
+        2000
+      );
     } catch {
       // 클립보드 권한이 없는 환경 — 조용히 무시
     }

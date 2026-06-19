@@ -12,7 +12,7 @@ import {
 import { meetingTypeQueries } from "@/shared/lib/queryKeys";
 import { useModal } from "@/shared/ui/modal/useModal";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 interface TypePayload {
   name: string;
@@ -29,6 +29,7 @@ export function useAdminTypesViewModel() {
   const [category, setCategory] = useState<MeetingTypeCategory>("regular");
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const objectUrlRef = useRef<string | null>(null);
   const [editingType, setEditingType] = useState<MeetingTypeDTO | null>(null);
   const [deletingType, setDeletingType] = useState<MeetingTypeDTO | null>(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -42,13 +43,17 @@ export function useAdminTypesViewModel() {
       const category = parseMeetingTypeDescription(type.description).category;
       if (category === "regular") regular.push(type);
       else if (category === "community") community.push(type);
+      else regular.push(type); // fallback: 관리 화면에서 숨기지 않음
     }
     return { regularTypes: regular, communityTypes: community };
   }, [types]);
 
   const { mutate: createType, isPending: isCreatePending } = useMutation({
     mutationFn: (payload: TypePayload) =>
-      clientFetcher.post<TypePayload, MeetingTypeDTO>("/api/meeting-types", payload),
+      clientFetcher.post<TypePayload, MeetingTypeDTO>(
+        "/api/meeting-types",
+        payload
+      ),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: meetingTypeQueries.all });
       modal.close();
@@ -70,7 +75,8 @@ export function useAdminTypesViewModel() {
   });
 
   const { mutate: deleteType, isPending: isDeletePending } = useMutation({
-    mutationFn: (id: number) => clientFetcher.delete(`/api/meeting-types/${id}`),
+    mutationFn: (id: number) =>
+      clientFetcher.delete(`/api/meeting-types/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: meetingTypeQueries.all });
       deleteModal.close();
@@ -79,6 +85,10 @@ export function useAdminTypesViewModel() {
   });
 
   const resetForm = () => {
+    if (objectUrlRef.current) {
+      URL.revokeObjectURL(objectUrlRef.current);
+      objectUrlRef.current = null;
+    }
     setName("");
     setCategory("regular");
     setImageFile(null);
@@ -87,8 +97,11 @@ export function useAdminTypesViewModel() {
   };
 
   const handleFileChange = (file: File) => {
+    if (objectUrlRef.current) URL.revokeObjectURL(objectUrlRef.current);
+    const nextUrl = URL.createObjectURL(file);
+    objectUrlRef.current = nextUrl;
     setImageFile(file);
-    setImagePreview(URL.createObjectURL(file));
+    setImagePreview(nextUrl);
   };
 
   const handleOpenAddModal = () => {
@@ -100,9 +113,8 @@ export function useAdminTypesViewModel() {
     setEditingType(type);
     setName(type.name);
     setImageFile(null);
-    const { category: existingCategory, imageUrl } = parseMeetingTypeDescription(
-      type.description
-    );
+    const { category: existingCategory, imageUrl } =
+      parseMeetingTypeDescription(type.description);
     setCategory(existingCategory === "unknown" ? "regular" : existingCategory);
     setImagePreview(imageUrl || null);
     modal.open();
@@ -151,6 +163,12 @@ export function useAdminTypesViewModel() {
       createType(payload);
     }
   };
+
+  useEffect(() => {
+    return () => {
+      if (objectUrlRef.current) URL.revokeObjectURL(objectUrlRef.current);
+    };
+  }, []);
 
   return {
     regularTypes,

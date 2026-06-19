@@ -28,6 +28,12 @@ export default function MeetingRow({
       role="button"
       tabIndex={0}
       onClick={onClick}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onClick();
+        }
+      }}
       className="flex cursor-pointer items-center gap-4 rounded-2xl border border-gray-100 bg-white p-4 hover:border-gray-200"
     >
       {meeting.image ? (
@@ -42,13 +48,18 @@ export default function MeetingRow({
       )}
       <div className="flex flex-1 flex-col gap-1">
         <div className="flex items-center gap-2">
-          <span className="text-sm font-semibold text-gray-900">{meeting.name}</span>
+          <span className="text-sm font-semibold text-gray-900">
+            {meeting.name}
+          </span>
           <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-500">
             {meeting.type}
           </span>
         </div>
         <p className="text-xs text-gray-400">
-          {meeting.region} · {meeting.dateTime ? format(meeting.dateTime, "yyyy-MM-dd HH:mm") : "일정 미정"}
+          {meeting.region} ·{" "}
+          {meeting.dateTime
+            ? format(meeting.dateTime, "yyyy-MM-dd HH:mm")
+            : "일정 미정"}
         </p>
       </div>
       <span className="text-sm text-gray-500">

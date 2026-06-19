@@ -17,7 +17,10 @@ export default async function AdminLayout({
   try {
     user = await serverFetcher.get<UserProfileDTO>("/users/me");
   } catch (error) {
-    if (error instanceof ApiError) {
+    if (
+      error instanceof ApiError &&
+      (error.status === 401 || error.status === 403)
+    ) {
       redirect("/login");
     }
     throw error;
