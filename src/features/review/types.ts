@@ -31,6 +31,17 @@ export interface ReviewListResponse {
   hasMore: boolean;
 }
 
+// GET /{teamId}/reviews/statistics 응답
+export interface ReviewStatsDTO {
+  averageScore: number;
+  totalReviews: number;
+  oneStar: number;
+  twoStars: number;
+  threeStars: number;
+  fourStars: number;
+  fiveStars: number;
+}
+
 // ReviewCard 컴포넌트 props
 export interface ReviewCardProps {
   score: number;
@@ -41,7 +52,6 @@ export interface ReviewCardProps {
     name: string;
     image: string | null;
   };
-  meetingId: number;
   name: string;
   type: string;
 }

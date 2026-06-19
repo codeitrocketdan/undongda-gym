@@ -181,7 +181,6 @@ export default function ReviewSection() {
               image={review.meeting.image}
               createdAt={review.createdAt}
               author={{ name: review.user.name, image: review.user.image }}
-              meetingId={review.meetingId}
               name={review.meeting.name}
               type={review.meeting.type}
             />
