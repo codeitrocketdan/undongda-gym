@@ -34,6 +34,10 @@ export default async function RootLayout({
               <AuthProvider>
                 <AppShell header={<Header />}>{children}</AppShell>
                 <Script src="https://accounts.google.com/gsi/client" />
+                <Script
+                  type="text/javascript"
+                  src={`https://dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_MAP_JS_KEY}&libraries=services,clusterer&autoload=false`}
+                />
               </AuthProvider>
             </AuthHydration>
           </QueryProvider>

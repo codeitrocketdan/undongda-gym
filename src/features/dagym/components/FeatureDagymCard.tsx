@@ -26,7 +26,7 @@ export default function FeatureDagymCard({
   onToggleFavorite,
 }: FeatureDagymCardProps) {
   return (
-    <Link href={`/meetings/${id}`}>
+    <Link href={`/dagym-detail/${id}`}>
       <FeedCard className="flex w-40.5 flex-col gap-2.5 md:w-75.5 md:gap-3.5">
         <div className="relative">
           <FeedCard.Image
