@@ -1,9 +1,10 @@
-import Header from "@/shared/ui/header/Header";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import Script from "next/script";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
+import { Header } from "@/shared/ui/header";
 import "./globals.css";
+import AppShell from "./providers/AppShell";
 import AuthHydration from "./providers/AuthHydration";
 import AuthProvider from "./providers/AuthProvider";
 import QueryProvider from "./providers/QueryProvider";
@@ -31,8 +32,7 @@ export default async function RootLayout({
           <QueryProvider>
             <AuthHydration>
               <AuthProvider>
-                <Header />
-                <div className="mx-auto w-full max-w-7xl">{children}</div>
+                <AppShell header={<Header />}>{children}</AppShell>
                 <Script src="https://accounts.google.com/gsi/client" />
                 <Script
                   type="text/javascript"

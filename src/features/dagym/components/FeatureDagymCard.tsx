@@ -4,6 +4,7 @@ import {
   formatMonthDay,
   formatTime,
 } from "@/shared/lib/formatDate";
+import { formatRegion } from "@/shared/lib/formatRegion";
 import FeedCard from "@/shared/ui/feed-card/FeedCard";
 import { HeartButton } from "@/shared/ui/heart-button/HeartButton";
 import Tag from "@/shared/ui/tag/Tag";
@@ -20,6 +21,7 @@ export default function FeatureDagymCard({
   registrationEnd,
   title,
   region,
+  address = null,
   type,
   onToggleFavorite,
 }: FeatureDagymCardProps) {
@@ -56,7 +58,7 @@ export default function FeatureDagymCard({
           <div className="flex items-center gap-1 text-xs text-slate-500 md:text-sm">
             <MapPin className="h-3 w-3" />
             <span>
-              {region} · {type}
+              {formatRegion(region, address)} · {type}
             </span>
           </div>
         </div>

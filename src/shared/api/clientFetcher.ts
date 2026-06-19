@@ -24,13 +24,19 @@ interface RequestOptions extends Omit<RequestInit, "body"> {
   body?: unknown;
 }
 
+const getBaseUrl = () => {
+  if (typeof window !== "undefined") return "";
+  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
+  return `http://localhost:${process.env.PORT ?? 3000}`;
+};
+
 const request = async <T>(
   path: string,
   options: RequestOptions = {}
 ): Promise<T> => {
   const { body, headers, ...restOptions } = options;
 
-  const response = await fetch(path, {
+  const response = await fetch(`${getBaseUrl()}${path}`, {
     ...restOptions,
     headers: {
       ...(body && !(body instanceof FormData)

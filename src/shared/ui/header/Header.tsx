@@ -1,80 +1,81 @@
-"use client";
-import { useAuth } from "@/app/providers/AuthClientProvider";
-import logo from "@/shared/assets/images/logo_dagym.png";
-import { Bell } from "lucide-react";
+import logo from "@/shared/assets/images/logo.png";
+import { cookies } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
-import Button from "../button/Button";
+import { twMerge } from "tailwind-merge";
+import { buttonVariants } from "../button/Button";
 import MobileMenu from "./MobileMenu";
 import NavLinks from "./NavLinks";
-import ProfileDropdown from "./ProfileDropdown";
+import NotificationBell from "./NotificationBell";
 import ProfileIcon from "./ProfileIcon";
 
-export default function Header() {
-  const NAV_ITEMS = [
-    { label: "다짐 보기", href: "/dagym" },
-    { label: "찜한 다짐", href: "/favorite" },
-    { label: "모든 리뷰", href: "/review" },
-    { label: "다짐 토크", href: "/talk" },
-  ];
+const NAV_ITEMS = [
+  { label: "다짐 보기", href: "/dagym" },
+  { label: "찜한 다짐", href: "/favorite" },
+  { label: "모든 리뷰", href: "/review" },
+  { label: "다짐 토크", href: "/post" },
+];
 
-  const { isAuthenticated } = useAuth();
+export default async function Header() {
+  const cookieStore = await cookies();
+  const isLogin = !!cookieStore.get("accessToken")?.value;
+
+  return (
+    <header>
+      <div className="relative mx-auto mb-4 flex w-full max-w-7xl items-center justify-between p-6">
+        <div className="flex items-center gap-4">
+          {isLogin && (
+            <div className="md:hidden">
+              <ProfileIcon asLink />
+            </div>
+          )}
+          <Link href="/" className="hidden md:block">
+            <Image src={logo} alt="운동다짐 로고" width={100} priority />
+          </Link>
+          <NavLinks navItems={NAV_ITEMS} />
+        </div>
+
+        <Link href="/" className="absolute left-1/2 -translate-x-1/2 md:hidden">
+          <Image src={logo} alt="운동다짐 로고" width={100} priority />
+        </Link>
+
+        <div className="flex items-center gap-2">
+          <div className="hidden items-center gap-3 md:flex">
+            <DesktopAuthSection isLogin={isLogin} />
+          </div>
+          <MobileMenu navItems={NAV_ITEMS} isLogin={isLogin} />
+        </div>
+      </div>
+    </header>
+  );
+}
+
+function DesktopAuthSection({ isLogin }: { isLogin: boolean }) {
+  if (!isLogin)
+    return (
+      <>
+        <Link
+          href="/signup"
+          className="text-sm font-medium whitespace-nowrap text-gray-600 hover:text-gray-900"
+        >
+          회원가입
+        </Link>
+        <Link
+          href="/login"
+          className={twMerge(
+            buttonVariants({ variant: "primary", size: "md" }),
+            "rounded-xl px-5"
+          )}
+        >
+          로그인
+        </Link>
+      </>
+    );
+
   return (
     <>
-      <header className="relative md:mb-7">
-        <div className="mx-auto flex w-full max-w-7xl items-center justify-between p-6">
-          <div className="header-wrap md:hidden">
-            {isAuthenticated && <ProfileIcon />}
-          </div>
-          <div className="header-wrap flex items-center">
-            <Link
-              href="/"
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 md:relative md:top-0 md:left-0 md:mr-4 md:translate-x-0 md:translate-y-0"
-            >
-              <Image
-                src={logo}
-                alt="운동다짐 로고"
-                width={100}
-                className="w-25"
-                priority
-              ></Image>
-            </Link>
-            <NavLinks navItems={NAV_ITEMS} />
-          </div>
-          <div className="header-wrap">
-            <div className="pc-menu hidden items-center gap-3 md:flex">
-              {isAuthenticated ? (
-                <>
-                  <Bell />
-                  {/* <ProfileIcon /> */}
-                  <ProfileDropdown />
-                </>
-              ) : (
-                <>
-                  <Link
-                    href="/signup"
-                    className="whitespace-nowrap text-gray-700"
-                  >
-                    회원가입
-                  </Link>
-                  <Button
-                    variant="primary"
-                    size="md"
-                    onClick={() => console.log("test")}
-                    className="flex gap-1.5 rounded-xl px-6 py-3"
-                  >
-                    <Link href="/login">로그인</Link>
-                  </Button>
-                </>
-              )}
-            </div>
-
-            <MobileMenu navItems={NAV_ITEMS} />
-          </div>
-        </div>
-      </header>
-
-      {/* 모바일 햄버거 메뉴 + 모션 */}
+      <NotificationBell />
+      <ProfileIcon />
     </>
   );
 }

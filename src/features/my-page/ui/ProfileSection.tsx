@@ -1,12 +1,15 @@
 "use client";
-import { useUserProfile } from "@/features/my-page/model/useUserProfile";
+import { useUser } from "@/shared/hooks/useUser";
 import avatar from "@/shared/assets/images/avatar.svg";
 import Skeleton from "@/shared/ui/skeleton/Skeleton";
+import { useModal } from "@/shared/ui/modal";
 import { Pencil } from "lucide-react";
 import Image from "next/image";
+import ProfileEditModal from "./ProfileEditModal";
 
 export default function ProfileSection() {
-  const { data: profile, isLoading, isError } = useUserProfile();
+  const { user: profile, isLoading, isError } = useUser();
+  const editModal = useModal();
 
   if (isError) {
     return (
@@ -49,7 +52,7 @@ export default function ProfileSection() {
           </span>
           <button
             type="button"
-            onClick={() => {}}
+            onClick={editModal.open}
             className="ml-1.5 text-slate-400 hover:cursor-pointer hover:text-slate-600"
           >
             <Pencil className="h-3 w-3" />
@@ -67,6 +70,14 @@ export default function ProfileSection() {
       >
         로그아웃
       </button>
+      {editModal.isOpen && (
+        <ProfileEditModal
+          initialName={profile.name}
+          initialEmail={profile.email}
+          initialImage={profile.image ?? null}
+          onClose={editModal.close}
+        />
+      )}
     </div>
   );
 }
