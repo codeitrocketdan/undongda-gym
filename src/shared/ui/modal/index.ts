@@ -3,6 +3,7 @@ export { default as Modal } from "./Modal";
 export { useModal } from "./useModal";
 
 // 외부에서 실제로 사용할 완성된 모달들 내보내기
+export { default as DeleteConfirmModal } from "./DeleteConfirmModal";
 export { default as ConfirmModal } from "./ConfirmModal";
 export { default as ErrorModal } from "./ErrorModal";
 export { default as LoginModal } from "./LoginModal";
