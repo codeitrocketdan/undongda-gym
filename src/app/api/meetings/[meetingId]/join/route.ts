@@ -8,7 +8,7 @@ export async function POST(
 ) {
   try {
     const { meetingId } = await params;
-    const data = await serverFetcher.post(`/meetings/${meetingId}/favorites`);
+    const data = await serverFetcher.post(`/meetings/${meetingId}/join`);
     return NextResponse.json(data);
   } catch (error) {
     return apiError(request, error);
@@ -21,7 +21,7 @@ export async function DELETE(
 ) {
   try {
     const { meetingId } = await params;
-    await serverFetcher.delete(`/meetings/${meetingId}/favorites`);
+    await serverFetcher.delete(`/meetings/${meetingId}/join`);
     return new NextResponse(null, { status: 204 });
   } catch (error) {
     return apiError(request, error);

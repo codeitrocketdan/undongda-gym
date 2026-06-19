@@ -1,11 +1,9 @@
 "use client";
-import { ko } from "@/shared/lib/date";
-import { DayPicker } from "@daypicker/react";
-import "@daypicker/react/style.css";
 
 import { Calendar } from "lucide-react";
 import { useState } from "react";
 import { createPortal } from "react-dom";
+import CalendarPanel from "./CalendarPanel";
 import { DatePickerProps } from "./types";
 import { useDatePicker } from "./usePicker";
 import { formatDate } from "./utils";
@@ -77,46 +75,21 @@ export default function DatePicker({
         createPortal(
           <div
             ref={ref}
-            className="absolute z-[9999] w-[320px] rounded-2xl border border-gray-200 bg-white p-4 shadow-xl"
+            className="absolute z-9999 w-[320px] rounded-2xl border border-gray-200 bg-white p-4 shadow-xl"
             style={{
               top: `${coords.top}px`,
               left: `${coords.left}px`,
               opacity: coords.top === 0 ? 0 : 1,
             }}
           >
-            <DayPicker
-              mode="single"
-              selected={tempValue}
+            <CalendarPanel
+              value={tempValue}
               onSelect={setTempValue}
-              locale={ko} // 한국어 설정
-              disabled={{
-                before: new Date(),
-              }}
-              // react-day-picker 내부 기능 특정 상태 class 지정
-              classNames={{
-                selected:
-                  "bg-blue-500 text-white rounded-full hover:bg-blue-600",
-                today: "text-blue-500 font-bold",
-                chevron: "fill-gray-800",
-              }}
+              onReset={handleReset}
+              onApply={handleApply}
+              disablePast
+              applyDisabled={!tempValue}
             />
-
-            {/* 하단 버튼 */}
-            <div className="mt-4 flex gap-2">
-              <button
-                onClick={handleReset}
-                className="flex-1 cursor-pointer rounded-xl border border-blue-500 py-2 font-medium text-blue-500 hover:bg-blue-50"
-              >
-                초기화
-              </button>
-              <button
-                disabled={!tempValue}
-                onClick={handleApply}
-                className="flex-1 cursor-pointer rounded-xl bg-blue-500 py-2 font-medium text-white hover:bg-blue-600"
-              >
-                적용
-              </button>
-            </div>
           </div>,
           document.body
         )}

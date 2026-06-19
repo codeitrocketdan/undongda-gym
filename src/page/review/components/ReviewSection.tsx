@@ -10,7 +10,7 @@ const REVIEW_SORT_OPTIONS: SortOption[] = [
   { label: "참여자 많은순", value: "participantCount:desc" },
 ];
 
-import { REGION_OPTIONS } from "@/features/dagym/constants/region";
+import { BRANCH_OPTIONS } from "@/features/dagym/constants/region";
 import { MeetingTypeDTO } from "@/features/dagym/types";
 import ReviewCard, {
   ReviewCardSkeleton,
@@ -47,7 +47,7 @@ export default function ReviewSection() {
   );
 
   const regionFilter =
-    REGION_OPTIONS.find((r) => r.value === region) ?? REGION_OPTIONS[0];
+    BRANCH_OPTIONS.find((r) => r.value === region) ?? BRANCH_OPTIONS[0];
 
   const currentSort =
     REVIEW_SORT_OPTIONS.find((o) => o.value === `${sortBy}:${sortOrder}`) ??
@@ -127,7 +127,7 @@ export default function ReviewSection() {
             onChange={() => {}}
           />
           <Filter.Center
-            options={REGION_OPTIONS}
+            options={BRANCH_OPTIONS}
             value={regionFilter}
             onChange={(option) => setRegion(option.value)}
           />

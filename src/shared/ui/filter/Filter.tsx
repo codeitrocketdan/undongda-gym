@@ -1,4 +1,5 @@
 import CenterFilter from "./CenterFilter";
+import DateFilter from "./DateFilter";
 import SortFilter from "./SortFilter";
 
 function Filter({ children }: { children: React.ReactNode }) {
@@ -7,5 +8,6 @@ function Filter({ children }: { children: React.ReactNode }) {
 
 export default Object.assign(Filter, {
   Center: CenterFilter,
+  Date: DateFilter,
   Sort: SortFilter,
 });
