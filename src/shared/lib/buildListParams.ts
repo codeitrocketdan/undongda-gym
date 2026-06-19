@@ -19,6 +19,11 @@ export function buildListParams({
   size = 10,
   cursor,
 }: ListParams): string {
+  // 날짜 형식 검증
+  if (date && !/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+    throw new Error(`Invalid date format: ${date}. Expected YYYY-MM-DD`);
+  }
+
   const dateStart = date
     ? new Date(`${date}T00:00:00+09:00`).toISOString()
     : undefined;

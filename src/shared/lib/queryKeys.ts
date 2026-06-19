@@ -29,8 +29,8 @@ export const userReviewQueries = {
 
 export const postQueries = {
   all: ["posts"] as const,
-  list: (search: string, sort: string, page: number) =>
-    [...postQueries.all, search, sort, page] as const,
+  list: (filters: { search?: string; sort?: string; page?: number }) =>
+    [...postQueries.all, filters] as const,
   detail: (postId: string) => [...postQueries.all, postId] as const,
   hot: ["hot-posts"] as const,
 };
