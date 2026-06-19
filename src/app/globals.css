@@ -253,3 +253,26 @@ select:-webkit-autofill {
   padding-inline: 1.5rem;
   padding-bottom: 4rem;
 }
+
+/* Tiptap 에디터 HTML 렌더링 */
+.tiptap-content strong {
+  font-weight: 700;
+}
+.tiptap-content em {
+  font-style: italic;
+}
+.tiptap-content u {
+  text-decoration: underline;
+}
+.tiptap-content p {
+  margin-bottom: 0.5rem;
+  line-height: 1.7;
+}
+.tiptap-content p:last-child {
+  margin-bottom: 0;
+}
+.tiptap-content img {
+  max-width: 100%;
+  border-radius: 0.5rem;
+  margin-bottom: 0.75rem;
+}
