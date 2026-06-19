@@ -16,7 +16,7 @@ export default function MobileMenu({ navItems, isLogin }: MobileMenuProps) {
   const { isOpen, open, close } = useMobileMenu();
 
   return (
-    <div className="md:hidden">
+    <div className="flex items-center md:hidden">
       {isLogin && <NotificationBell />}
       <button
         onClick={open}

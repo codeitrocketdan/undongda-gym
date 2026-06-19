@@ -3,6 +3,11 @@ import {
   meetingQueries,
   userMeetingQueries,
 } from "@/shared/lib/queryKeys";
+import {
+  decrementFavoritesCount,
+  incrementFavoritesCount,
+} from "@/shared/hooks/useNewFavoritesCount";
+import { clientFetcher } from "@/shared/api/clientFetcher";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export function useFavorite() {
@@ -17,21 +22,22 @@ export function useFavorite() {
 
   const { mutate: add } = useMutation({
     mutationFn: (id: number) =>
-      fetch(`/api/meetings/${id}/favorites`, { method: "POST" }).then((r) => {
-        if (!r.ok) throw new Error("찜 추가에 실패했어요");
-        return r.json();
-      }),
-    onSuccess: invalidateAll,
+      clientFetcher.post(`/api/meetings/${id}/favorites`),
+    onSuccess: () => {
+      invalidateAll();
+      incrementFavoritesCount();
+    },
     // TODO: 에러 처리 통일 후 적용
     onError: (error) => console.error("찜 추가 실패:", error),
   });
 
   const { mutate: remove } = useMutation({
     mutationFn: (id: number) =>
-      fetch(`/api/meetings/${id}/favorites`, { method: "DELETE" }).then((r) => {
-        if (!r.ok) throw new Error("찜 취소에 실패했어요");
-      }),
-    onSuccess: invalidateAll,
+      clientFetcher.delete(`/api/meetings/${id}/favorites`),
+    onSuccess: () => {
+      invalidateAll();
+      decrementFavoritesCount();
+    },
     // TODO: 에러 처리 통일 후 적용
     onError: (error) => console.error("찜 취소 실패:", error),
   });

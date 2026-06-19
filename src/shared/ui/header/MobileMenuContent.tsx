@@ -1,5 +1,6 @@
 "use client";
 
+import { useNewFavoritesCount } from "@/shared/hooks/useNewFavoritesCount";
 import { useFocusTrap } from "@/shared/lib/useFocusTrap";
 import { motion } from "framer-motion";
 import { X } from "lucide-react";
@@ -23,6 +24,7 @@ export function MobileMenuContent({
 }: MobileMenuContentProps) {
   const trapRef = useFocusTrap<HTMLDivElement>();
   const pathname = usePathname();
+  const newCount = useNewFavoritesCount();
   const logout = useLogout();
 
   return (
@@ -69,7 +71,14 @@ export function MobileMenuContent({
                     : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
                 }`}
               >
-                {item.label}
+                <span className="relative inline-block">
+                  {item.label}
+                  {item.href === "/favorite" && newCount > 0 && (
+                    <span className="absolute top-1/2 left-full ml-1 -translate-y-1/2 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-0.5 text-[10px] font-bold text-white">
+                      {newCount > 9 ? "9+" : newCount}
+                    </span>
+                  )}
+                </span>
               </Link>
             </li>
           );
