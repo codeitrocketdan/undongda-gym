@@ -5,12 +5,14 @@ import { createPortal } from "react-dom";
 import { useMounted } from "../../hooks/useMounted";
 import { useFocusTrap } from "../../lib/useFocusTrap";
 import ModalBackground from "./Background";
+import ModalBody from "./Body";
 import CloseButton from "./CloseButton";
 import ModalFooter from "./Footer";
 import ModalHeader from "./Header";
 
 interface ModalComponent extends React.FC<ModalProps> {
   Header: typeof ModalHeader;
+  Body: typeof ModalBody;
   Footer: typeof ModalFooter;
   CloseButton: typeof CloseButton;
 }
@@ -48,11 +50,9 @@ const Modal = ({ children, onClose, isClickToClose }: ModalProps) => {
             if (e.key === "Escape") onClose();
           }}
           onClick={(e) => e.stopPropagation()}
-          className="flex w-full max-w-136 max-h-[90vh] flex-col overflow-hidden rounded-xl bg-white"
+          className="xs:p-12 flex max-h-[90vh] w-full max-w-136 flex-col overflow-hidden rounded-xl bg-white px-6 py-8"
         >
-          <div className="xs:p-12 min-h-0 flex-1 overflow-y-auto px-6 py-8">
-            {children}
-          </div>
+          {children}
         </div>
       </ModalBackground>
     </ModalContext.Provider>,
@@ -61,6 +61,7 @@ const Modal = ({ children, onClose, isClickToClose }: ModalProps) => {
 };
 
 (Modal as ModalComponent).Header = ModalHeader;
+(Modal as ModalComponent).Body = ModalBody;
 (Modal as ModalComponent).Footer = ModalFooter;
 (Modal as ModalComponent).CloseButton = CloseButton;
 

@@ -35,7 +35,11 @@ export default function DeleteConfirmModal({
           <Modal.CloseButton />
         </div>
       </Modal.Header>
-      {description && <p className="text-sm text-gray-500">{description}</p>}
+      {description && (
+        <Modal.Body>
+          <p className="text-sm text-gray-500">{description}</p>
+        </Modal.Body>
+      )}
       <Modal.Footer>
         <Button variant="tertiary" onClick={handleClose} isDisabled={isConfirming}>
           {cancelLabel}
