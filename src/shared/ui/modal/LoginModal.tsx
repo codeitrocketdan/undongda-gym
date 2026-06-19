@@ -1,36 +1,38 @@
 "use client";
+
+import Button from "@/shared/ui/button/Button";
+import { useRouter } from "next/navigation";
 import Modal from "./Modal";
-import { useModal } from "./useModal";
 
-export default function LoginModal() {
-  const modal = useModal();
+interface Props {
+  onClose: () => void;
+}
+
+export default function LoginModal({ onClose }: Props) {
+  const router = useRouter();
+
+  const handleLogin = () => {
+    onClose();
+    router.push("/login");
+  };
+
   return (
-    <>
-      <button onClick={modal.open} className="bg-blue-400">
-        모달 열기
-      </button>
-
-      {modal.isOpen && (
-        <Modal onClose={modal.close} isClickToClose={true}>
-          <Modal.Header>
-            <Modal.CloseButton />
-          </Modal.Header>
-          <main>
-            <p className="mt-5 text-center">로그인이 필요한 서비스입니다.</p>
-            <input
-              type="text"
-              placeholder="인풋에 포커스 먼저 가는지 확인"
-              className="border-1 border-gray-800"
-              autoFocus
-            />
-          </main>
-          <Modal.Footer>
-            {/* 버튼 공통 컴포넌트로 교체 */}
-            <button onClick={modal.close}>취소</button>
-            <button onClick={() => {}}>확인</button>
-          </Modal.Footer>
-        </Modal>
-      )}
-    </>
+    <Modal onClose={onClose} isClickToClose>
+      <Modal.Header className="flex-row justify-end">
+        <Modal.CloseButton />
+      </Modal.Header>
+      <main className="py-1 text-center">
+        <p className="text-2xl font-semibold text-slate-800">
+          로그인이 필요한 서비스입니다.
+        </p>
+        <p className="mt-2 text-sm text-slate-500">로그인 후 이용해주세요.</p>
+      </main>
+      <Modal.Footer>
+        <Button variant="tertiary" onClick={onClose}>
+          취소
+        </Button>
+        <Button onClick={handleLogin}>로그인하러 가기</Button>
+      </Modal.Footer>
+    </Modal>
   );
 }

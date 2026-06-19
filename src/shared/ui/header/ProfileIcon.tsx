@@ -1,6 +1,6 @@
 "use client";
-import { useUserProfile } from "@/features/my-page/model/useUserProfile";
 import avatar from "@/shared/assets/images/avatar.svg";
+import { useUser } from "@/shared/hooks/useUser";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
@@ -14,7 +14,7 @@ interface Props {
 }
 
 export default function ProfileIcon({ className, asLink }: Props) {
-  const { data: profile } = useUserProfile();
+  const { user: profile } = useUser();
   const [isOpen, setIsOpen] = useState(false);
   const logout = useLogout();
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -26,7 +26,10 @@ export default function ProfileIcon({ className, asLink }: Props) {
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
+      if (
+        wrapperRef.current &&
+        !wrapperRef.current.contains(e.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
