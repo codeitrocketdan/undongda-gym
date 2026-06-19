@@ -13,6 +13,9 @@ const SUB_TABS = [
   { id: 1, name: "작성한 리뷰" },
 ];
 
+const WRITABLE_REVIEW_TAB = SUB_TABS[0].name;
+const WRITTEN_REVIEW_TAB = SUB_TABS[1].name;
+
 function ListError() {
   return (
     <div className="flex flex-col items-center justify-center gap-4 py-20">
@@ -51,7 +54,7 @@ export default function MyReviewSection() {
         defaultValue={SUB_TABS[0].name}
         onChange={setActiveTab}
       />
-      {activeTab === "작성 가능한 리뷰" && (
+      {activeTab === WRITABLE_REVIEW_TAB && (
         <AsyncBoundary
           fallback={<WritableReviewSkeleton />}
           errorFallback={<ListError />}
@@ -59,7 +62,7 @@ export default function MyReviewSection() {
           <WritableReviewList />
         </AsyncBoundary>
       )}
-      {activeTab === "작성한 리뷰" && (
+      {activeTab === WRITTEN_REVIEW_TAB && (
         <AsyncBoundary
           fallback={<WrittenReviewSkeleton />}
           errorFallback={<ListError />}

@@ -5,8 +5,8 @@ import MyDagymSection from "@/features/my-page/ui/MyDagymSection";
 import MyPageCardSkeleton from "@/features/my-page/ui/MyPageCardSkeleton";
 import MyReviewSection from "@/features/my-page/ui/MyReviewSection";
 import ProfileSection from "@/features/my-page/ui/ProfileSection";
-import { ErrorModal, useModal } from "@/shared/ui/modal";
 import AsyncBoundary from "@/shared/ui/AsyncBoundary";
+import { ErrorModal, useModal } from "@/shared/ui/modal";
 import UnderlineTabs from "@/shared/ui/tab/UnderlineTabs";
 import { parseAsString, useQueryState } from "nuqs";
 
@@ -15,24 +15,6 @@ const TABS = [
   { id: 1, name: "나의 리뷰" },
   { id: 2, name: "내가 만든 다짐" },
 ];
-
-function MyDagymSkeleton() {
-  return (
-    <div className="flex flex-col gap-4 lg:gap-6">
-      {Array.from({ length: 3 }).map((_, i) => (
-        <MyPageCardSkeleton key={i} />
-      ))}
-    </div>
-  );
-}
-
-function ListError() {
-  return (
-    <p className="py-20 text-center text-sm text-slate-400">
-      불러오는 중 문제가 발생했어요
-    </p>
-  );
-}
 
 export default function MyPage() {
   const [activeTab, setActiveTab] = useQueryState(
@@ -91,3 +73,17 @@ export default function MyPage() {
     </>
   );
 }
+
+const MyDagymSkeleton = () => (
+  <div className="flex flex-col gap-4 lg:gap-6">
+    {Array.from({ length: 3 }).map((_, i) => (
+      <MyPageCardSkeleton key={i} />
+    ))}
+  </div>
+);
+
+const ListError = () => (
+  <p className="py-20 text-center text-sm text-slate-400">
+    불러오는 중 문제가 발생했어요
+  </p>
+);

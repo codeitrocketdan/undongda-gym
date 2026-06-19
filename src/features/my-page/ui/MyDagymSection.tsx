@@ -10,6 +10,8 @@ import { useSuspenseInfiniteList } from "@/shared/hooks/useSuspenseInfiniteList"
 import { useUser } from "@/shared/hooks/useUser";
 import { userMeetingQueries } from "@/shared/lib/queryKeys";
 import Image from "next/image";
+import Link from "next/link";
+import Button from "@/shared/ui/button/Button";
 import MyPageCard from "./MyPageCard";
 
 const LIMIT = 5;
@@ -39,6 +41,11 @@ export default function MyDagymSection({ onError }: MyDagymSectionProps) {
           <p className="text-center text-sm text-slate-400">
             참여한 다짐이 없어요 <br /> 다양한 다짐에 참여해보세요!
           </p>
+          <Link href="/dagym">
+            <Button variant="primary" size="sm">
+              다짐 보기
+            </Button>
+          </Link>
         </div>
       ) : (
         meetings.map((meeting: MeetingWithHostDTO) => {
