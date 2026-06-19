@@ -10,7 +10,7 @@ import NotificationBell from "./NotificationBell";
 import ProfileIcon from "./ProfileIcon";
 
 const NAV_ITEMS = [
-  { label: "다짐 보기", href: "/" },
+  { label: "다짐 보기", href: "/dagym" },
   { label: "찜한 다짐", href: "/favorite" },
   { label: "모든 리뷰", href: "/review" },
   { label: "다짐 토크", href: "/post" },

@@ -2,8 +2,9 @@
 import { Modal } from "@/shared/ui/modal";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { CAPACITY_MIN, TOTAL_STEPS } from "../constants";
-import { uploadImageToStorage } from "../lib/uploadImage";
+import { CAPACITY_MIN, DAGYM_STEP, TOTAL_STEPS } from "../constants";
+import { DagymFormData } from "../model/types";
+import { useCreateDagym } from "../model/useCreateDagym";
 import SetCategories from "./SetCategories";
 import SetDate from "./SetDate";
 import SetDescription from "./SetDescription";
@@ -13,24 +14,10 @@ import StepButtons from "./StepButtons";
 interface useModalTypeProps {
   onClose: () => void;
 }
-interface DagymFormData {
-  type: string;
-  name: string;
-  region: string;
-  address: string;
-  addressDetail: string;
-  latitude: number | null;
-  longitude: number | null;
-  image: File | null;
-  description: string;
-  dateTime: Date;
-  registrationEnd: Date;
-  capacity: number;
-}
 
 export default function CreateDagymForm({ onClose }: useModalTypeProps) {
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [step, setStep] = useState(1);
+  const { onSubmit } = useCreateDagym(onClose);
 
   const methods = useForm<DagymFormData>({
     defaultValues: {
@@ -55,88 +42,33 @@ export default function CreateDagymForm({ onClose }: useModalTypeProps) {
   const currentRegion = watch("region");
   const currentAddress = watch("address");
   const currentAttachedImage = watch("image");
+  const currentLatitude = watch("latitude");
+  const currentLongitude = watch("longitude");
   const currentdescription = watch("description");
   const currentDateTime = watch("dateTime");
   const currentCapacity = watch("capacity");
 
   const isNextDisabled = () => {
-    if (step === 1) {
+    if (step === DAGYM_STEP.CATEGORY)
       return !currentCategories || currentCategories.length === 0;
-    }
-    if (step === 2) {
+    if (step === DAGYM_STEP.INFO)
       return (
         !currentTitle ||
         !currentAttachedImage ||
         !currentRegion ||
-        (currentRegion === "지점 외 장소" && !currentAddress)
+        (currentRegion === "지점 외 장소" &&
+          (!currentAddress || !currentLatitude || !currentLongitude))
       );
-    }
-    if (step === 3) {
-      return !currentdescription;
-    }
-    if (step === 4) {
-      return !currentDateTime || !currentCapacity;
-    }
-
-    return false; // 기본값은 활성화
+    if (step === DAGYM_STEP.DESCRIPTION) return !currentdescription;
+    if (step === DAGYM_STEP.DATE) return !currentDateTime || !currentCapacity;
+    return false;
   };
 
-  const handleNext = async () => {
-    if (step < TOTAL_STEPS) {
-      setStep((prev) => prev + 1);
-    }
+  const handleNext = () => {
+    if (step < TOTAL_STEPS) setStep((prev) => prev + 1);
   };
   const handlePrev = () => {
-    if (step > 1) {
-      setStep((prev) => prev - 1);
-    }
-  };
-
-  const onSubmit = async (data: DagymFormData) => {
-    if (isSubmitting) return;
-
-    try {
-      setIsSubmitting(true);
-      let finalImageUrl = "";
-      if (data.image) {
-        finalImageUrl = await uploadImageToStorage({ file: data.image });
-      }
-
-      const submitData = {
-        type: data.type,
-        name: data.name,
-        region: data.region,
-        address: data.address,
-        addressDetail: data.addressDetail,
-        latitude: data.latitude ? Number(data.latitude) : 37.4979,
-        longitude: data.longitude ? Number(data.longitude) : 127.0276,
-        image: finalImageUrl, // File 객체 대신 최종 발급받은 publicUrl 주소 대입
-        description: data.description,
-        dateTime: data.dateTime,
-        registrationEnd: data.registrationEnd,
-        capacity: data.capacity,
-      };
-
-      const response = await fetch("/api/meetings", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json", // JSON 전송 명시
-        },
-        body: JSON.stringify(submitData),
-      });
-
-      if (!response.ok) {
-        throw new Error(`서버 에러 발생: ${response.status}`);
-      }
-      const result = await response.json();
-      console.log("다짐 생성 최종 성공!", result);
-      onClose();
-    } catch (error) {
-      console.error("최종 생성 실패:", error);
-      alert("다짐 생성 중 오류가 발생했습니다.");
-    } finally {
-      setIsSubmitting(false);
-    }
+    if (step > DAGYM_STEP.CATEGORY) setStep((prev) => prev - 1);
   };
   return (
     <FormProvider {...methods}>
@@ -153,10 +85,10 @@ export default function CreateDagymForm({ onClose }: useModalTypeProps) {
             id="meeting-multi-step-form"
             onSubmit={methods.handleSubmit(onSubmit)}
           >
-            {step === 1 && <SetCategories />}
-            {step === 2 && <SetInfo />}
-            {step === 3 && <SetDescription />}
-            {step === 4 && <SetDate />}
+            {step === DAGYM_STEP.CATEGORY && <SetCategories />}
+            {step === DAGYM_STEP.INFO && <SetInfo />}
+            {step === DAGYM_STEP.DESCRIPTION && <SetDescription />}
+            {step === DAGYM_STEP.DATE && <SetDate />}
           </form>
         </main>
         <Modal.Footer>
