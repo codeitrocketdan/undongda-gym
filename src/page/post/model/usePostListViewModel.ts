@@ -18,7 +18,9 @@ export const POST_SORT_OPTIONS: SortOption[] = [
   { label: "댓글 많은 순", value: "commentCount:desc" },
 ];
 
-export function usePostListViewModel({ onError }: { onError?: () => void } = {}) {
+export function usePostListViewModel({
+  onError,
+}: { onError?: () => void } = {}) {
   const [keyword, setKeyword] = useState("");
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -28,7 +30,7 @@ export function usePostListViewModel({ onError }: { onError?: () => void } = {})
   const offset = (currentPage - 1) * LIMIT;
 
   const { data, isLoading, isError } = useQuery<PostListResponse>({
-    queryKey: postQueries.list(search, sort.value, currentPage),
+    queryKey: postQueries.list({ search, sort: sort.value, page: currentPage }),
     queryFn: () => {
       const query = qs.stringify(
         {
@@ -38,7 +40,7 @@ export function usePostListViewModel({ onError }: { onError?: () => void } = {})
           sortOrder,
           keyword: search || undefined,
         },
-        { skipNulls: true },
+        { skipNulls: true }
       );
       return clientFetcher.get<PostListResponse>(`/api/posts?${query}`);
     },

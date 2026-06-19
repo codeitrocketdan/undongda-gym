@@ -12,7 +12,7 @@ export function useSuspenseInfiniteList<T>({
   queryKey: readonly unknown[];
   queryFn: (pageParam: unknown) => Promise<CursorPage<T>>;
 }) {
-  const { data, fetchNextPage, hasNextPage, isFetching } =
+  const { data, fetchNextPage, hasNextPage, isFetching, isError } =
     useSuspenseInfiniteQuery<
       CursorPage<T>,
       Error,
@@ -33,5 +33,5 @@ export function useSuspenseInfiniteList<T>({
     isFetching,
   });
 
-  return { items, observerRef };
+  return { items, observerRef, isError };
 }

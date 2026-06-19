@@ -9,20 +9,16 @@ import emptyImage from "@/shared/assets/images/empty.svg";
 import { useSuspenseInfiniteList } from "@/shared/hooks/useSuspenseInfiniteList";
 import { useUser } from "@/shared/hooks/useUser";
 import { userMeetingQueries } from "@/shared/lib/queryKeys";
+import Button from "@/shared/ui/button/Button";
 import Image from "next/image";
 import Link from "next/link";
-import Button from "@/shared/ui/button/Button";
 import MyPageCard from "./MyPageCard";
 
 const LIMIT = 5;
 
-interface MyDagymSectionProps {
-  onError?: () => void;
-}
-
-export default function MyDagymSection({ onError }: MyDagymSectionProps) {
-  const { toggleFavorite } = useFavorite({ onError });
-  const { toggleJoin } = useJoinMeeting({ onError });
+export default function MyDagymSection() {
+  const { toggleFavorite } = useFavorite();
+  const { toggleJoin } = useJoinMeeting();
   const { user } = useUser();
 
   const { items: meetings, observerRef } = useSuspenseInfiniteList({

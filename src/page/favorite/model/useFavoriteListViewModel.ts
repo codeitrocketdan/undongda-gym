@@ -9,17 +9,18 @@ import { useSuspenseInfiniteList } from "@/shared/hooks/useSuspenseInfiniteList"
 import { buildListParams } from "@/shared/lib/buildListParams";
 import { favoriteQueries } from "@/shared/lib/queryKeys";
 
-export function useFavoriteListViewModel({
-  userId,
-  onError,
-}: { userId?: number; onError?: () => void } = {}) {
-  const { selectedCategory, date, region, sortBy, sortOrder, typeList } =
+export function useFavoriteListViewModel({ userId }: { userId?: number } = {}) {
+  const { selectedCategory, date, region, sortBy, sortOrder } =
     useListQueryParams();
 
-  const { toggleFavorite } = useFavorite({ onError });
-  const { toggleJoin } = useJoinMeeting({ onError });
+  const { toggleFavorite } = useFavorite();
+  const { toggleJoin } = useJoinMeeting();
 
-  const { items: favoriteItems, observerRef } = useSuspenseInfiniteList({
+  const {
+    items: favoriteItems,
+    observerRef,
+    isError,
+  } = useSuspenseInfiniteList({
     queryKey: favoriteQueries.list({
       type: selectedCategory || undefined,
       date: date || undefined,
@@ -29,16 +30,14 @@ export function useFavoriteListViewModel({
     }),
     queryFn: (pageParam) =>
       clientFetcher.get<FavoriteListResponse>(
-        `/api/favorites?${buildListParams({ type: selectedCategory, date, region, sortBy, sortOrder, cursor: pageParam })}`,
+        `/api/favorites?${buildListParams({ type: selectedCategory, date, region, sortBy, sortOrder, cursor: pageParam })}`
       ),
   });
 
   const allMeetings = favoriteItems
     .map((f) => f.meeting)
     .filter((m) => m.host.id !== userId);
-  const meetings = selectedCategory
-    ? allMeetings
-    : allMeetings.filter((m) => typeList.includes(m.type));
+  const meetings = allMeetings;
 
-  return { meetings, observerRef, toggleFavorite, toggleJoin };
+  return { meetings, observerRef, toggleFavorite, toggleJoin, isError };
 }

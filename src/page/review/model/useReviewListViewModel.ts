@@ -8,10 +8,14 @@ import { buildListParams } from "@/shared/lib/buildListParams";
 import { reviewQueries } from "@/shared/lib/queryKeys";
 
 export function useReviewListViewModel() {
-  const { selectedCategory, date, region, sortBy, sortOrder, typeList } =
+  const { selectedCategory, date, region, sortBy, sortOrder } =
     useListQueryParams();
 
-  const { items: allReviews, observerRef } = useSuspenseInfiniteList({
+  const {
+    items: allReviews,
+    observerRef,
+    isError,
+  } = useSuspenseInfiniteList({
     queryKey: reviewQueries.list({
       type: selectedCategory || undefined,
       date: date || undefined,
@@ -25,9 +29,7 @@ export function useReviewListViewModel() {
       ),
   });
 
-  const reviews = selectedCategory
-    ? allReviews
-    : allReviews.filter((r) => typeList.includes(r.meeting.type));
+  const reviews = allReviews;
 
-  return { reviews, observerRef };
+  return { reviews, observerRef, isError };
 }

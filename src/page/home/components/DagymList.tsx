@@ -22,7 +22,7 @@ export function DagymListSkeleton() {
 export default function DagymList() {
   const errorModal = useModal();
   const { meetings, observerRef, toggleFavorite, toggleJoin } =
-    useDagymListViewModel({ onError: errorModal.open });
+    useDagymListViewModel();
   const { user } = useUser();
   const loginModal = useModal();
 

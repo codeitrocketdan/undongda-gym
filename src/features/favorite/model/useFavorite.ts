@@ -1,20 +1,19 @@
+import { clientFetcher } from "@/shared/api/clientFetcher";
+import {
+  decrementFavoritesCount,
+  incrementFavoritesCount,
+} from "@/shared/hooks/useNewFavoritesCount";
 import {
   favoriteQueries,
   meetingQueries,
   userMeetingQueries,
 } from "@/shared/lib/queryKeys";
-import {
-  decrementFavoritesCount,
-  incrementFavoritesCount,
-} from "@/shared/hooks/useNewFavoritesCount";
-import { clientFetcher } from "@/shared/api/clientFetcher";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export function useFavorite() {
   const queryClient = useQueryClient();
 
   const invalidateAll = () => {
-    // 구조화된 쿼리키 — userMeetingQueries.all 하나로 joined/created/writable 전부 무효화
     queryClient.invalidateQueries({ queryKey: favoriteQueries.all });
     queryClient.invalidateQueries({ queryKey: meetingQueries.all });
     queryClient.invalidateQueries({ queryKey: userMeetingQueries.all });
@@ -27,7 +26,6 @@ export function useFavorite() {
       invalidateAll();
       incrementFavoritesCount();
     },
-    // TODO: 에러 처리 통일 후 적용
     onError: (error) => console.error("찜 추가 실패:", error),
   });
 
@@ -38,7 +36,6 @@ export function useFavorite() {
       invalidateAll();
       decrementFavoritesCount();
     },
-    // TODO: 에러 처리 통일 후 적용
     onError: (error) => console.error("찜 취소 실패:", error),
   });
 

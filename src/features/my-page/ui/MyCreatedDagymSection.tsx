@@ -12,14 +12,8 @@ import MyPageCard from "./MyPageCard";
 
 const LIMIT = 5;
 
-interface MyCreatedDagymSectionProps {
-  onError?: () => void;
-}
-
-export default function MyCreatedDagymSection({
-  onError,
-}: MyCreatedDagymSectionProps) {
-  const { toggleFavorite } = useFavorite({ onError });
+export default function MyCreatedDagymSection() {
+  const { toggleFavorite } = useFavorite();
 
   const { items: meetings, observerRef } = useSuspenseInfiniteList({
     queryKey: userMeetingQueries.created(),
