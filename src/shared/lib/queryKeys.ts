@@ -16,6 +16,10 @@ export const favoriteQueries = {
   list: (filters: ListFilters) => [...favoriteQueries.all, filters] as const,
 };
 
+export const meetingTypeQueries = {
+  all: ["meeting-types"] as const,
+};
+
 export const userMeetingQueries = {
   all: ["users", "me", "meetings"] as const,
   joined: () => [...userMeetingQueries.all, "joined"] as const,
