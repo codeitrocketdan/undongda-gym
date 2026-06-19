@@ -1,6 +1,6 @@
 import { X } from "lucide-react";
 import Image from "next/image";
-import { ChangeEvent, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
 
 export default function UploadImage() {
@@ -13,6 +13,12 @@ export default function UploadImage() {
     }
     return null;
   });
+
+  useEffect(() => {
+    return () => {
+      if (imagePreview?.startsWith("blob:")) URL.revokeObjectURL(imagePreview);
+    };
+  }, [imagePreview]);
 
   const handleBoxClick = () => {
     fileInputRef.current?.click();

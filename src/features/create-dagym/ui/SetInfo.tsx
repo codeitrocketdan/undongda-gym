@@ -88,10 +88,17 @@ export default function SetInfo() {
           </option>
         </select>
       </InputField>
-      <input type="hidden" {...register("latitude", { valueAsNumber: true })} />
       <input
         type="hidden"
-        {...register("longitude", { valueAsNumber: true })}
+        {...register("latitude", {
+          setValueAs: (v) => (v === "" || Number.isNaN(v) ? null : Number(v)),
+        })}
+      />
+      <input
+        type="hidden"
+        {...register("longitude", {
+          setValueAs: (v) => (v === "" || Number.isNaN(v) ? null : Number(v)),
+        })}
       />
 
       {currentRegion === "지점 외 장소" && (
