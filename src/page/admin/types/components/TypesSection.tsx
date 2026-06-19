@@ -1,7 +1,7 @@
 "use client";
 
 import { MeetingTypeDTO } from "@/features/dagym/types";
-import { ConfirmModal } from "@/shared/ui/modal";
+import { DeleteConfirmModal } from "@/shared/ui/modal";
 import Skeleton from "@/shared/ui/skeleton/Skeleton";
 import { CalendarX2 } from "lucide-react";
 import { useAdminTypesViewModel } from "../model/useAdminTypesViewModel";
@@ -135,7 +135,7 @@ export default function TypesSection() {
       )}
 
       {deleteModal.isOpen && deletingType && (
-        <ConfirmModal
+        <DeleteConfirmModal
           title="정말 삭제하시겠습니까?"
           description={`'${deletingType.name}' 타입을 삭제하면 되돌릴 수 없습니다.`}
           isConfirming={isDeleting}

@@ -1,6 +1,6 @@
 "use client";
 
-import { ConfirmModal } from "@/shared/ui/modal";
+import { DeleteConfirmModal } from "@/shared/ui/modal";
 import Skeleton from "@/shared/ui/skeleton/Skeleton";
 import { CalendarX2 } from "lucide-react";
 import Link from "next/link";
@@ -122,7 +122,7 @@ export default function MeetingsSection() {
       )}
 
       {deleteModal.isOpen && deletingMeeting && (
-        <ConfirmModal
+        <DeleteConfirmModal
           title="정말 삭제하시겠습니까?"
           description={`'${deletingMeeting.name}' 다짐을 삭제하면 되돌릴 수 없습니다.`}
           isConfirming={isDeleting}
