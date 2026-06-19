@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 // 로그인해야 접근 가능한 페이지
-const PROTECTED_ROUTES = ["/mypage"];
+const PROTECTED_ROUTES = ["/mypage", "/admin"];
 
 // 로그인된 사용자는 접근 불가
 const AUTH_ROUTES = ["/login", "/signup"];
