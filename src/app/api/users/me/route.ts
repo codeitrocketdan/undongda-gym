@@ -1,7 +1,9 @@
 // app/api/users/me/route.ts
+import { apiError } from "@/shared/api/apiError";
+import { serverFetcher } from "@/shared/api/serverFetcher";
 import { clearAuthCookies } from "@/shared/lib/auth/cookies";
 import { cookies } from "next/headers";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 const COOKIE_OPTIONS = {
   httpOnly: true,
@@ -108,4 +110,14 @@ export async function GET() {
   // 첫 번째 요청이 한 번에 성공했을 경우 바로 반환
   const user = await response.json();
   return NextResponse.json(user);
+}
+
+export async function PATCH(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const data = await serverFetcher.patch("/users/me", body);
+    return NextResponse.json(data);
+  } catch (error) {
+    return apiError(request, error);
+  }
 }
