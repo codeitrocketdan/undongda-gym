@@ -16,16 +16,6 @@ interface Props {
   onClose: () => void;
 }
 
-function getHref(notification: EnrichedNotification): string | null {
-  if (notification.type === "COMMENT" && notification.data.postId) {
-    return `/post/${notification.data.postId}`;
-  }
-  if (notification.type !== "COMMENT" && notification.data.meetingId) {
-    return `/meetings/${notification.data.meetingId}`;
-  }
-  return null;
-}
-
 export default function NotificationItem({
   notification,
   onRead,
@@ -135,4 +125,14 @@ export default function NotificationItem({
       </button>
     </div>
   );
+}
+
+function getHref(notification: EnrichedNotification): string | null {
+  if (notification.type === "COMMENT" && notification.data.postId) {
+    return `/post/${notification.data.postId}`;
+  }
+  if (notification.type !== "COMMENT" && notification.data.meetingId) {
+    return `/meetings/${notification.data.meetingId}`;
+  }
+  return null;
 }
