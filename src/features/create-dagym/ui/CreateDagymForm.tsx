@@ -2,7 +2,7 @@
 import { Modal } from "@/shared/ui/modal";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { CAPACITY_MIN, TOTAL_STEPS } from "../constants";
+import { CAPACITY_MIN, DAGYM_STEP, TOTAL_STEPS } from "../constants";
 import { DagymFormData } from "../model/types";
 import { useCreateDagym } from "../model/useCreateDagym";
 import SetCategories from "./SetCategories";
@@ -42,21 +42,25 @@ export default function CreateDagymForm({ onClose }: useModalTypeProps) {
   const currentRegion = watch("region");
   const currentAddress = watch("address");
   const currentAttachedImage = watch("image");
+  const currentLatitude = watch("latitude");
+  const currentLongitude = watch("longitude");
   const currentdescription = watch("description");
   const currentDateTime = watch("dateTime");
   const currentCapacity = watch("capacity");
 
   const isNextDisabled = () => {
-    if (step === 1) return !currentCategories || currentCategories.length === 0;
-    if (step === 2)
+    if (step === DAGYM_STEP.CATEGORY)
+      return !currentCategories || currentCategories.length === 0;
+    if (step === DAGYM_STEP.INFO)
       return (
         !currentTitle ||
         !currentAttachedImage ||
         !currentRegion ||
-        (currentRegion === "지점 외 장소" && !currentAddress)
+        (currentRegion === "지점 외 장소" &&
+          (!currentAddress || !currentLatitude || !currentLongitude))
       );
-    if (step === 3) return !currentdescription;
-    if (step === 4) return !currentDateTime || !currentCapacity;
+    if (step === DAGYM_STEP.DESCRIPTION) return !currentdescription;
+    if (step === DAGYM_STEP.DATE) return !currentDateTime || !currentCapacity;
     return false;
   };
 
@@ -64,7 +68,7 @@ export default function CreateDagymForm({ onClose }: useModalTypeProps) {
     if (step < TOTAL_STEPS) setStep((prev) => prev + 1);
   };
   const handlePrev = () => {
-    if (step > 1) setStep((prev) => prev - 1);
+    if (step > DAGYM_STEP.CATEGORY) setStep((prev) => prev - 1);
   };
   return (
     <FormProvider {...methods}>
@@ -81,10 +85,10 @@ export default function CreateDagymForm({ onClose }: useModalTypeProps) {
             id="meeting-multi-step-form"
             onSubmit={methods.handleSubmit(onSubmit)}
           >
-            {step === 1 && <SetCategories />}
-            {step === 2 && <SetInfo />}
-            {step === 3 && <SetDescription />}
-            {step === 4 && <SetDate />}
+            {step === DAGYM_STEP.CATEGORY && <SetCategories />}
+            {step === DAGYM_STEP.INFO && <SetInfo />}
+            {step === DAGYM_STEP.DESCRIPTION && <SetDescription />}
+            {step === DAGYM_STEP.DATE && <SetDate />}
           </form>
         </main>
         <Modal.Footer>
