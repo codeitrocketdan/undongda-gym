@@ -22,7 +22,9 @@ export default function PostCard({
         <div className="flex flex-1 flex-col border-b border-slate-200 pt-2 pb-6 md:pt-4">
           <FeedCard.Title title={title} className="text-base-bold md:text-xl-bold mb-2" />
           <FeedCard.Image src={image} className="mb-3 h-36 rounded-xl md:hidden" />
-          <p className="mb-4 line-clamp-2 min-h-[2lh] text-sm md:text-lg">{content}</p>
+          <p className="mb-4 line-clamp-2 min-h-[2lh] text-sm md:text-lg">
+            {content.replace(/<[^>]*>/g, " ").trim()}
+          </p>
           <div className="mt-auto flex items-center justify-between">
             <div className="flex items-center gap-1.5 md:gap-2">
               <Author name={author.name} image={author.image} />

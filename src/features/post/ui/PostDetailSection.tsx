@@ -52,9 +52,10 @@ export default function PostDetailSection({
       </div>
 
       {/* 본문 */}
-      <p className="mb-8 text-sm leading-relaxed whitespace-pre-wrap text-slate-700 md:text-base">
-        {post.content}
-      </p>
+      <div
+        className="tiptap-content mb-8 text-sm leading-relaxed text-slate-700 md:text-base"
+        dangerouslySetInnerHTML={{ __html: post.content }}
+      />
 
       {/* 이미지 */}
       {post.image && (

@@ -88,7 +88,7 @@ export default function CommentItem({
             >
               취소
             </Button>
-            <Button size="sm" className="w-auto" onClick={handleSave}>
+            <Button size="sm" className="w-auto" onClick={handleSave} isDisabled={!editValue.trim()}>
               수정
             </Button>
           </div>

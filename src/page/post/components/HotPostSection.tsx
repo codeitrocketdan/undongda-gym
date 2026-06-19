@@ -2,20 +2,28 @@
 
 import HotPostCard, { HotPostCardSkeleton } from "@/features/post/components/HotPostCard";
 import { PostDTO, PostListResponse } from "@/features/post/types";
+import { clientFetcher } from "@/shared/api/clientFetcher";
 import emptyImage from "@/shared/assets/images/empty.svg";
+import { ErrorModal, useModal } from "@/shared/ui/modal";
+import { postQueries } from "@/shared/lib/queryKeys";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
-
-
+import { useEffect } from "react";
 
 export default function HotPostSection() {
+  const errorModal = useModal();
   const { data, isLoading, isError } = useQuery<PostListResponse>({
-    queryKey: ["hot-posts"],
-    queryFn: async () => {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts?type=best&offset=0&limit=4`);
-      return res.json();
-    },
+    queryKey: postQueries.hot,
+    queryFn: () =>
+      clientFetcher.get<PostListResponse>(
+        "/api/posts?type=best&offset=0&limit=4",
+      ),
   });
+
+  const { open: openErrorModal } = errorModal;
+  useEffect(() => {
+    if (isError) openErrorModal();
+  }, [isError, openErrorModal]);
 
   const posts = data?.data ?? [];
 
@@ -51,6 +59,7 @@ export default function HotPostSection() {
           ))}
         </div>
       )}
+      {errorModal.isOpen && <ErrorModal onClose={errorModal.close} />}
     </section>
   );
 }
