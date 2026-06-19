@@ -9,6 +9,7 @@ import { usePathname } from "next/navigation";
 import { twMerge } from "tailwind-merge";
 import { buttonVariants } from "../button/Button";
 import { NavItem } from "./types";
+import { useLogout } from "./useLogout";
 
 interface MobileMenuContentProps {
   navItems: NavItem[];
@@ -24,6 +25,7 @@ export function MobileMenuContent({
   const trapRef = useFocusTrap<HTMLDivElement>();
   const pathname = usePathname();
   const newCount = useNewFavoritesCount();
+  const logout = useLogout();
 
   return (
     <motion.div
@@ -87,6 +89,7 @@ export function MobileMenuContent({
         {isLogin ? (
           <button
             type="button"
+            onClick={async () => { onClose(); await logout(); }}
             className="p-3 text-sm text-slate-400 underline hover:cursor-pointer hover:text-slate-600"
           >
             로그아웃

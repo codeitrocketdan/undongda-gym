@@ -1,3 +1,4 @@
+import { clientFetcher } from "@/shared/api/clientFetcher";
 import type { Dagym } from "./types";
 
 export interface JoinedMeetingsResponse {
@@ -5,7 +6,5 @@ export interface JoinedMeetingsResponse {
 }
 
 export async function fetchJoinedMeetings(): Promise<JoinedMeetingsResponse> {
-  const response = await fetch("/api/users/me/meetings");
-  if (!response.ok) throw new Error(`서버 에러 상태코드: ${response.status}`);
-  return response.json();
+  return clientFetcher.get<JoinedMeetingsResponse>("/api/users/me/meetings");
 }

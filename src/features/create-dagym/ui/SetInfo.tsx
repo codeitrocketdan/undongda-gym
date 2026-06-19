@@ -1,10 +1,10 @@
-import { CENTER_INFO, centerLists } from "../constants";
 import Input from "@/shared/ui/input/Input";
 import InputField from "@/shared/ui/input/InputFiled";
 import clsx from "clsx";
 import { MapPin } from "lucide-react";
 import Script from "next/script";
 import { useFormContext } from "react-hook-form";
+import { CENTER_INFO, centerLists } from "../constants";
 import { useKakaoMap } from "../lib/useKakaoMap";
 import { useKakaoPostcode } from "../lib/useKaKaoPostcode";
 import UploadImage from "./UploadImage";
@@ -13,8 +13,6 @@ export default function SetInfo() {
   const { register, setValue, watch } = useFormContext();
   const currentRegion = watch("region") || "default";
   const currentAddress = watch("address");
-  const debugLat = watch("latitude");
-  const debugLng = watch("longitude");
 
   const { onScriptLoad } = useKakaoMap();
 
@@ -90,6 +88,18 @@ export default function SetInfo() {
           </option>
         </select>
       </InputField>
+      <input
+        type="hidden"
+        {...register("latitude", {
+          setValueAs: (v) => (v === "" || Number.isNaN(v) ? null : Number(v)),
+        })}
+      />
+      <input
+        type="hidden"
+        {...register("longitude", {
+          setValueAs: (v) => (v === "" || Number.isNaN(v) ? null : Number(v)),
+        })}
+      />
 
       {currentRegion === "지점 외 장소" && (
         <>
@@ -116,14 +126,6 @@ export default function SetInfo() {
           </InputField>
         </>
       )}
-
-      {/* TODO: 테스트용 — 확인 후 삭제 */}
-      {process.env.NODE_ENV === "development" && (
-        <div className="rounded bg-yellow-50 p-2 text-xs text-gray-500">
-          lat: {String(debugLat)} / lng: {String(debugLng)}
-        </div>
-      )}
-
       <InputField label="이미지" htmlFor="dagymImage">
         <UploadImage />
       </InputField>

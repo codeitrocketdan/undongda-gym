@@ -7,11 +7,10 @@ import { buttonVariants } from "../button/Button";
 import MobileMenu from "./MobileMenu";
 import NavLinks from "./NavLinks";
 import NotificationBell from "./NotificationBell";
-import ProfileDropdown from "./ProfileDropdown";
 import ProfileIcon from "./ProfileIcon";
 
 const NAV_ITEMS = [
-  { label: "다짐 보기", href: "/" },
+  { label: "다짐 보기", href: "/dagym" },
   { label: "찜한 다짐", href: "/favorite" },
   { label: "모든 리뷰", href: "/review" },
   { label: "다짐 토크", href: "/post" },
@@ -27,7 +26,7 @@ export default async function Header() {
         <div className="flex items-center gap-4">
           {isLogin && (
             <div className="md:hidden">
-              <ProfileIcon />
+              <ProfileIcon asLink />
             </div>
           )}
           <Link href="/" className="hidden md:block">
