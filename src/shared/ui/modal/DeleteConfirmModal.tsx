@@ -3,7 +3,7 @@
 import Button from "@/shared/ui/button/Button";
 import Modal from "./Modal";
 
-interface ConfirmModalProps {
+interface DeleteConfirmModalProps {
   title: string;
   description?: string;
   confirmLabel?: string;
@@ -13,7 +13,7 @@ interface ConfirmModalProps {
   onClose: () => void;
 }
 
-export default function ConfirmModal({
+export default function DeleteConfirmModal({
   title,
   description,
   confirmLabel = "삭제하기",
@@ -21,9 +21,14 @@ export default function ConfirmModal({
   isConfirming = false,
   onConfirm,
   onClose,
-}: ConfirmModalProps) {
+}: DeleteConfirmModalProps) {
+  const handleClose = () => {
+    if (isConfirming) return;
+    onClose();
+  };
+
   return (
-    <Modal onClose={onClose} isClickToClose>
+    <Modal onClose={handleClose} isClickToClose>
       <Modal.Header>
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-bold text-gray-900">{title}</h2>
@@ -32,7 +37,7 @@ export default function ConfirmModal({
       </Modal.Header>
       {description && <p className="text-sm text-gray-500">{description}</p>}
       <Modal.Footer>
-        <Button variant="tertiary" onClick={onClose} isDisabled={isConfirming}>
+        <Button variant="tertiary" onClick={handleClose} isDisabled={isConfirming}>
           {cancelLabel}
         </Button>
         <Button onClick={onConfirm} isDisabled={isConfirming}>

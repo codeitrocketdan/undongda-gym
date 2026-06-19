@@ -9,7 +9,7 @@ interface AppShellProps {
 
 export default function AppShell({ header, children }: AppShellProps) {
   const pathname = usePathname();
-  const isAdminRoute = pathname?.startsWith("/admin");
+  const isAdminRoute = pathname === "/admin" || pathname?.startsWith("/admin/");
 
   if (isAdminRoute) {
     return <>{children}</>;
