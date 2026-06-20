@@ -12,7 +12,12 @@ interface PasswordInputProps {
   register: UseFormRegisterReturn;
 }
 
-const PasswordInput = ({ id, placeholder, error, register }: PasswordInputProps) => {
+const PasswordInput = ({
+  id,
+  placeholder,
+  error,
+  register,
+}: PasswordInputProps) => {
   const [show, setShow] = useState(false);
 
   return (
@@ -30,9 +35,13 @@ const PasswordInput = ({ id, placeholder, error, register }: PasswordInputProps)
         onClick={() => setShow((v) => !v)}
         aria-label={show ? "비밀번호 보기" : "비밀번호 숨기기"}
         aria-pressed={show}
-        className="absolute top-1/2 right-3 -translate-y-1/2 text-gray-800"
+        className="absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer text-gray-800"
       >
-        {show ? <Eye size={22} aria-hidden={true} /> : <EyeOff size={22} aria-hidden={true} />}
+        {show ? (
+          <Eye size={22} aria-hidden={true} />
+        ) : (
+          <EyeOff size={22} aria-hidden={true} />
+        )}
       </button>
     </div>
   );
