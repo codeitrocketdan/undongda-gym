@@ -134,7 +134,7 @@ export default function ProfileEditModal({
 
         <div className="mb-4">
           <label className="text-sm-medium mb-2 block text-slate-800">
-            이름
+            닉네임
           </label>
           <input
             type="text"
