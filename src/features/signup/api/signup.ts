@@ -2,5 +2,6 @@ import { clientFetcher } from "@/shared/api/clientFetcher";
 import { SignupFormValues } from "../model/types";
 
 export const signup = async (signupData: SignupFormValues) => {
-  return clientFetcher.post("/auth/signup", signupData);
+  console.log(signupData);
+  return await clientFetcher.post("/api/auth/signup", signupData);
 };
