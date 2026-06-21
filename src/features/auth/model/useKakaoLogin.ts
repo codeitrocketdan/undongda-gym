@@ -1,5 +1,6 @@
 "use client";
 
+import { useQueryClient } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
@@ -10,6 +11,7 @@ const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${
 export const useKakaoLogin = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const queryClient = useQueryClient();
   const loginWithKakao = () => {
     window.location.href = KAKAO_AUTH_URL;
   };
@@ -35,6 +37,7 @@ export const useKakaoLogin = () => {
         if (!response.ok) {
           throw new Error(data.message || "카카오 로그인에 실패했습니다.");
         }
+        await queryClient.invalidateQueries();
         router.push("/");
       } catch (error) {
         console.error(error);

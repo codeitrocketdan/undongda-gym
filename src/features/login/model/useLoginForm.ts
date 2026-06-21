@@ -26,9 +26,7 @@ export const useLoginForm = () => {
     try {
       await login(loginData);
 
-      await queryClient.invalidateQueries({
-        queryKey: ["user"],
-      });
+      await queryClient.invalidateQueries();
 
       router.replace("/");
       router.refresh();
