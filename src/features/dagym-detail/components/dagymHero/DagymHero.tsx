@@ -160,15 +160,12 @@ export default function DagymHero({ id, dagym }: PropsType) {
 
                     <DagymParticipants meetingId={id} />
                   </div>
-
-                  <StatusLabel />
+                  {dagym.participantCount >= 3 && <StatusLabel />}
                 </div>
 
                 <div className="flex flex-col gap-2">
                   <div className="flex justify-between">
-                    <p className="text-sm-medium text-slate-600">
-                      최소 {dagym.participantCount}명
-                    </p>
+                    <p className="text-sm-medium text-slate-600">최소 3명</p>
 
                     <p className="text-sm-medium text-slate-600">
                       최대 {dagym.capacity}명

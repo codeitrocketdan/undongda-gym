@@ -21,7 +21,7 @@ export const DagymParticipants = ({ meetingId }: Props) => {
       return data;
     },
   });
-  console.log(meetingId);
+
   const visibleParticipants = participants.slice(0, 4);
 
   const remainCount = Math.max(
