@@ -80,7 +80,7 @@ export default function CreateDagymForm({ onClose }: useModalTypeProps) {
           </p>
           <Modal.CloseButton />
         </Modal.Header>
-        <main>
+        <Modal.Body>
           <form
             id="meeting-multi-step-form"
             onSubmit={methods.handleSubmit(onSubmit)}
@@ -90,7 +90,7 @@ export default function CreateDagymForm({ onClose }: useModalTypeProps) {
             {step === DAGYM_STEP.DESCRIPTION && <SetDescription />}
             {step === DAGYM_STEP.DATE && <SetDate />}
           </form>
-        </main>
+        </Modal.Body>
         <Modal.Footer>
           <StepButtons
             formId="meeting-multi-step-form"

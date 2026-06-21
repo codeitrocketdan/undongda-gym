@@ -102,7 +102,7 @@ export default function ProfileEditModal({
         <Modal.CloseButton />
       </Modal.Header>
 
-      <main>
+      <Modal.Body>
         {/* 프로필 이미지 */}
         <div className="mb-8 flex justify-center">
           <div className="relative">
@@ -160,7 +160,7 @@ export default function ProfileEditModal({
         {error && (
           <p className="mb-4 text-center text-sm text-red-500">{error}</p>
         )}
-      </main>
+      </Modal.Body>
 
       <Modal.Footer>
         <Button

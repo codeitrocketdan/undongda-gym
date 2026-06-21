@@ -37,11 +37,13 @@
 //         <Modal.CloseButton />
 //       </Modal.Header>
 
-//       <main className="py-6">
+//       <Modal.Body>
+//       <div className="py-6">
 //         <p className="text-center text-lg font-medium">
 //           로그아웃 하시겠습니까?
 //         </p>
-//       </main>
+//       </div>
+//       </Modal.Body>
 
 //       <Modal.Footer>
 //         <Button variant="secondary" onClick={onClose}>
