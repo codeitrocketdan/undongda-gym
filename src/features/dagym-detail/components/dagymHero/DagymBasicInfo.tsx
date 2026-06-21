@@ -1,5 +1,6 @@
 "use client";
 
+import { CENTER_INFO } from "@/shared/constants/centers";
 import Input from "@/shared/ui/input/Input";
 import InputField from "@/shared/ui/input/InputFiled";
 import clsx from "clsx";
@@ -25,17 +26,23 @@ export default function DagymBasicInfo() {
       },
     });
 
-  const handleCenterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const nextRegion = e.target.value;
-    setValue("region", nextRegion, { shouldDirty: true });
+  const handleRegionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const region = e.target.value;
+    setValue("region", region);
+    setValue("addressDetail", "");
 
-    if (nextRegion !== "지점 외 장소") {
-      setValue("address", "", { shouldDirty: true });
-      setValue("addressDetail", "", { shouldDirty: true });
-      setValue("latitude", 0, { shouldDirty: true });
-      setValue("longitude", 0, { shouldDirty: true });
+    const center = CENTER_INFO[region];
+    if (center) {
+      setValue("address", center.address);
+      setValue("latitude", center.latitude);
+      setValue("longitude", center.longitude);
+    } else {
+      setValue("address", "");
+      setValue("latitude", undefined);
+      setValue("longitude", undefined);
     }
   };
+
   return (
     <>
       <Script
@@ -54,7 +61,7 @@ export default function DagymBasicInfo() {
       <InputField label="지점을 선택하세요" htmlFor="dagymCenter">
         <select
           value={currentRegion}
-          onChange={handleCenterChange}
+          onChange={handleRegionChange}
           className={clsx(
             "w-full rounded-xl border border-transparent bg-gray-50 p-3 outline-none focus:border-blue-500",
             currentRegion === "default" ? "text-gray-400" : "text-inherit"
