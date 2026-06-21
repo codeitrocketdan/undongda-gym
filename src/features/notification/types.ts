@@ -38,4 +38,5 @@ export interface UnreadCountResponse {
 export interface EnrichedNotification extends NotificationDTO {
   actorName?: string;
   actorImage?: string | null;
+  actorLoading?: boolean;
 }

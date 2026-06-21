@@ -86,11 +86,15 @@ export default function NotificationItem({
         {isComment ? (
           <>
             <p className="text-sm">
-              <span
-                className={twMerge(!notification.isRead && "font-semibold")}
-              >
-                {notification.actorName ?? "알 수 없음"}
-              </span>
+              {notification.actorLoading ? (
+                <span className="inline-block h-3.5 w-16 animate-pulse rounded bg-slate-200 align-middle" />
+              ) : (
+                <span
+                  className={twMerge(!notification.isRead && "font-semibold")}
+                >
+                  {notification.actorName ?? "알 수 없음"}
+                </span>
+              )}
               <span className="text-slate-500"> 님이 댓글을 남겼습니다.</span>
             </p>
             {notification.data.commentContent && (
