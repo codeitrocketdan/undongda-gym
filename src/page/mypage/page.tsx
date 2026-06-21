@@ -48,7 +48,7 @@ export default function MyPage() {
               fallback={<MyDagymSkeleton />}
               errorFallback={<ListError />}
             >
-              <MyDagymSection onError={errorModal.open} />
+              <MyDagymSection />
             </AsyncBoundary>
           )}
           {validTab === "나의 리뷰" && (
@@ -64,7 +64,7 @@ export default function MyPage() {
               fallback={<MyDagymSkeleton />}
               errorFallback={<ListError />}
             >
-              <MyCreatedDagymSection onError={errorModal.open} />
+              <MyCreatedDagymSection />
             </AsyncBoundary>
           )}
         </div>
