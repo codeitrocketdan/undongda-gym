@@ -29,7 +29,7 @@ const DagymSuggest = ({ dagym, meetingId }: PropsType) => {
         return bScore - aScore;
       })
       .slice(0, 6) ?? [];
-  console.log(meetings);
+
   if (isLoading) {
     return (
       <div className="py-10 text-center text-slate-400">

@@ -1,45 +1,45 @@
 "use client";
 
 import Image from "next/image";
-import { ChangeEvent, useMemo, useRef } from "react";
-import { useFormContext, useWatch } from "react-hook-form";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { useFormContext } from "react-hook-form";
 
 export default function UploadImage() {
-  const { control, register, setValue } = useFormContext();
-
+  const { register, setValue, getValues } = useFormContext();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(() => {
+    const image = getValues("image");
 
-  const imageValue = useWatch({
-    control,
-    name: "image",
-  });
-
-  const previewUrl = useMemo(() => {
-    if (!imageValue) return null;
-
-    if (typeof imageValue === "string") {
-      return imageValue;
+    if (image instanceof File) {
+      return URL.createObjectURL(image);
     }
 
-    if (imageValue instanceof File) {
-      return URL.createObjectURL(imageValue);
+    if (typeof image === "string") {
+      return image;
     }
 
     return null;
-  }, [imageValue]);
+  });
+
+  useEffect(() => {
+    return () => {
+      if (imagePreview?.startsWith("blob:")) URL.revokeObjectURL(imagePreview);
+    };
+  }, [imagePreview]);
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-
     if (!file) return;
-
-    setValue("image", file, {
-      shouldDirty: true,
-      shouldValidate: true,
-      shouldTouch: true,
-    });
-
+    if (imagePreview?.startsWith("blob:")) URL.revokeObjectURL(imagePreview);
+    setValue("image", file);
+    setImagePreview(URL.createObjectURL(file));
     e.target.value = "";
+  };
+
+  const handleRemove = () => {
+    if (imagePreview?.startsWith("blob:")) URL.revokeObjectURL(imagePreview);
+    setValue("image", null);
+    setImagePreview(null);
   };
 
   const { ref: registerRef } = register("image");
@@ -49,33 +49,28 @@ export default function UploadImage() {
       <input
         id="dagymImage"
         type="file"
-        accept="image/*"
-        className="hidden"
-        ref={(element) => {
-          registerRef(element);
-          fileInputRef.current = element;
+        ref={(e) => {
+          registerRef(e);
+          fileInputRef.current = e;
         }}
         onChange={handleFileChange}
+        accept="image/*"
+        className="hidden"
       />
 
       <label
         htmlFor="dagymImage"
         className="relative flex h-[150px] w-[150px] cursor-pointer items-center justify-center overflow-hidden rounded-2xl border border-gray-200 bg-gray-50"
       >
-        {previewUrl ? (
+        {imagePreview && (
           <Image
-            key={previewUrl}
-            src={previewUrl}
+            key={imagePreview}
+            src={imagePreview}
             alt="미리보기"
             fill
             unoptimized
             className="object-cover"
           />
-        ) : (
-          <div className="flex flex-col items-center gap-1 text-gray-400">
-            <span className="text-2xl">🖼️</span>
-            <span className="text-xs">파일 첨부</span>
-          </div>
         )}
       </label>
     </div>
