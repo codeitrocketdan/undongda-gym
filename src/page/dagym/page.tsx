@@ -11,14 +11,14 @@ import bannerPc from "@/shared/assets/images/banner_1024.png";
 import bannerMobile from "@/shared/assets/images/banner_360.png";
 import bannerTablet from "@/shared/assets/images/banner_768.png";
 import Image from "next/image";
-import DagymSection from "./components/DagymSection";
+import DagymSection from "../home/components/DagymSection";
 
-const HomePage = async () => {
+const DagymPage = async () => {
   const cookieStore = await cookies();
   const isLogin = !!cookieStore.get("accessToken")?.value;
 
   return (
-    <div>
+    <div className="mx-auto w-full max-w-7xl">
       <main>
         {/* 모바일 로그인 */}
         <div className="mb-6 w-full md:mb-10 lg:mb-12">
@@ -54,4 +54,4 @@ const HomePage = async () => {
   );
 };
 
-export default HomePage;
+export default DagymPage;

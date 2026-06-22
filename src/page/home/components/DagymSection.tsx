@@ -24,6 +24,7 @@ export default function DagymSection() {
   const {
     tab,
     tabs,
+    selectedCategoryValue,
     date,
     centerOptions,
     regionFilter,
@@ -40,9 +41,9 @@ export default function DagymSection() {
       <MeetingCategoryTabs />
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <PillTabs
-          key={tab}
+          key={`${tab}-${selectedCategoryValue}`}
           tabs={tabs}
-          defaultValue="전체"
+          defaultValue={selectedCategoryValue || "전체"}
           onChange={(value) =>
             setSelectedCategory(value === "전체" ? "" : value)
           }

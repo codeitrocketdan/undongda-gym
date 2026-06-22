@@ -65,6 +65,7 @@ export function useDagymFilter() {
   return {
     tab,
     tabs,
+    selectedCategoryValue,
     date,
     centerOptions,
     regionFilter,
