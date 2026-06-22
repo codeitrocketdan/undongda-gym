@@ -25,6 +25,7 @@
  */
 
 import { cookies } from "next/headers";
+import { clearAuthCookies, setAuthCookies } from "@/shared/lib/auth/cookies";
 import { ApiError } from "./types";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL!;
@@ -34,19 +35,17 @@ interface RequestOptions extends Omit<RequestInit, "body"> {
   isPublic?: boolean;
 }
 
-const request = async <T>(
+interface RefreshTokenResponse {
+  accessToken: string;
+  refreshToken?: string;
+}
+
+const callBackend = (
   path: string,
-  options: RequestOptions = {}
-): Promise<T> => {
-  const { body, headers, isPublic = false, ...restOptions } = options;
-
-  const cookieStore = await cookies();
-
-  const accessToken = isPublic
-    ? undefined
-    : cookieStore.get("accessToken")?.value;
-
-  const response = await fetch(`${API_URL}${path}`, {
+  { body, headers, isPublic, ...restOptions }: RequestOptions,
+  accessToken?: string
+) =>
+  fetch(`${API_URL}${path}`, {
     ...restOptions,
     headers: {
       ...(body && !(body instanceof FormData)
@@ -61,6 +60,46 @@ const request = async <T>(
       body: body instanceof FormData ? body : JSON.stringify(body),
     }),
   });
+
+// accessToken 만료(401) 시 refreshToken으로 재발급 시도. 실패하면 null.
+const refreshAccessToken = async (refreshToken: string) => {
+  const response = await fetch(`${API_URL}/auth/refresh`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ refreshToken }),
+  });
+
+  if (!response.ok) return null;
+  return (await response.json()) as RefreshTokenResponse;
+};
+
+const request = async <T>(
+  path: string,
+  options: RequestOptions = {}
+): Promise<T> => {
+  const { isPublic = false } = options;
+
+  const cookieStore = await cookies();
+  const accessToken = isPublic
+    ? undefined
+    : cookieStore.get("accessToken")?.value;
+
+  let response = await callBackend(path, options, accessToken);
+
+  if (response.status === 401 && !isPublic) {
+    const refreshToken = cookieStore.get("refreshToken")?.value;
+
+    if (refreshToken) {
+      const refreshed = await refreshAccessToken(refreshToken);
+
+      if (refreshed) {
+        await setAuthCookies(refreshed.accessToken, refreshed.refreshToken ?? null);
+        response = await callBackend(path, options, refreshed.accessToken);
+      } else {
+        await clearAuthCookies();
+      }
+    }
+  }
 
   if (!response.ok) {
     const error = await response
