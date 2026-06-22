@@ -2,11 +2,10 @@
 import avatar from "@/shared/assets/images/avatar.svg";
 import { useUser } from "@/shared/hooks/useUser";
 import { useLogout } from "@/shared/ui/header/useLogout";
-import { useModal } from "@/shared/ui/modal";
+import { ProfileModal, useModal } from "@/shared/ui/modal";
 import Skeleton from "@/shared/ui/skeleton/Skeleton";
 import { Pencil } from "lucide-react";
 import Image from "next/image";
-import ProfileEditModal from "./ProfileEditModal";
 
 export default function ProfileSection() {
   const logout = useLogout();
@@ -74,7 +73,8 @@ export default function ProfileSection() {
         로그아웃
       </button>
       {editModal.isOpen && (
-        <ProfileEditModal
+        <ProfileModal
+          mode="edit"
           initialName={profile.name}
           initialEmail={profile.email}
           initialImage={profile.image ?? null}

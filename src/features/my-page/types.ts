@@ -12,6 +12,16 @@ export interface UserProfileDTO {
   updatedAt: string;
 }
 
+// GET /users/{userId} 응답
+export interface PublicUserDTO {
+  id: number;
+  teamId: string;
+  email: string;
+  name: string;
+  companyName: string | null;
+  image: string | null;
+}
+
 // GET /meetings/joined 아이템 (MeetingWithHost 확장)
 export interface JoinedMeetingDTO extends MeetingWithHostDTO {
   joinedAt: string | null;

@@ -31,6 +31,10 @@ export const userReviewQueries = {
   all: ["users", "me", "reviews"] as const,
 };
 
+export const publicUserQueries = {
+  detail: (userId: number) => ["public-user", userId] as const,
+};
+
 export const postQueries = {
   all: ["posts"] as const,
   list: (filters: { search?: string; sort?: string; page?: number }) =>
