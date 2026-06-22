@@ -5,7 +5,6 @@ interface CreateMeetingRequest {
   name: string;
   region: string;
   address: string;
-  addressDetail: string;
   latitude: number;
   longitude: number;
   image: string;

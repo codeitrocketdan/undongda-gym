@@ -7,6 +7,7 @@ import { useFormContext } from "react-hook-form";
 import { twMerge } from "tailwind-merge";
 
 import { uploadImageToStorage } from "@/features/create-dagym/lib/uploadImage";
+import { combineAddress } from "@/shared/lib/address";
 import { useUpdateDagymMutation } from "../../api/useUpdateDagymMutation";
 import { DagymUpdateForm } from "../../model/types";
 import DagymBasicInfo from "./DagymBasicInfo";
@@ -47,15 +48,14 @@ export default function DagymUpdateModal({ id, onClose }: PropsType) {
         return;
       }
 
+      const { addressDetail, ...rest } = values;
       const finalPayload = {
-        ...values,
+        ...rest,
         image: finalImageUrl,
         latitude: values.latitude,
         longitude: values.longitude,
-        addressDetail: values.addressDetail,
+        address: combineAddress(values.address, addressDetail),
       };
-      console.log(values, "<====values");
-      console.log(finalPayload, "<====final");
       updateMutation.mutate(finalPayload, {
         onSuccess: () => {
           onClose();

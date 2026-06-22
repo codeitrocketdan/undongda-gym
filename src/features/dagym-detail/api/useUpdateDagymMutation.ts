@@ -7,7 +7,7 @@ export function useUpdateDagymMutation(meetingId: string) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (body: DagymUpdateForm) => {
+    mutationFn: async (body: Omit<DagymUpdateForm, "addressDetail">) => {
       return clientFetcher.patch(`/api/meetings/${meetingId}`, body);
     },
 
