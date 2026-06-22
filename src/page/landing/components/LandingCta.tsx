@@ -23,8 +23,8 @@ export default function LandingCta() {
       <Link
         href="/dagym"
         className={twMerge(
-          buttonVariants({ variant: "primary", size: "lg" }),
-          "w-auto rounded-2xl px-10"
+          buttonVariants({ variant: "primary", size: "md" }),
+          "w-fit hover:bg-blue-700 mx-auto"
         )}
       >
         지금 다짐하기
