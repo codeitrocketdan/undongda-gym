@@ -28,7 +28,7 @@ export default function LandingCommunity() {
     >
       <div className="flex flex-col gap-8 md:gap-12">
         <div className="text-center">
-          <span className="text-sm-bold mb-2 inline-block text-blue-600">
+          <span className="text-sm-bold mb-2 inline-block text-blue-700">
             다짐토크
           </span>
           <h2 className="text-2xl-bold md:text-3xl-bold mb-2 text-gray-900 md:mb-3">
