@@ -83,7 +83,7 @@ export default function MyPageCard({
     <Button
       variant={showReviewButton ? "primary" : "secondary"}
       size="sm"
-      className={`w-auto${showCancelButton && !isCanceled ? "border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white" : ""}`}
+      className={`w-auto! ${showCancelButton && !isCanceled ? "border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white" : ""}`}
       isDisabled={showCancelButton && isCanceled}
       onClick={(e) => {
         e?.preventDefault();
