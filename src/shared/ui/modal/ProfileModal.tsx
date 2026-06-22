@@ -27,11 +27,14 @@ async function uploadImageToS3(file: File): Promise<string> {
     folder: "users",
   });
 
-  await fetch(presignedUrl, {
+  const uploadResponse = await fetch(presignedUrl, {
     method: "PUT",
     headers: { "Content-Type": file.type },
     body: file,
   });
+  if (!uploadResponse.ok) {
+    throw new Error("이미지 업로드에 실패했습니다");
+  }
 
   return publicUrl;
 }
