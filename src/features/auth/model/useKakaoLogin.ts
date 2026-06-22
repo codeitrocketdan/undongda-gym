@@ -37,7 +37,7 @@ export const useKakaoLogin = () => {
         if (!response.ok) {
           throw new Error(data.message || "카카오 로그인에 실패했습니다.");
         }
-        await queryClient.invalidateQueries();
+        queryClient.invalidateQueries();
         router.push("/");
       } catch (error) {
         console.error(error);

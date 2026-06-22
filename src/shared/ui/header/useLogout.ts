@@ -12,8 +12,7 @@ export function useLogout() {
     try {
       await clientFetcher.post("/api/auth/logout");
       resetFavoritesCount();
-      queryClient.setQueryData(["user"], null);
-      queryClient.invalidateQueries();
+      queryClient.clear();
       router.push("/");
       router.refresh();
     } catch (error) {
