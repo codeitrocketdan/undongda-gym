@@ -1,6 +1,5 @@
 "use client";
 
-import { REGULAR_CLASS_TYPES } from "@/features/dagym/constants/meetingTypes";
 import { MeetingTypeDTO } from "@/features/dagym/types";
 import { useInView } from "@/shared/hooks/useInView";
 import { useQuery } from "@tanstack/react-query";
@@ -43,9 +42,7 @@ export default function LandingCategories() {
     },
   });
 
-  const featuredCategories = categories
-    .filter((c) => REGULAR_CLASS_TYPES.includes(c.name))
-    .slice(0, 6);
+  const featuredCategories = categories.slice(0, 6);
 
   return (
     <section ref={ref} className="mx-auto max-w-7xl px-6 py-20 md:py-26">
