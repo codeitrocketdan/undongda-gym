@@ -6,8 +6,10 @@ import { useModal } from "@/shared/ui/modal";
 import { Pencil } from "lucide-react";
 import Image from "next/image";
 import ProfileEditModal from "./ProfileEditModal";
+import { useLogout } from "@/shared/ui/header/useLogout";
 
 export default function ProfileSection() {
+  const logout = useLogout();
   const { user: profile, isLoading, isError } = useUser();
   const editModal = useModal();
 
@@ -66,6 +68,7 @@ export default function ProfileSection() {
       </div>
       <button
         type="button"
+        onClick={logout}
         className="absolute right-4 bottom-4 text-sm text-slate-400 underline hover:cursor-pointer hover:text-slate-600 lg:bottom-1"
       >
         로그아웃
