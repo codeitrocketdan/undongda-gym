@@ -1,15 +1,9 @@
 "use client";
 
 import { DagymSort } from "@/features/dagym/components/DagymFilterBar";
-import {
-  COMMUNITY_TYPES,
-  REGULAR_CLASS_TYPES,
-} from "@/features/dagym/constants/meetingTypes";
 import { BRANCH_OPTIONS } from "@/features/dagym/constants/region";
-import {
-  MeetingCategory,
-  useMeetingCategoryTab,
-} from "@/shared/hooks/useMeetingCategoryTab";
+import { useMeetingCategoryTab } from "@/shared/hooks/useMeetingCategoryTab";
+import { useMeetingTypeList } from "@/shared/hooks/useMeetingTypeList";
 import { SortOption } from "@/shared/ui/filter/SortFilter";
 import { parseAsString, useQueryState } from "nuqs";
 import { useEffect, useRef } from "react";
@@ -34,26 +28,13 @@ export function useDagymFilter() {
     parseAsString.withDefault("desc")
   );
 
-  const { tab, setTab } = useMeetingCategoryTab();
-  const typeList = tab === "정규수업" ? REGULAR_CLASS_TYPES : COMMUNITY_TYPES;
+  const { tab } = useMeetingCategoryTab();
+  const typeList = useMeetingTypeList();
   const centerOptions = BRANCH_OPTIONS;
 
   // 첫 렌더와 "type 파라미터 때문에 탭이 바뀐 경우"를 구분하기 위한 표시
   const isFirstRender = useRef(true);
   const isSyncingTabFromType = useRef(false);
-
-  // URL의 type 파라미터가 있으면 해당 탭으로 자동 변경
-  useEffect(() => {
-    if (!selectedCategoryValue) return;
-    const isRegular = REGULAR_CLASS_TYPES.includes(selectedCategoryValue);
-    const targetTab: MeetingCategory = isRegular ? "정규수업" : "다모여짐";
-    if (tab !== targetTab) {
-      // 이 탭 변경은 자동 동기화이므로 아래 초기화 effect에서 건너뛰게 한다
-      isSyncingTabFromType.current = true;
-      setTab(targetTab);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedCategoryValue]);
 
   // 사용자가 직접 탭을 바꿨을 때만 카테고리/지역 필터를 초기화한다.
   // (첫 렌더나 type 파라미터로 인한 자동 탭 변경 때는 초기화하지 않는다)
