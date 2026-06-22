@@ -48,7 +48,11 @@ export function useMeetingFormFields(initial?: MeetingFormInitialValues) {
   const [capacity, setCapacity] = useState(initial?.capacity ?? CAPACITY_DEFAULT);
   const [capacityMessage, setCapacityMessage] = useState("");
 
-  const { data: types = [] } = useMeetingTypes();
+  const { data: allTypes = [] } = useMeetingTypes();
+  // community 타입은 유저가 직접 작성하는 다짐이므로 관리자 생성 폼에서는 제외
+  const types = allTypes.filter(
+    (t) => parseMeetingTypeDescription(t.description).category === "regular"
+  );
 
   const handleTypeChange = (value: string) => {
     setType(value);

@@ -14,7 +14,7 @@ export default function CreateMeetingForm() {
   } = useAdminCreateViewModel();
 
   return (
-    <div className="max-w-xl rounded-2xl bg-white p-8 shadow-sm">
+    <div className="w-full rounded-2xl bg-white p-8 shadow-sm">
       <MeetingFormFields {...fields} />
 
       {submitError && (

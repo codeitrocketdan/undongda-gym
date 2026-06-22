@@ -12,8 +12,8 @@ export default function TypeCard({ type, onEdit, onDelete }: TypeCardProps) {
   const { imageUrl } = parseMeetingTypeDescription(type.description);
 
   return (
-    <div className="group relative flex flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
-      <div className="relative h-32 w-full bg-gray-100">
+    <div className="group relative flex flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-md">
+      <div className="relative aspect-square w-full bg-gray-100">
         {imageUrl ? (
           <img
             src={imageUrl}
@@ -44,8 +44,10 @@ export default function TypeCard({ type, onEdit, onDelete }: TypeCardProps) {
           </button>
         </div>
       </div>
-      <div className="p-4">
-        <p className="font-semibold text-gray-800">{type.name}</p>
+      <div className="border-t border-gray-100 px-3 py-2.5">
+        <p className="truncate text-sm font-semibold text-gray-800">
+          {type.name}
+        </p>
       </div>
     </div>
   );

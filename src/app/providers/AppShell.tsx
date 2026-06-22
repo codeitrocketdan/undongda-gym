@@ -18,7 +18,7 @@ export default function AppShell({ header, children }: AppShellProps) {
   return (
     <>
       {header}
-      <div className="mx-auto w-full max-w-7xl">{children}</div>
+      <div className="mx-auto w-full max-w-7xl pt-24 md:pt-30">{children}</div>
     </>
   );
 }

@@ -4,82 +4,78 @@ import { MeetingTypeDTO } from "@/features/dagym/types";
 import { DeleteConfirmModal } from "@/shared/ui/modal";
 import Skeleton from "@/shared/ui/skeleton/Skeleton";
 import { CalendarX2 } from "lucide-react";
-import { useAdminTypesViewModel } from "../model/useAdminTypesViewModel";
+import { UseAdminTypesViewModelResult } from "../model/useAdminTypesViewModel";
 import AddTypeModal from "./AddTypeModal";
 import TypeCard from "./TypeCard";
 
-function TypeGrid({
+function TypeGroup({
+  title,
   types,
   onEdit,
   onDelete,
 }: {
+  title: string;
   types: MeetingTypeDTO[];
   onEdit: (type: MeetingTypeDTO) => void;
   onDelete: (type: MeetingTypeDTO) => void;
 }) {
-  if (types.length === 0) {
-    return (
-      <p className="py-6 text-center text-sm text-gray-400">
-        등록된 타입이 없어요.
-      </p>
-    );
-  }
   return (
-    <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
-      {types.map((type) => (
-        <TypeCard
-          key={type.id}
-          type={type}
-          onEdit={onEdit}
-          onDelete={onDelete}
-        />
-      ))}
+    <div>
+      <h3 className="mb-3 flex items-center gap-1.5 text-base font-semibold text-gray-700">
+        {title}
+        <span className="text-xs font-normal text-gray-400">
+          {types.length}
+        </span>
+      </h3>
+      {types.length === 0 ? (
+        <p className="rounded-xl border border-dashed border-gray-200 py-6 text-center text-sm text-gray-400">
+          등록된 타입이 없어요.
+        </p>
+      ) : (
+        <div className="grid grid-cols-3 gap-4 md:grid-cols-4 lg:grid-cols-5">
+          {types.map((type) => (
+            <TypeCard
+              key={type.id}
+              type={type}
+              onEdit={onEdit}
+              onDelete={onDelete}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
 
-export default function TypesSection() {
-  const {
-    regularTypes,
-    communityTypes,
-    isEmpty,
-    isLoading,
-    modal,
-    mode,
-    name,
-    category,
-    imagePreview,
-    isSubmitting,
-    setName,
-    setCategory,
-    handleFileChange,
-    handleSubmit,
-    handleOpenAddModal,
-    handleOpenEditModal,
-    deleteModal,
-    deletingType,
-    isDeleting,
-    handleOpenDeleteModal,
-    handleConfirmDelete,
-  } = useAdminTypesViewModel();
-
+export default function TypesSection({
+  regularTypes,
+  communityTypes,
+  isEmpty,
+  isLoading,
+  modal,
+  mode,
+  name,
+  category,
+  imagePreview,
+  isSubmitting,
+  setName,
+  setCategory,
+  handleFileChange,
+  handleSubmit,
+  handleOpenAddModal,
+  handleOpenEditModal,
+  deleteModal,
+  deletingType,
+  isDeleting,
+  handleOpenDeleteModal,
+  handleConfirmDelete,
+}: UseAdminTypesViewModelResult) {
   return (
-    <section className="flex flex-col gap-14">
-      <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-gray-800">다짐 타입 목록</h2>
-        <button
-          type="button"
-          onClick={handleOpenAddModal}
-          className="flex cursor-pointer items-center gap-1.5 rounded-xl bg-blue-700 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-800"
-        >
-          <span className="text-base leading-none">+</span>새 타입 추가
-        </button>
-      </div>
-
+    <section className="flex flex-col gap-8">
       {isLoading ? (
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+        <div className="grid grid-cols-3 gap-4 md:grid-cols-4 lg:grid-cols-5">
           {Array.from({ length: 6 }).map((_, i) => (
-            <Skeleton key={i} className="h-44 rounded-2xl" />
+            <Skeleton key={i} className="aspect-square rounded-2xl" />
           ))}
         </div>
       ) : isEmpty ? (
@@ -95,28 +91,20 @@ export default function TypesSection() {
           </button>
         </div>
       ) : (
-        <>
-          <div>
-            <h3 className="mb-4 text-base font-semibold text-gray-700">
-              정규수업
-            </h3>
-            <TypeGrid
-              types={regularTypes}
-              onEdit={handleOpenEditModal}
-              onDelete={handleOpenDeleteModal}
-            />
-          </div>
-          <div>
-            <h3 className="mb-4 text-base font-semibold text-gray-700">
-              다모여짐
-            </h3>
-            <TypeGrid
-              types={communityTypes}
-              onEdit={handleOpenEditModal}
-              onDelete={handleOpenDeleteModal}
-            />
-          </div>
-        </>
+        <div className="flex flex-col gap-12">
+          <TypeGroup
+            title="정규수업"
+            types={regularTypes}
+            onEdit={handleOpenEditModal}
+            onDelete={handleOpenDeleteModal}
+          />
+          <TypeGroup
+            title="다모여짐"
+            types={communityTypes}
+            onEdit={handleOpenEditModal}
+            onDelete={handleOpenDeleteModal}
+          />
+        </div>
       )}
 
       {modal.isOpen && (

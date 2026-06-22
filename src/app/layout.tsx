@@ -27,7 +27,7 @@ export default async function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${Pretendard.variable} h-full antialiased`}>
-      <body className="flex min-h-full flex-col pt-24 md:pt-30">
+      <body className="flex min-h-full flex-col">
         <NuqsAdapter>
           <QueryProvider>
             <AuthHydration>
