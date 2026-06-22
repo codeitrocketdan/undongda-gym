@@ -19,6 +19,10 @@ interface TypePayload {
   description: string;
 }
 
+export type UseAdminTypesViewModelResult = ReturnType<
+  typeof useAdminTypesViewModel
+>;
+
 export function useAdminTypesViewModel() {
   const queryClient = useQueryClient();
   const modal = useModal();
