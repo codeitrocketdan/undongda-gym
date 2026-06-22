@@ -9,7 +9,7 @@ export const FORM_FIELDS = [
     name: "email",
     label: "이메일",
     type: "email",
-    placeholder: "이메일를 입력해주세요",
+    placeholder: "이메일을 입력해주세요",
   },
   {
     name: "password",

@@ -2,7 +2,11 @@ import { useQuery } from "@tanstack/react-query";
 import { getMe } from "../api/getMe";
 
 export const useUserQuery = (enabled: boolean) => {
-  const { data: user = null, isLoading } = useQuery({
+  const {
+    data: user = null,
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: ["user"],
     queryFn: getMe,
     enabled,
@@ -11,5 +15,5 @@ export const useUserQuery = (enabled: boolean) => {
     refetchOnWindowFocus: true,
   });
 
-  return { user, isLoading, isAuthenticated: !!user };
+  return { user, isLoading, isError, isAuthenticated: !!user };
 };
