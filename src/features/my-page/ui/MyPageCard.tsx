@@ -114,7 +114,7 @@ export default function MyPageCard({
   );
 
   return (
-    <Link href={`/meetings/${id}`}>
+    <Link href={`/dagym-detail/${id}`}>
       {/* 모바일 */}
       <div className="md:hidden">
         <FeedCard className="w-full overflow-hidden rounded-3xl">
