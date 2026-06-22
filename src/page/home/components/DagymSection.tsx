@@ -41,7 +41,7 @@ export default function DagymSection() {
       <MeetingCategoryTabs />
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <PillTabs
-          key={tab}
+          key={`${tab}-${selectedCategoryValue}`}
           tabs={tabs}
           defaultValue={selectedCategoryValue || "전체"}
           onChange={(value) =>
