@@ -10,8 +10,8 @@ export function useLogout() {
   return async () => {
     try {
       await clientFetcher.post("/api/auth/logout");
-      queryClient.removeQueries({ queryKey: ["user"] });
-      queryClient.setQueryData(["user"], null);
+      queryClient.removeQueries({ queryKey: ["users/me"] });
+      queryClient.setQueryData(["users/me"], null);
       router.push("/");
       router.refresh();
     } catch (error) {
