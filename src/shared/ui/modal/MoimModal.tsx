@@ -19,7 +19,7 @@ export default function MoimModal() {
             </p>
             <Modal.CloseButton />
           </Modal.Header>
-          <div>[콘텐츠]</div>
+          <Modal.Body>[콘텐츠]</Modal.Body>
           <Modal.Footer>
             {/* 버튼 공통 컴포넌트로 교체 */}
             <button onClick={modal.close}>취소</button>

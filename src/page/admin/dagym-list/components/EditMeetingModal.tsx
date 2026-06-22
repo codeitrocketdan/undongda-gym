@@ -27,11 +27,13 @@ export default function EditMeetingModal({
         </div>
       </Modal.Header>
 
-      <MeetingFormFields {...fields} />
+      <Modal.Body>
+        <MeetingFormFields {...fields} />
 
-      {submitError && (
-        <p className="mb-3 text-sm text-red-500">{submitError}</p>
-      )}
+        {submitError && (
+          <p className="mb-3 text-sm text-red-500">{submitError}</p>
+        )}
+      </Modal.Body>
 
       <Modal.Footer>
         <Button variant="tertiary" onClick={onClose}>

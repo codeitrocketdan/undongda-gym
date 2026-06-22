@@ -83,7 +83,7 @@ export default function MainContent() {
             </div>
             <Modal.CloseButton className="mb-2" />
           </Modal.Header>
-          <div>
+          <Modal.Body>
             <MonthlyCalendar
               completedDays={completedDays}
               reservedDays={reservedDays}
@@ -100,7 +100,7 @@ export default function MainContent() {
                 />
               )}
             />
-          </div>
+          </Modal.Body>
         </Modal>
       )}
     </div>

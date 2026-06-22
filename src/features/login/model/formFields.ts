@@ -3,7 +3,7 @@ export const FORM_FIELDS = [
     name: "email" as const,
     label: "이메일",
     type: "email",
-    placeholder: "아이디를 입력해주세요.",
+    placeholder: "이메일을 입력해주세요.",
   },
   {
     name: "password" as const,

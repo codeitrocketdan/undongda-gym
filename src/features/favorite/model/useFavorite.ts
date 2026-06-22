@@ -8,6 +8,7 @@ import {
   meetingQueries,
   userMeetingQueries,
 } from "@/shared/lib/queryKeys";
+import { dagymQueries } from "@/features/dagym-detail/api/queries";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export function useFavorite() {
@@ -17,6 +18,7 @@ export function useFavorite() {
     queryClient.invalidateQueries({ queryKey: favoriteQueries.all });
     queryClient.invalidateQueries({ queryKey: meetingQueries.all });
     queryClient.invalidateQueries({ queryKey: userMeetingQueries.all });
+    queryClient.invalidateQueries({ queryKey: dagymQueries.all });
   };
 
   const { mutate: add } = useMutation({

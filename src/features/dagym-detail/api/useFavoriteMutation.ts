@@ -1,4 +1,13 @@
 import { clientFetcher } from "@/shared/api/clientFetcher";
+import {
+  decrementFavoritesCount,
+  incrementFavoritesCount,
+} from "@/shared/hooks/useNewFavoritesCount";
+import {
+  favoriteQueries,
+  meetingQueries,
+  userMeetingQueries,
+} from "@/shared/lib/queryKeys";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Dagym } from "../model/types";
 import { dagymQueries } from "./queries";
@@ -47,6 +56,11 @@ export function useFavoriteMutation(meetingId: string) {
       }
     },
 
+    onSuccess: (_data, isFavorited) => {
+      if (isFavorited) decrementFavoritesCount();
+      else incrementFavoritesCount();
+    },
+
     onSettled: async () => {
       await Promise.all([
         queryClient.invalidateQueries({
@@ -56,6 +70,10 @@ export function useFavoriteMutation(meetingId: string) {
         queryClient.invalidateQueries({
           queryKey: dagymQueries.suggests(),
         }),
+
+        queryClient.invalidateQueries({ queryKey: favoriteQueries.all }),
+        queryClient.invalidateQueries({ queryKey: meetingQueries.all }),
+        queryClient.invalidateQueries({ queryKey: userMeetingQueries.all }),
       ]);
     },
   });
