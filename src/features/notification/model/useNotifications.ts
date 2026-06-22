@@ -56,7 +56,10 @@ export function useEnrichedNotifications() {
   });
 
   const authorMap = new Map<number, { name: string; image: string | null }>();
-  commentQueries.forEach((query) => {
+  const postLoadingMap = new Map<number, boolean>();
+  commentQueries.forEach((query, index) => {
+    const postId = uniquePostIds[index];
+    postLoadingMap.set(postId, query.isLoading);
     const comments = (query.data as { data: CommentDTO[] } | undefined)?.data ?? [];
     comments.forEach((comment) => {
       authorMap.set(comment.id, { name: comment.author.name, image: comment.author.image });
@@ -66,7 +69,12 @@ export function useEnrichedNotifications() {
   const enriched: EnrichedNotification[] = notifications.map((n) => {
     if (n.type === "COMMENT" && n.data.commentId != null) {
       const author = authorMap.get(n.data.commentId);
-      return { ...n, actorName: author?.name, actorImage: author?.image ?? null };
+      return {
+        ...n,
+        actorName: author?.name,
+        actorImage: author?.image ?? null,
+        actorLoading: postLoadingMap.get(n.data.postId!) ?? false,
+      };
     }
     return n;
   });

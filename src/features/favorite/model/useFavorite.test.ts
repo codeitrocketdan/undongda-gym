@@ -6,6 +6,7 @@ import {
   meetingQueries,
   userMeetingQueries,
 } from "@/shared/lib/queryKeys";
+import { dagymQueries } from "@/features/dagym-detail/api/queries";
 import { useFavorite } from "./useFavorite";
 
 const mockInvalidateQueries = jest.fn();
@@ -65,7 +66,7 @@ describe("useFavorite", () => {
       expect(clientFetcher.delete).not.toHaveBeenCalled();
     });
 
-    it("성공 시 찜, 다짐, 내 다짐 쿼리를 모두 무효화한다", () => {
+    it("성공 시 찜, 다짐, 내 다짐, 다짐 상세 쿼리를 모두 무효화한다", () => {
       const { result } = renderHook(() => useFavorite());
 
       act(() => result.current.toggleFavorite(1, false));
@@ -79,7 +80,10 @@ describe("useFavorite", () => {
       expect(mockInvalidateQueries).toHaveBeenCalledWith({
         queryKey: userMeetingQueries.all,
       });
-      expect(mockInvalidateQueries).toHaveBeenCalledTimes(3);
+      expect(mockInvalidateQueries).toHaveBeenCalledWith({
+        queryKey: dagymQueries.all,
+      });
+      expect(mockInvalidateQueries).toHaveBeenCalledTimes(4);
     });
   });
 });
