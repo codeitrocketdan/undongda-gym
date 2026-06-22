@@ -11,7 +11,7 @@ import { reviewQueries } from "@/shared/lib/queryKeys";
 export function useReviewListViewModel() {
   const { selectedCategory, date, region, sortBy, sortOrder } =
     useListQueryParams();
-  const typeList = useMeetingTypeList();
+  const { typeList, isReady } = useMeetingTypeList();
 
   const {
     items: allReviews,
@@ -31,9 +31,10 @@ export function useReviewListViewModel() {
       ),
   });
 
-  const reviews = selectedCategory
-    ? allReviews
-    : allReviews.filter((r) => typeList.includes(r.meeting.type));
+  const reviews =
+    selectedCategory || !isReady
+      ? allReviews
+      : allReviews.filter((r) => typeList.includes(r.meeting.type));
 
   return { reviews, observerRef, isError };
 }

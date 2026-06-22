@@ -29,7 +29,7 @@ export function useDagymFilter() {
   );
 
   const { tab } = useMeetingCategoryTab();
-  const typeList = useMeetingTypeList();
+  const { typeList, isReady } = useMeetingTypeList();
   const centerOptions = BRANCH_OPTIONS;
 
   // 탭이 바뀔 때만 카테고리/지역 필터를 초기화한다 (selectedCategoryValue, regionValue를
@@ -58,7 +58,7 @@ export function useDagymFilter() {
   const tabs = [
     { id: 0, name: "전체" },
     ...categories
-      .filter((c) => typeList.includes(c.name))
+      .filter((c) => !isReady || typeList.includes(c.name))
       .map((c) => ({ id: c.id, name: c.name })),
   ];
 

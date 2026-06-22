@@ -13,7 +13,7 @@ import { favoriteQueries } from "@/shared/lib/queryKeys";
 export function useFavoriteListViewModel({ userId }: { userId?: number } = {}) {
   const { selectedCategory, date, region, sortBy, sortOrder } =
     useListQueryParams();
-  const typeList = useMeetingTypeList();
+  const { typeList, isReady } = useMeetingTypeList();
 
   const { toggleFavorite } = useFavorite();
   const { toggleJoin } = useJoinMeeting();
@@ -39,9 +39,10 @@ export function useFavoriteListViewModel({ userId }: { userId?: number } = {}) {
   const allMeetings = favoriteItems
     .map((f) => f.meeting)
     .filter((m) => m.host.id !== userId);
-  const meetings = selectedCategory
-    ? allMeetings
-    : allMeetings.filter((m) => typeList.includes(m.type));
+  const meetings =
+    selectedCategory || !isReady
+      ? allMeetings
+      : allMeetings.filter((m) => typeList.includes(m.type));
 
   return { meetings, observerRef, toggleFavorite, toggleJoin, isError };
 }
