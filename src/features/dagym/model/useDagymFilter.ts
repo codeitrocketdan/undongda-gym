@@ -6,10 +6,13 @@ import {
   REGULAR_CLASS_TYPES,
 } from "@/features/dagym/constants/meetingTypes";
 import { BRANCH_OPTIONS } from "@/features/dagym/constants/region";
-import { useMeetingCategoryTab } from "@/shared/hooks/useMeetingCategoryTab";
+import {
+  MeetingCategory,
+  useMeetingCategoryTab,
+} from "@/shared/hooks/useMeetingCategoryTab";
 import { SortOption } from "@/shared/ui/filter/SortFilter";
 import { parseAsString, useQueryState } from "nuqs";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useMeetingTypes } from "./useMeetingTypes";
 
 export function useDagymFilter() {
@@ -31,13 +34,38 @@ export function useDagymFilter() {
     parseAsString.withDefault("desc")
   );
 
-  const { tab } = useMeetingCategoryTab();
+  const { tab, setTab } = useMeetingCategoryTab();
   const typeList = tab === "정규수업" ? REGULAR_CLASS_TYPES : COMMUNITY_TYPES;
   const centerOptions = BRANCH_OPTIONS;
 
-  // 탭이 바뀔 때만 카테고리/지역 필터를 초기화한다 (selectedCategoryValue, regionValue를
-  // deps에 넣으면 필터 값이 바뀔 때도 effect가 재실행되어 의도가 깨진다)
+  // 첫 렌더와 "type 파라미터 때문에 탭이 바뀐 경우"를 구분하기 위한 표시
+  const isFirstRender = useRef(true);
+  const isSyncingTabFromType = useRef(false);
+
+  // URL의 type 파라미터가 있으면 해당 탭으로 자동 변경
   useEffect(() => {
+    if (!selectedCategoryValue) return;
+    const isRegular = REGULAR_CLASS_TYPES.includes(selectedCategoryValue);
+    const targetTab: MeetingCategory = isRegular ? "정규수업" : "다모여짐";
+    if (tab !== targetTab) {
+      // 이 탭 변경은 자동 동기화이므로 아래 초기화 effect에서 건너뛰게 한다
+      isSyncingTabFromType.current = true;
+      setTab(targetTab);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedCategoryValue]);
+
+  // 사용자가 직접 탭을 바꿨을 때만 카테고리/지역 필터를 초기화한다.
+  // (첫 렌더나 type 파라미터로 인한 자동 탭 변경 때는 초기화하지 않는다)
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    if (isSyncingTabFromType.current) {
+      isSyncingTabFromType.current = false;
+      return;
+    }
     if (selectedCategoryValue) setSelectedCategory(null);
     if (regionValue) setRegion(null);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -68,6 +96,7 @@ export function useDagymFilter() {
   return {
     tab,
     tabs,
+    selectedCategoryValue,
     date,
     centerOptions,
     regionFilter,

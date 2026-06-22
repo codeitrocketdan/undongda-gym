@@ -24,6 +24,7 @@ export default function DagymSection() {
   const {
     tab,
     tabs,
+    selectedCategoryValue,
     date,
     centerOptions,
     regionFilter,
@@ -42,7 +43,7 @@ export default function DagymSection() {
         <PillTabs
           key={tab}
           tabs={tabs}
-          defaultValue="전체"
+          defaultValue={selectedCategoryValue || "전체"}
           onChange={(value) =>
             setSelectedCategory(value === "전체" ? "" : value)
           }
