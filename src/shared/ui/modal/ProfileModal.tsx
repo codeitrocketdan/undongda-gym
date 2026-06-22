@@ -62,7 +62,11 @@ export default function ProfileModal(props: ProfileModalProps) {
 
   const userId = mode === "read" ? props.userId : null;
 
-  const { data: publicProfile, isLoading: isPublicProfileLoading } = useQuery({
+  const {
+    data: publicProfile,
+    isLoading: isPublicProfileLoading,
+    isError: isPublicProfileError,
+  } = useQuery({
     queryKey: publicUserQueries.detail(userId ?? -1),
     queryFn: () => clientFetcher.get<PublicUserDTO>(`/api/users/${userId}`),
     enabled: userId !== null,
@@ -116,7 +120,7 @@ export default function ProfileModal(props: ProfileModalProps) {
     }
   };
 
-  if (mode === "read" && (isPublicProfileLoading || !publicProfile)) {
+  if (mode === "read" && isPublicProfileLoading) {
     return (
       <Modal onClose={onClose}>
         <Modal.Header className="flex-row justify-between">
@@ -126,6 +130,22 @@ export default function ProfileModal(props: ProfileModalProps) {
         <main>
           <p className="py-10 text-center text-sm text-slate-400">
             불러오는 중...
+          </p>
+        </main>
+      </Modal>
+    );
+  }
+
+  if (mode === "read" && (isPublicProfileError || !publicProfile)) {
+    return (
+      <Modal onClose={onClose}>
+        <Modal.Header className="flex-row justify-between">
+          <p className="text-2xl-semibold">프로필</p>
+          <Modal.CloseButton />
+        </Modal.Header>
+        <main>
+          <p className="py-10 text-center text-sm text-red-400">
+            프로필을 불러오지 못했습니다
           </p>
         </main>
       </Modal>
