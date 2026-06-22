@@ -2,8 +2,8 @@
 import { formatMonthDay, formatTime } from "@/shared/lib/formatDate";
 import { formatRegion } from "@/shared/lib/formatRegion";
 import {
-  getMeetingStatus,
   getMeetingStateText,
+  getMeetingStatus,
 } from "@/shared/lib/getMeetingStatus";
 import ConfirmBadge from "@/shared/ui/badge/ConfirmBadge";
 import StatusBadge from "@/shared/ui/badge/StatusBadge";
@@ -68,7 +68,12 @@ export default function MyPageCard({
 
   const overlayText =
     variant === "my-dagym" || variant === "created-dagym"
-      ? getMeetingStateText(canceledAt, registrationEnd, participantCount, capacity)
+      ? getMeetingStateText(
+          canceledAt,
+          registrationEnd,
+          participantCount,
+          capacity
+        )
       : null;
 
   const badges = showBadge && (
@@ -89,9 +94,7 @@ export default function MyPageCard({
         onClick?.();
       }}
     >
-      {showReviewButton
-        ? "리뷰 작성하기"
-        : overlayText || "예약 취소하기"}
+      {showReviewButton ? "리뷰작성" : overlayText || "참여취소"}
     </Button>
   );
 

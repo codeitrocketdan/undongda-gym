@@ -66,7 +66,7 @@ function JoinButton({
         className="border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white"
         onClick={handleClick}
       >
-        예약 취소하기
+        참여취소
       </Button>
     );
   }
