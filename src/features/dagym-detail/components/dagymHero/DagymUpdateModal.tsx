@@ -74,7 +74,7 @@ export default function DagymUpdateModal({ id, onClose }: PropsType) {
         <Modal.CloseButton />
       </Modal.Header>
 
-      <main>
+      <Modal.Body>
         <div className="mb-12 flex w-full border-b-2 border-slate-200">
           {TABS.map((tab) => (
             <button
@@ -97,7 +97,7 @@ export default function DagymUpdateModal({ id, onClose }: PropsType) {
           {activeTab === "기본 정보" && <DagymBasicInfo />}
           {activeTab === "일정 및 인원" && <DagymScheduleInfo />}
         </form>
-      </main>
+      </Modal.Body>
 
       <Modal.Footer>
         <Button variant="tertiary" onClick={onClose}>

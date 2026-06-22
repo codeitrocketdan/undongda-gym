@@ -21,12 +21,14 @@ export default function LoginModal({ onClose }: Props) {
       <Modal.Header className="flex-row justify-end">
         <Modal.CloseButton />
       </Modal.Header>
-      <main className="py-1 text-center">
-        <p className="text-2xl font-semibold text-slate-800">
-          로그인이 필요한 서비스입니다.
-        </p>
-        <p className="mt-2 text-sm text-slate-500">로그인 후 이용해주세요.</p>
-      </main>
+      <Modal.Body>
+        <div className="py-1 text-center">
+          <p className="text-2xl font-semibold text-slate-800">
+            로그인이 필요한 서비스입니다.
+          </p>
+          <p className="mt-2 text-sm text-slate-500">로그인 후 이용해주세요.</p>
+        </div>
+      </Modal.Body>
       <Modal.Footer>
         <Button variant="tertiary" onClick={onClose}>
           취소

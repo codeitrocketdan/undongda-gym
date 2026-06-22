@@ -15,7 +15,7 @@ export default function ProfileModal() {
           <Modal.Header>
             <Modal.CloseButton />
           </Modal.Header>
-          <main>
+          <Modal.Body>
             <img
               src="https://cdn-icons-png.flaticon.com/512/8847/8847419.png"
               alt="프로필 사진"
@@ -28,7 +28,7 @@ export default function ProfileModal() {
             <p className="rounded-2xl bg-green-200 px-4 py-2 text-center">
               lovewins@codeit.com
             </p>
-          </main>
+          </Modal.Body>
         </Modal>
       )}
     </>
