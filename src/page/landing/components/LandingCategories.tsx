@@ -38,6 +38,7 @@ export default function LandingCategories() {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/meeting-types`
       );
+      if (!res.ok) return [];
       return res.json();
     },
   });
@@ -49,7 +50,7 @@ export default function LandingCategories() {
   return (
     <section ref={ref} className="mx-auto max-w-7xl px-6 py-20 md:py-26">
       <div className="mb-13 text-center">
-        <span className="text-sm-bold mb-3 inline-block text-blue-600">
+        <span className="text-sm-bold mb-3 inline-block text-blue-700">
           다짐 둘러보기
         </span>
         <h2 className="text-2xl-bold md:text-3xl-bold mb-3 text-gray-900">
