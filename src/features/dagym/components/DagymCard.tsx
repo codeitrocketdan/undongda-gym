@@ -5,7 +5,7 @@ import {
   formatTime,
 } from "@/shared/lib/formatDate";
 import { formatRegion } from "@/shared/lib/formatRegion";
-import { getOverlayText } from "@/shared/lib/getMeetingStatus";
+import { getMeetingStateText } from "@/shared/lib/getMeetingStatus";
 import Button from "@/shared/ui/button/Button";
 import FeedCard from "@/shared/ui/feed-card/FeedCard";
 import { HeartButton } from "@/shared/ui/heart-button/HeartButton";
@@ -37,10 +37,12 @@ function JoinButton({
 >) {
   if (isOwner) return null;
 
-  const isExpired = registrationEnd
-    ? new Date(registrationEnd) < new Date()
-    : false;
-  const isFull = participantCount >= capacity;
+  const stateText = getMeetingStateText(
+    canceledAt,
+    registrationEnd,
+    participantCount,
+    capacity
+  );
 
   const handleClick = (e?: React.MouseEvent<HTMLButtonElement>) => {
     e?.preventDefault();
@@ -48,10 +50,10 @@ function JoinButton({
     onJoin();
   };
 
-  if (canceledAt) {
+  if (stateText) {
     return (
-      <Button variant="secondary" size="sm" isDisabled>
-        취소됨
+      <Button size="sm" isDisabled>
+        {stateText}
       </Button>
     );
   }
@@ -65,22 +67,6 @@ function JoinButton({
         onClick={handleClick}
       >
         예약 취소하기
-      </Button>
-    );
-  }
-
-  if (isExpired) {
-    return (
-      <Button size="sm" isDisabled>
-        모집 마감
-      </Button>
-    );
-  }
-
-  if (isFull) {
-    return (
-      <Button size="sm" isDisabled>
-        정원 마감
       </Button>
     );
   }
@@ -126,7 +112,7 @@ export default function DagymCard({
     onJoin,
   };
 
-  const overlayText = getOverlayText(
+  const overlayText = getMeetingStateText(
     canceledAt,
     registrationEnd,
     participantCount,

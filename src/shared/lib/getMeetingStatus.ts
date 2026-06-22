@@ -11,8 +11,8 @@ export function getMeetingStatus(meeting: Meeting): MeetingStatus {
   return "upcoming";
 }
 
-// 카드 썸네일 위에 띄울 오버레이 문구 (취소/모집 마감/정원 마감)
-export function getOverlayText(
+// 모임의 상태 텍스트 (오버레이, 버튼 등에 사용)
+export function getMeetingStateText(
   canceledAt: string | null,
   registrationEnd: string | null,
   participantCount: number,
