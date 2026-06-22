@@ -33,7 +33,7 @@ const DagymDescription = ({ dagym }: Props) => {
         </p>
       </div>
 
-      {profileModal.isOpen && profileModal.userId && (
+      {profileModal.isOpen && profileModal.userId !== null && (
         <ProfileModal
           mode="read"
           userId={profileModal.userId}

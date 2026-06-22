@@ -105,7 +105,7 @@ export default function CommentItem({
         <p className="text-sm text-slate-700 md:text-base">{comment.content}</p>
       )}
 
-      {profileModal.isOpen && profileModal.userId && (
+      {profileModal.isOpen && profileModal.userId !== null && (
         <ProfileModal
           mode="read"
           userId={profileModal.userId}
