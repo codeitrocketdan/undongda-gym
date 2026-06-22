@@ -1,8 +1,8 @@
+import { Header } from "@/shared/ui/header";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import Script from "next/script";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
-import { Header } from "@/shared/ui/header";
 import "./globals.css";
 import AppShell from "./providers/AppShell";
 import AuthHydration from "./providers/AuthHydration";
@@ -27,7 +27,7 @@ export default async function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${Pretendard.variable} h-full antialiased`}>
-      <body className="flex min-h-full flex-col">
+      <body className="flex min-h-full flex-col pt-24 md:pt-30">
         <NuqsAdapter>
           <QueryProvider>
             <AuthHydration>

@@ -21,8 +21,8 @@ export default async function Header() {
   const isLogin = !!cookieStore.get("accessToken")?.value;
 
   return (
-    <header className="fixed top-0 left-0 z-100 w-full bg-[var(--color-background)]">
-      <div className="relative mx-auto mb-4 flex w-full max-w-7xl items-center justify-between p-6">
+    <header className="fixed top-0 left-0 z-50 w-full bg-[var(--color-background)]">
+      <div className="relative mx-auto flex w-full max-w-7xl items-center justify-between p-6">
         <div className="flex items-center gap-4">
           {isLogin && (
             <div className="md:hidden">
