@@ -1,12 +1,16 @@
 "use client";
+import { ApiError } from "@/shared/api/types";
+import { meetingQueries, userMeetingQueries } from "@/shared/lib/queryKeys";
+import { useQueryClient } from "@tanstack/react-query";
 import { useRef, useState } from "react";
 import { createMeeting } from "../api";
 import { uploadImageToStorage } from "../lib/uploadImage";
 import { DagymFormData } from "./types";
 
 export function useCreateDagym(onClose: () => void) {
-  // TODO - UI에서 제출 중 버튼 비활성화/로딩 표시용으로 사용 가능 (미사용 시 제거 가능)
+  const queryClient = useQueryClient();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   // useRef 기반 락 사용으로 대체
   const submitLockRef = useRef(false);
 
@@ -36,15 +40,27 @@ export function useCreateDagym(onClose: () => void) {
         capacity: data.capacity,
       });
 
+      queryClient.invalidateQueries({ queryKey: meetingQueries.all });
+      queryClient.invalidateQueries({ queryKey: userMeetingQueries.all });
+
       onClose();
     } catch (error) {
       console.error("최종 생성 실패:", error);
-      alert("다짐 생성 중 오류가 발생했습니다.");
+      setErrorMessage(
+        error instanceof ApiError
+          ? error.message
+          : "다짐 생성 중 오류가 발생했습니다."
+      );
     } finally {
       submitLockRef.current = false;
       setIsSubmitting(false);
     }
   };
 
-  return { isSubmitting, onSubmit };
+  return {
+    isSubmitting,
+    errorMessage,
+    clearError: () => setErrorMessage(""),
+    onSubmit,
+  };
 }
