@@ -23,7 +23,7 @@ export default function FavoriteList() {
   const errorModal = useModal();
   const { user } = useUser();
   const { meetings, observerRef, toggleFavorite, toggleJoin } =
-    useFavoriteListViewModel({ userId: user?.id, onError: errorModal.open });
+    useFavoriteListViewModel({ userId: user?.id });
 
   return (
     <>

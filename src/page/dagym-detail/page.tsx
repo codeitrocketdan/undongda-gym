@@ -22,7 +22,7 @@ const DagymDetailPage = ({ id }: Props) => {
       <DagymHero dagym={dagym} id={id} />
       <DagymDescription dagym={dagym} />
       <DagymLocation dagym={dagym} />
-      <DagymReviews dagym={dagym} meetingId={id} />
+      <DagymReviews meetingId={id} />
       <DagymSuggest dagym={dagym} meetingId={id} />
     </div>
   );
