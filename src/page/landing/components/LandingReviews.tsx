@@ -1,9 +1,9 @@
 "use client";
 
 import { ReviewDTO, ReviewListResponse } from "@/features/review/types";
+import { useInView } from "@/shared/hooks/useInView";
 import Author from "@/shared/ui/author/Author";
 import Rating from "@/shared/ui/rating/Rating";
-import { useInView } from "@/shared/hooks/useInView";
 import { useQuery } from "@tanstack/react-query";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -18,6 +18,7 @@ export default function LandingReviews() {
         size: "50",
       });
       const res = await fetch(`${API_URL}/reviews?${params}`);
+      if (!res.ok) return { data: [] };
       return res.json();
     },
   });
@@ -36,7 +37,7 @@ export default function LandingReviews() {
       }`}
     >
       <div className="mb-13 text-center">
-        <span className="text-sm-bold mb-3 inline-block text-blue-600">
+        <span className="text-sm-bold mb-3 inline-block text-blue-700">
           생생 후기
         </span>
         <h2 className="text-2xl-bold md:text-3xl-bold mb-3 text-gray-900">
@@ -72,11 +73,11 @@ export default function LandingReviews() {
       `}</style>
 
       <div className="carousel-wrapper flex justify-center gap-5 overflow-hidden">
-        <div className="carousel-container flex gap-5 shrink-0">
+        <div className="carousel-container flex shrink-0 gap-5">
           {duplicatedReviews.map((review: ReviewDTO, index: number) => (
             <div
               key={`${review.id}-${index}`}
-              className="flex w-85 shrink-0 flex-col items-center justify-center gap-3.5 rounded-2xl border border-gray-100 bg-white p-6 shadow-sm text-center"
+              className="flex w-85 shrink-0 flex-col items-center justify-center gap-3.5 rounded-2xl border border-gray-100 bg-white p-6 text-center shadow-sm"
             >
               <Rating score={review.score} size={16} />
               <Author name={review.user.name} image={review.user.image} />
