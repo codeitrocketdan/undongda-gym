@@ -171,7 +171,7 @@ export default function ReviewModal(props: ReviewModalProps) {
               variant="secondary"
               onClick={() => {
                 onClose();
-                router.push(`/meetings/${props.review.meetingId}`);
+                router.push(`/dagym-detail/${props.review.meetingId}`);
               }}
               className="flex-1"
             >

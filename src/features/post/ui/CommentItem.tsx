@@ -5,6 +5,7 @@ import { formatRelativeDate } from "@/shared/lib/formatDate";
 import Author from "@/shared/ui/author/Author";
 import Button from "@/shared/ui/button/Button";
 import Dropdown from "@/shared/ui/dropdown/Dropdown";
+import { ProfileModal, useProfileModal } from "@/shared/ui/modal";
 import { MoreHorizontal } from "lucide-react";
 import { useState } from "react";
 
@@ -23,6 +24,7 @@ export default function CommentItem({
 }: CommentItemProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState(comment.content);
+  const profileModal = useProfileModal();
 
   const handleSave = () => {
     if (!editValue.trim()) return;
@@ -49,6 +51,7 @@ export default function CommentItem({
             name={comment.author.name}
             image={comment.author.image}
             className="font-semibold"
+            onClick={() => profileModal.open(comment.author.id)}
           />
           <span className="text-xs text-slate-500">
             {formatRelativeDate(comment.createdAt)}
@@ -88,13 +91,26 @@ export default function CommentItem({
             >
               취소
             </Button>
-            <Button size="sm" className="w-auto" onClick={handleSave} isDisabled={!editValue.trim()}>
+            <Button
+              size="sm"
+              className="w-auto"
+              onClick={handleSave}
+              isDisabled={!editValue.trim()}
+            >
               수정
             </Button>
           </div>
         </div>
       ) : (
         <p className="text-sm text-slate-700 md:text-base">{comment.content}</p>
+      )}
+
+      {profileModal.isOpen && profileModal.userId !== null && (
+        <ProfileModal
+          mode="read"
+          userId={profileModal.userId}
+          onClose={profileModal.close}
+        />
       )}
     </div>
   );

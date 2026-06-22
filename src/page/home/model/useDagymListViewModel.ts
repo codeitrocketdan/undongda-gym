@@ -13,7 +13,7 @@ import { meetingQueries } from "@/shared/lib/queryKeys";
 export function useDagymListViewModel() {
   const { selectedCategory, date, region, sortBy, sortOrder } =
     useListQueryParams();
-  const typeList = useMeetingTypeList();
+  const { typeList, isReady } = useMeetingTypeList();
 
   const { toggleFavorite } = useFavorite();
   const { toggleJoin } = useJoinMeeting();
@@ -42,9 +42,10 @@ export function useDagymListViewModel() {
     (m) => !m.registrationEnd || new Date(m.registrationEnd) >= now
   );
 
-  const meetings = selectedCategory
-    ? activeMeetings
-    : activeMeetings.filter((m) => typeList.includes(m.type));
+  const meetings =
+    selectedCategory || !isReady
+      ? activeMeetings
+      : activeMeetings.filter((m) => typeList.includes(m.type));
 
   return { meetings, observerRef, toggleFavorite, toggleJoin, isError };
 }
