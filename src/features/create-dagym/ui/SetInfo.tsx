@@ -9,12 +9,16 @@ import { useKakaoMap } from "../lib/useKakaoMap";
 import { useKakaoPostcode } from "../lib/useKaKaoPostcode";
 import UploadImage from "./UploadImage";
 
-export default function SetInfo() {
+interface SetInfoProps {
+  imagePreview: string | null;
+}
+
+export default function SetInfo({ imagePreview }: SetInfoProps) {
   const { register, setValue, watch } = useFormContext();
   const currentRegion = watch("region") || "default";
   const currentAddress = watch("address");
 
-  const { onScriptLoad } = useKakaoMap();
+  const { onScriptLoad } = useKakaoMap(currentRegion === "지점 외 장소");
 
   const handleRegionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const region = e.target.value;
@@ -53,7 +57,7 @@ export default function SetInfo() {
       <Script
         src={`https://dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_MAP_JS_KEY}&libraries=services&autoload=false`}
         strategy="afterInteractive"
-        onLoad={onScriptLoad}
+        onReady={onScriptLoad}
       />
 
       <InputField label="다짐 이름" htmlFor="dagymName">
@@ -127,7 +131,7 @@ export default function SetInfo() {
         </>
       )}
       <InputField label="이미지" htmlFor="dagymImage">
-        <UploadImage />
+        <UploadImage imagePreview={imagePreview} />
       </InputField>
 
       {isPostcodeOpen && (
