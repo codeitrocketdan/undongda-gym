@@ -28,9 +28,6 @@ export const useSignupForm = () => {
     try {
       await signup(signupData);
       modal.open();
-      await queryClient.invalidateQueries({
-        queryKey: ["user"],
-      });
     } catch (error) {
       if (error instanceof ApiError) {
         if (error.status === 409) {

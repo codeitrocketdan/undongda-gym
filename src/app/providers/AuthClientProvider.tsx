@@ -26,7 +26,7 @@ export default function AuthClientProvider({
   hasToken: boolean;
 }) {
   const { user, isLoading, isError, isAuthenticated } = useUserQuery(hasToken);
-  console.log(user, "유저");
+
   return (
     <AuthContext.Provider value={{ user, isLoading, isError, isAuthenticated }}>
       {children}
