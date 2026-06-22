@@ -1,0 +1,76 @@
+"use client";
+
+import UnderlineTabs from "@/shared/ui/tab/UnderlineTabs";
+import { parseAsString, useQueryState } from "nuqs";
+
+import MyCreatedDagymSection from "@/features/my-page/ui/MyCreatedDagymSection";
+import MyDagymSection from "@/features/my-page/ui/MyDagymSection";
+import MyPageCardSkeleton from "@/features/my-page/ui/MyPageCardSkeleton";
+import MyReviewSection from "@/features/my-page/ui/MyReviewSection";
+import AsyncBoundary from "@/shared/ui/AsyncBoundary";
+
+const TABS = [
+  { id: 0, name: "나의 다짐" },
+  { id: 1, name: "나의 리뷰" },
+  { id: 2, name: "내가 만든 다짐" },
+];
+const Test = () => {
+  const [activeTab, setActiveTab] = useQueryState(
+    "myTab",
+    parseAsString.withDefault(TABS[0].name)
+  );
+  const validTab = TABS.some((t) => t.name === activeTab)
+    ? activeTab
+    : TABS[0].name;
+  return (
+    <div className="lg:w-4/5">
+      <div className="mb-11">
+        <UnderlineTabs
+          tabs={TABS}
+          defaultValue={activeTab}
+          onChange={setActiveTab}
+        />
+      </div>
+      {validTab === "나의 다짐" && (
+        <AsyncBoundary
+          fallback={<MyDagymSkeleton />}
+          errorFallback={<ListError />}
+        >
+          <MyDagymSection />
+        </AsyncBoundary>
+      )}
+      {validTab === "나의 리뷰" && (
+        <AsyncBoundary
+          fallback={<MyDagymSkeleton />}
+          errorFallback={<ListError />}
+        >
+          <MyReviewSection />
+        </AsyncBoundary>
+      )}
+      {validTab === "내가 만든 다짐" && (
+        <AsyncBoundary
+          fallback={<MyDagymSkeleton />}
+          errorFallback={<ListError />}
+        >
+          <MyCreatedDagymSection />
+        </AsyncBoundary>
+      )}
+    </div>
+  );
+};
+
+export default Test;
+
+const MyDagymSkeleton = () => (
+  <div className="flex flex-col gap-4 lg:gap-6">
+    {Array.from({ length: 3 }).map((_, i) => (
+      <MyPageCardSkeleton key={i} />
+    ))}
+  </div>
+);
+
+const ListError = () => (
+  <p className="py-20 text-center text-sm text-slate-400">
+    불러오는 중 문제가 발생했어요
+  </p>
+);

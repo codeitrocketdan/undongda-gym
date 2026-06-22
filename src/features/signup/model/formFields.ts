@@ -1,15 +1,15 @@
 export const FORM_FIELDS = [
   {
     name: "name",
-    label: "이름",
+    label: "닉네임",
     type: "text",
-    placeholder: "이름을 입력해주세요",
+    placeholder: "닉네임을 입력해주세요",
   },
   {
     name: "email",
-    label: "아이디",
+    label: "이메일",
     type: "email",
-    placeholder: "아이디를 입력해주세요",
+    placeholder: "이메일을 입력해주세요",
   },
   {
     name: "password",
