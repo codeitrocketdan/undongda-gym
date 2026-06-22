@@ -75,12 +75,6 @@ export default function CreateDagymForm({ onClose }: useModalTypeProps) {
     if (step === DAGYM_STEP.DATE) return !currentDateTime || !currentCapacity;
     return false;
   };
-  console.log("currentTitle", currentTitle);
-  console.log("currentAttachedImage", currentAttachedImage);
-  console.log("currentRegion", currentRegion);
-  console.log("currentAddress", currentAddress);
-  console.log("currentLatitude", currentLatitude);
-  console.log("currentLongitude", currentLongitude);
 
   const handleNext = () => {
     if (step < TOTAL_STEPS) setStep((prev) => prev + 1);
