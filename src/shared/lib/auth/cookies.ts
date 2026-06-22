@@ -23,7 +23,7 @@ export const setAuthCookies = async (
 
   cookieStore.set("accessToken", accessToken, {
     ...COOKIE_OPTIONS,
-    maxAge: 1000 * 60 * 15,
+    maxAge: 60 * 15,
   });
   if (refreshToken !== null) {
     cookieStore.set("refreshToken", refreshToken, {
