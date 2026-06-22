@@ -124,7 +124,11 @@ export default function DagymHero({ id, dagym }: PropsType) {
                   />
 
                   {isHost && (
-                    <Crown size={30} color="#00C3FF" className="mb-2.5" />
+                    <Crown
+                      size={30}
+                      color="#00C3FF"
+                      className="mb-2.5 shrink-0"
+                    />
                   )}
                 </div>
 
