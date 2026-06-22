@@ -1,4 +1,6 @@
 "use client";
+import { ADMIN_EMAIL } from "@/shared/config/admin";
+import { useUser } from "@/shared/hooks/useUser";
 import { useRouter } from "next/navigation";
 import { Dispatch, SetStateAction } from "react";
 
@@ -9,6 +11,9 @@ interface Props {
 
 export default function ProfileMenu({ onLogout, setIsOpen }: Props) {
   const router = useRouter();
+  const { user } = useUser();
+  const isAdmin = user?.email === ADMIN_EMAIL;
+
   return (
     <div className="absolute top-full right-0 z-50 mt-2 w-40 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg">
       <button
@@ -20,6 +25,18 @@ export default function ProfileMenu({ onLogout, setIsOpen }: Props) {
       >
         마이페이지
       </button>
+
+      {isAdmin && (
+        <button
+          onClick={() => {
+            setIsOpen(false);
+            router.push("/admin");
+          }}
+          className="w-full px-4 py-3 text-left text-sm hover:bg-gray-50"
+        >
+          관리자 페이지
+        </button>
+      )}
 
       <button
         onClick={onLogout}
