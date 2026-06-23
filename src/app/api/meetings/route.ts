@@ -1,5 +1,5 @@
-import { serverFetcher } from "@/shared/api/serverFetcher";
 import { apiError } from "@/shared/api/apiError";
+import { serverFetcher } from "@/shared/api/serverFetcher";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {

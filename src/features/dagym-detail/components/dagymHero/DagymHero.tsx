@@ -31,7 +31,7 @@ export default function DagymHero({ id, dagym }: PropsType) {
   const { user } = useAuth();
   const editModal = useModal();
   const deleteModal = useModal();
-  console.log(dagym);
+
   const deleteMutation = useDeleteDagymMutation(id);
   const methods = useForm<DagymUpdateForm>({
     defaultValues: {

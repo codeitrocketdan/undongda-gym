@@ -5,14 +5,12 @@ import { useQuery } from "@tanstack/react-query";
 import { MeetingListResponse } from "../model/types";
 import { dagymQueries } from "./queries";
 
-export const useDagymSuggestQuery = (region: string) => {
+export const useDagymSuggestQuery = () => {
   return useQuery({
-    queryKey: dagymQueries.suggest(region),
+    queryKey: dagymQueries.suggests(),
 
     queryFn: async () => {
-      return clientFetcher.get<MeetingListResponse>(
-        `/api/meetings?region=${region}&size=6`
-      );
+      return clientFetcher.get<MeetingListResponse>(`/api/meetings?size=100`);
     },
   });
 };

@@ -89,6 +89,7 @@ export interface Meeting {
   region: string;
   image: string;
   dateTime: string;
+  registrationEnd: string;
 }
 
 export interface Review {

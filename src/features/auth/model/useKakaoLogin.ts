@@ -32,7 +32,6 @@ export const useKakaoLogin = () => {
         });
 
         const data = await response.json();
-        console.log(data);
 
         if (!response.ok) {
           throw new Error(data.message || "카카오 로그인에 실패했습니다.");
