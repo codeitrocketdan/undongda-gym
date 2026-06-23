@@ -5,15 +5,18 @@ import { useEffect } from "react";
 import { PostDetailDTO } from "../types";
 import { PostFormData } from "../ui/PostForm";
 
-export function usePostDetail(postId: string, { onError }: { onError?: () => void } = {}) {
+export function usePostDetail(
+  postId: string,
+  { onError }: { onError?: (error: unknown) => void } = {}
+) {
   const query = useQuery<PostDetailDTO>({
     queryKey: postQueries.detail(postId),
     queryFn: () => clientFetcher.get<PostDetailDTO>(`/api/posts/${postId}`),
   });
 
   useEffect(() => {
-    if (query.isError) onError?.();
-  }, [query.isError, onError]);
+    if (query.isError) onError?.(query.error);
+  }, [query.isError, query.error, onError]);
 
   return query;
 }

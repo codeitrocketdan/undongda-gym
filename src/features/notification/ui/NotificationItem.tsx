@@ -124,6 +124,7 @@ export default function NotificationItem({
           e.stopPropagation();
           onDelete(notification.id);
         }}
+        onKeyDown={(e) => e.stopPropagation()}
       >
         <X size={14} />
       </button>
@@ -136,7 +137,7 @@ function getHref(notification: EnrichedNotification): string | null {
     return `/post/${notification.data.postId}`;
   }
   if (notification.type !== "COMMENT" && notification.data.meetingId) {
-    return `/meetings/${notification.data.meetingId}`;
+    return `/dagym-detail/${notification.data.meetingId}`;
   }
   return null;
 }
