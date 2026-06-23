@@ -24,18 +24,24 @@ export function ReviewListSkeleton() {
 export default function ReviewList() {
   const detailModal = useModal();
   const [selectedReview, setSelectedReview] = useState<ReviewDTO | null>(null);
-  const { reviews, observerRef } = useReviewListViewModel();
+  const { reviews, observerRef, isEmpty } = useReviewListViewModel();
 
   return (
     <>
       <div className="mt-6 flex flex-col gap-4 rounded-2xl bg-white px-6 py-4 md:gap-8 md:rounded-4xl md:p-8">
         {reviews.length === 0 ? (
-          <div className="flex flex-col items-center gap-4 py-20">
-            <Image src={emptyImage} alt="리뷰 없음" className="h-50 w-50" />
-            <p className="text-center text-sm text-slate-400">
-              아직 리뷰가 없어요 <br /> 다짐에 참여하고 첫 리뷰를 남겨보세요!
-            </p>
-          </div>
+          isEmpty ? (
+            <div className="flex flex-col items-center gap-4 py-20">
+              <Image src={emptyImage} alt="리뷰 없음" className="h-50 w-50" />
+              <p className="text-center text-sm text-slate-400">
+                아직 리뷰가 없어요 <br /> 다짐에 참여하고 첫 리뷰를 남겨보세요!
+              </p>
+            </div>
+          ) : (
+            Array.from({ length: 5 }).map((_, i) => (
+              <ReviewCardSkeleton key={i} />
+            ))
+          )
         ) : (
           reviews.map((review: ReviewDTO) => (
             <button

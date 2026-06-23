@@ -22,6 +22,8 @@ export function useFavoriteListViewModel({ userId }: { userId?: number } = {}) {
     items: favoriteItems,
     observerRef,
     isError,
+    hasNextPage,
+    isFetching,
   } = useSuspenseInfiniteList({
     queryKey: favoriteQueries.list({
       type: selectedCategory || undefined,
@@ -44,5 +46,7 @@ export function useFavoriteListViewModel({ userId }: { userId?: number } = {}) {
       ? allMeetings
       : allMeetings.filter((m) => typeList.includes(m.type));
 
-  return { meetings, observerRef, toggleFavorite, toggleJoin, isError };
+  const isEmpty = meetings.length === 0 && isReady && !hasNextPage && !isFetching;
+
+  return { meetings, observerRef, toggleFavorite, toggleJoin, isError, isEmpty };
 }

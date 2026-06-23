@@ -80,11 +80,14 @@ export function useDagymListViewModel() {
     isFetching,
   });
 
+  const isEmpty = meetings.length === 0 && isReady && !hasNextPage && !isFetching;
+
   return {
     meetings: meetings.slice(0, displayCount),
     observerRef,
     toggleFavorite,
     toggleJoin,
     isError,
+    isEmpty,
   };
 }
