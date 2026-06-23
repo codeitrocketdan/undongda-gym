@@ -1,7 +1,7 @@
 "use client";
 
 import Button from "@/shared/ui/button/Button";
-import { Modal } from "@/shared/ui/modal";
+import { Modal, useModal } from "@/shared/ui/modal";
 import { parseAsString, useQueryState } from "nuqs";
 import { useFormContext } from "react-hook-form";
 import { twMerge } from "tailwind-merge";
@@ -28,6 +28,7 @@ export default function DagymUpdateModal({ id, onClose }: PropsType) {
     "tab",
     parseAsString.withDefault("기본 정보")
   );
+  const successModal = useModal();
   const {
     handleSubmit,
     formState: { isDirty },
@@ -61,8 +62,7 @@ export default function DagymUpdateModal({ id, onClose }: PropsType) {
 
       updateMutation.mutate(finalPayload, {
         onSuccess: () => {
-          onClose();
-          alert("수정이 완료되었습니다.");
+          successModal.open();
         },
       });
     } catch (error) {
@@ -72,51 +72,73 @@ export default function DagymUpdateModal({ id, onClose }: PropsType) {
   };
 
   return (
-    <Modal onClose={onClose}>
-      <Modal.Header className="mb-6 flex-row justify-between">
-        <p className="text-lg-bold">다짐 수정하기</p>
-        <Modal.CloseButton />
-      </Modal.Header>
+    <>
+      <Modal onClose={onClose}>
+        <Modal.Header className="mb-6 flex-row justify-between">
+          <p className="text-lg-bold">다짐 수정하기</p>
+          <Modal.CloseButton />
+        </Modal.Header>
 
-      <Modal.Body>
-        <div className="mb-12 flex w-full border-b-2 border-slate-200">
-          {TABS.map((tab) => (
-            <button
-              key={tab.id}
-              type="button"
-              onClick={() => setActiveTab(tab.name)}
-              className={twMerge(
-                "-mb-0.5 w-1/2 flex-1 cursor-pointer border-b-2 px-8 py-2",
-                activeTab === tab.name
-                  ? "border-blue-500 text-blue-600"
-                  : "border-transparent"
-              )}
+        <Modal.Body>
+          <div className="mb-12 flex w-full border-b-2 border-slate-200">
+            {TABS.map((tab) => (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setActiveTab(tab.name)}
+                className={twMerge(
+                  "-mb-0.5 w-1/2 flex-1 cursor-pointer border-b-2 px-8 py-2",
+                  activeTab === tab.name
+                    ? "border-blue-500 text-blue-600"
+                    : "border-transparent"
+                )}
+              >
+                <p className="text-xl-semibold">{tab.name}</p>
+              </button>
+            ))}
+          </div>
+
+          <form id="meeting-multi-step-form" onSubmit={handleSubmit(onSubmit)}>
+            {activeTab === "기본 정보" && <DagymBasicInfo />}
+            {activeTab === "일정 및 인원" && <DagymScheduleInfo />}
+          </form>
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Button variant="tertiary" onClick={onClose}>
+            취소
+          </Button>
+
+          <Button
+            type="submit"
+            form="meeting-multi-step-form"
+            variant="primary"
+            isDisabled={updateMutation.isPending || !isDirty}
+          >
+            {updateMutation.isPending ? "수정 중..." : "수정하기"}
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      {successModal.isOpen && (
+        <Modal onClose={successModal.close}>
+          <Modal.Body>
+            <p className="text-xl-semibold text-center">
+              수정이 완료되었습니다
+            </p>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button
+              variant="primary"
+              onClick={() => {
+                successModal.close();
+                onClose();
+              }}
             >
-              <p className="text-xl-semibold">{tab.name}</p>
-            </button>
-          ))}
-        </div>
-
-        <form id="meeting-multi-step-form" onSubmit={handleSubmit(onSubmit)}>
-          {activeTab === "기본 정보" && <DagymBasicInfo />}
-          {activeTab === "일정 및 인원" && <DagymScheduleInfo />}
-        </form>
-      </Modal.Body>
-
-      <Modal.Footer>
-        <Button variant="tertiary" onClick={onClose}>
-          취소
-        </Button>
-
-        <Button
-          type="submit"
-          form="meeting-multi-step-form"
-          variant="primary"
-          isDisabled={updateMutation.isPending || !isDirty}
-        >
-          {updateMutation.isPending ? "수정 중..." : "수정하기"}
-        </Button>
-      </Modal.Footer>
-    </Modal>
+              확인
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      )}
+    </>
   );
 }
