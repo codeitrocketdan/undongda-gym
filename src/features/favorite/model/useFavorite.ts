@@ -9,6 +9,7 @@ import {
   userMeetingQueries,
 } from "@/shared/lib/queryKeys";
 import { dagymQueries } from "@/features/dagym-detail/api/queries";
+import { patchMeetingListCaches } from "@/features/dagym/lib/patchMeetingListCaches";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export function useFavorite() {
@@ -21,24 +22,44 @@ export function useFavorite() {
     queryClient.invalidateQueries({ queryKey: dagymQueries.all });
   };
 
+  // 목록 캐시(홈/찜/내 다짐)를 즉시 고쳐서 버튼을 누르는 즉시 화면에 반영하고,
+  // 서버 응답이 오면 onSettled에서 백그라운드로 정합성을 다시 맞춘다.
   const { mutate: add } = useMutation({
     mutationFn: (id: number) =>
       clientFetcher.post(`/api/meetings/${id}/favorites`),
-    onSuccess: () => {
-      invalidateAll();
+    onMutate: (id) => {
       incrementFavoritesCount();
+      const restore = patchMeetingListCaches(queryClient, id, (meeting) => ({
+        ...meeting,
+        isFavorited: true,
+      }));
+      return { restore };
     },
-    onError: (error) => console.error("찜 추가 실패:", error),
+    onError: (error, _id, context) => {
+      console.error("찜 추가 실패:", error);
+      decrementFavoritesCount();
+      context?.restore();
+    },
+    onSettled: invalidateAll,
   });
 
   const { mutate: remove } = useMutation({
     mutationFn: (id: number) =>
       clientFetcher.delete(`/api/meetings/${id}/favorites`),
-    onSuccess: () => {
-      invalidateAll();
+    onMutate: (id) => {
       decrementFavoritesCount();
+      const restore = patchMeetingListCaches(queryClient, id, (meeting) => ({
+        ...meeting,
+        isFavorited: false,
+      }));
+      return { restore };
     },
-    onError: (error) => console.error("찜 취소 실패:", error),
+    onError: (error, _id, context) => {
+      console.error("찜 취소 실패:", error);
+      incrementFavoritesCount();
+      context?.restore();
+    },
+    onSettled: invalidateAll,
   });
 
   const toggleFavorite = (id: number, isFavorited: boolean) => {

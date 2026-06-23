@@ -9,6 +9,9 @@ import {
 import { useJoinMeeting } from "./useJoinMeeting";
 
 const mockInvalidateQueries = jest.fn();
+const mockGetQueriesData = jest.fn(() => []);
+const mockSetQueriesData = jest.fn();
+const mockSetQueryData = jest.fn();
 
 jest.mock("@tanstack/react-query", () => ({
   ...jest.requireActual("@tanstack/react-query"),
@@ -28,15 +31,21 @@ const mockUseMutation = useMutation as jest.Mock;
 
 beforeEach(() => {
   jest.clearAllMocks();
+  mockGetQueriesData.mockReturnValue([]);
 
   mockUseQueryClient.mockReturnValue({
     invalidateQueries: mockInvalidateQueries,
+    getQueriesData: mockGetQueriesData,
+    setQueriesData: mockSetQueriesData,
+    setQueryData: mockSetQueryData,
   });
 
-  mockUseMutation.mockImplementation(({ mutationFn, onSuccess }) => ({
+  // 실제 useMutation 흐름(낙관적 업데이트 → 요청 → 정합성 재확인)을 흉내 낸다
+  mockUseMutation.mockImplementation(({ mutationFn, onMutate, onSettled }) => ({
     mutate: (args: unknown) => {
+      const context = onMutate?.(args);
       mutationFn(args);
-      onSuccess?.();
+      onSettled?.(undefined, null, args, context);
     },
   }));
 });
@@ -76,6 +85,25 @@ describe("useJoinMeeting", () => {
         queryKey: userMeetingQueries.all,
       });
       expect(mockInvalidateQueries).toHaveBeenCalledTimes(3);
+    });
+
+    it("요청 완료를 기다리지 않고 목록 캐시를 즉시 패치한다", () => {
+      const { result } = renderHook(() => useJoinMeeting());
+
+      act(() => result.current.toggleJoin(5, false));
+
+      expect(mockSetQueriesData).toHaveBeenCalledWith(
+        { queryKey: meetingQueries.all },
+        expect.any(Function)
+      );
+      expect(mockSetQueriesData).toHaveBeenCalledWith(
+        { queryKey: favoriteQueries.all },
+        expect.any(Function)
+      );
+      expect(mockSetQueriesData).toHaveBeenCalledWith(
+        { queryKey: userMeetingQueries.all },
+        expect.any(Function)
+      );
     });
   });
 });
