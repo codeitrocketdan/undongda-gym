@@ -17,7 +17,7 @@ function renderModal(onClose: jest.Mock, isClickToClose?: boolean) {
   const buttons = screen.getAllByRole("button");
   return {
     closeBtn: buttons[0], // X 버튼 (첫 번째 focusable)
-    cancelBtn: buttons[1], // 취소 버튼
+    cancelBtn: buttons[1], // 취소 버 튼
     confirmBtn: buttons[2], // 확인 버튼 (마지막 focusable)
     trapContainer: buttons[0].closest('[tabindex="-1"]') as HTMLElement,
     backgroundDiv: document.querySelector(".bg-close") as HTMLElement,
