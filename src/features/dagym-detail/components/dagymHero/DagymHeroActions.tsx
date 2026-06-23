@@ -3,6 +3,8 @@
 import Button from "@/shared/ui/button/Button";
 import { HeartButton } from "@/shared/ui/heart-button/HeartButton";
 
+import { useRequireAuth } from "@/shared/hooks/useRequireAuth";
+import { LoginModal } from "@/shared/ui/modal";
 import { useFavoriteMutation } from "../../api/useFavoriteMutation";
 import { useJoinMutation } from "../../api/useJoinMutation";
 
@@ -25,6 +27,7 @@ export default function DagymHeroActions({
   capacity,
   registrationEnd,
 }: Props) {
+  const { requireAuth, loginModal } = useRequireAuth();
   const { mutate: joinMutate, isPending: joinPending } = useJoinMutation(id);
   const { mutate: favoriteMutate } = useFavoriteMutation(id);
 
@@ -32,9 +35,13 @@ export default function DagymHeroActions({
   const isRegistrationClosed =
     registrationEnd && new Date(registrationEnd) < new Date();
 
-  const handleJoinToggle = () => joinMutate(isJoined);
-  const handleFavoriteToggle = () => favoriteMutate(isFavorited);
+  const handleJoinToggle = () => {
+    requireAuth(() => joinMutate(isJoined));
+  };
 
+  const handleFavoriteToggle = () => {
+    requireAuth(() => favoriteMutate(isFavorited));
+  };
   const handleShare = async () => {
     try {
       await navigator.clipboard.writeText(window.location.href);
@@ -113,6 +120,7 @@ export default function DagymHeroActions({
         onClick={handleFavoriteToggle}
       />
       {renderActionButton()}
+      {loginModal.isOpen && <LoginModal onClose={loginModal.close} />}
     </div>
   );
 }
