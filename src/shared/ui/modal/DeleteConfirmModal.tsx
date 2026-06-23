@@ -28,7 +28,7 @@ export default function DeleteConfirmModal({
   };
 
   return (
-    <Modal onClose={handleClose} isClickToClose>
+    <Modal onClose={handleClose} isClickToClose size="sm">
       <Modal.Header>
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-bold text-gray-900">{title}</h2>

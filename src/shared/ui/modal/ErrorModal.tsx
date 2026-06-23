@@ -13,7 +13,7 @@ export default function ErrorModal({
   message = "잠시 후 다시 시도해 주세요.",
 }: Props) {
   return (
-    <Modal onClose={onClose} isClickToClose>
+    <Modal onClose={onClose} isClickToClose size="sm">
       <Modal.Header className="flex-row justify-end">
         <Modal.CloseButton />
       </Modal.Header>

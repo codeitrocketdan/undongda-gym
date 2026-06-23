@@ -17,13 +17,13 @@ export default function LoginModal({ onClose }: Props) {
   };
 
   return (
-    <Modal onClose={onClose} isClickToClose>
+    <Modal onClose={onClose} isClickToClose size="sm">
       <Modal.Header className="flex-row justify-end">
         <Modal.CloseButton />
       </Modal.Header>
       <Modal.Body>
         <div className="py-1 text-center">
-          <p className="text-2xl font-semibold text-slate-800">
+          <p className="text-xl font-semibold text-slate-800">
             로그인이 필요한 서비스입니다.
           </p>
           <p className="mt-2 text-sm text-slate-500">로그인 후 이용해주세요.</p>
@@ -33,7 +33,7 @@ export default function LoginModal({ onClose }: Props) {
         <Button variant="tertiary" onClick={onClose}>
           취소
         </Button>
-        <Button onClick={handleLogin}>로그인하러 가기</Button>
+        <Button onClick={handleLogin}>로그인하기</Button>
       </Modal.Footer>
     </Modal>
   );

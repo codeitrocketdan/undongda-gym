@@ -20,7 +20,7 @@ export default function ConfirmModal({
   onCancel,
 }: Props) {
   return (
-    <Modal onClose={onCancel} isClickToClose>
+    <Modal onClose={onCancel} isClickToClose size="sm">
       <Modal.Header className="flex-row justify-end">
         <Modal.CloseButton />
       </Modal.Header>

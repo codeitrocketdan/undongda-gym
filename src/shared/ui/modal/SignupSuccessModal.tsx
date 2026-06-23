@@ -13,7 +13,7 @@ const SignupSuccessModal = ({ onClose }: Props) => {
     router.refresh();
   };
   return (
-    <Modal onClose={onClose} isClickToClose>
+    <Modal onClose={onClose} isClickToClose size="sm">
       <Modal.Header className="flex-row justify-end">
         <Modal.CloseButton />
       </Modal.Header>
