@@ -19,7 +19,7 @@ export default function ErrorModal({
       </Modal.Header>
       <Modal.Body>
         <div className="py-1 text-center">
-          <p className="text-2xl font-semibold text-slate-800">
+          <p className="text-xl font-semibold text-slate-800">
             일시적인 오류가 발생했어요
           </p>
           <p className="mt-2 text-sm text-slate-500">{message}</p>

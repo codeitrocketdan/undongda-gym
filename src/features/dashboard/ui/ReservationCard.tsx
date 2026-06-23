@@ -15,6 +15,11 @@ export default function ReservationCard({ isLogin }: { isLogin: boolean }) {
   if (isLoading) return <ReservationCardSkeleton />;
   if (!nextDagym) return null;
 
+  const regionLabel =
+    nextDagym.region === "지점 외 장소"
+      ? formatRegion(nextDagym.region, nextDagym.address)
+      : `${nextDagym.region}점`;
+
   return (
     <div className="inner">
       <div
@@ -29,7 +34,7 @@ export default function ReservationCard({ isLogin }: { isLogin: boolean }) {
         </div>
         <div className="xs:flex-row xs:items-center flex flex-col items-start gap-x-2">
           <p className="flex flex-row flex-wrap items-center gap-x-2 text-lg font-black">
-            <span>{formatRegion(nextDagym.region, nextDagym.address)}</span>
+            <span>{regionLabel}</span>
             <span>
               {format(nextDagym.dateTime, DATE_FORMAT.TIME)} ~
               {format(nextDagym.dateTime, DATE_FORMAT.TIME_END)}
