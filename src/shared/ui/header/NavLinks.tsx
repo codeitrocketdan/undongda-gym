@@ -3,6 +3,7 @@
 import { useNewFavoritesCount } from "@/shared/hooks/useNewFavoritesCount";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { isNavItemActive } from "./isNavItemActive";
 import { NavItem } from "./types";
 
 interface NavLinksProps {
@@ -16,7 +17,7 @@ export default function NavLinks({ navItems }: NavLinksProps) {
   return (
     <ul className="hidden gap-2 md:flex">
       {navItems.map((item) => {
-        const isActive = pathname === item.href;
+        const isActive = isNavItemActive(pathname, item.href);
 
         return (
           <li key={item.href}>

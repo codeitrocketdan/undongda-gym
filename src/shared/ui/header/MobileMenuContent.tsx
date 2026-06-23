@@ -8,6 +8,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { twMerge } from "tailwind-merge";
 import { buttonVariants } from "../button/Button";
+import { isNavItemActive } from "./isNavItemActive";
 import { NavItem } from "./types";
 import { useLogout } from "./useLogout";
 
@@ -59,7 +60,7 @@ export function MobileMenuContent({
 
       <ul className="flex-1 overflow-y-auto px-3 py-4">
         {navItems.map((item) => {
-          const isActive = pathname === item.href;
+          const isActive = isNavItemActive(pathname, item.href);
           return (
             <li key={item.href}>
               <Link
