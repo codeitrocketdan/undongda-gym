@@ -167,7 +167,7 @@ export function useAdminMeetingsViewModel() {
 
   const [sharedMeetingId, setSharedMeetingId] = useState<number | null>(null);
   const handleShare = async (meeting: MeetingWithHostDTO) => {
-    const url = `${window.location.origin}/meetings/${meeting.id}`;
+    const url = `${window.location.origin}/dagym-detail/${meeting.id}`;
     try {
       await navigator.clipboard.writeText(url);
       setSharedMeetingId(meeting.id);
@@ -175,8 +175,9 @@ export function useAdminMeetingsViewModel() {
         () => setSharedMeetingId((prev) => (prev === meeting.id ? null : prev)),
         2000
       );
+      alert("링크가 클립보드에 복사되었습니다.");
     } catch {
-      // 클립보드 권한이 없는 환경 — 조용히 무시
+      alert("링크 복사에 실패했습니다. 주소창의 링크를 복사해주세요.");
     }
   };
 
