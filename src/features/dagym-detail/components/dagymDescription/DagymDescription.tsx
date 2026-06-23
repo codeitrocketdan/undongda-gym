@@ -15,7 +15,7 @@ const DagymDescription = ({ dagym }: Props) => {
 
   return (
     <section className="mb-20 hidden md:block">
-      <h2 className="text-2xl-semibold mb-5">모임 설명</h2>
+      <h2 className="text-2xl-semibold mb-5">다짐 설명</h2>
 
       <div className="rounded-4xl bg-white px-12 pt-4 pb-8">
         <div className="flex items-center gap-1.5">

@@ -29,11 +29,11 @@ const DagymSuggest = ({ dagym, meetingId }: PropsType) => {
         return bScore - aScore;
       })
       .slice(0, 6) ?? [];
-  console.log(meetings);
+
   if (isLoading) {
     return (
       <div className="py-10 text-center text-slate-400">
-        추천 모임 불러오는 중...
+        추천 다짐 불러오는 중...
       </div>
     );
   }
@@ -41,14 +41,14 @@ const DagymSuggest = ({ dagym, meetingId }: PropsType) => {
   if (isError || !data) {
     return (
       <div className="py-10 text-center text-red-400">
-        추천 모임을 불러오지 못했습니다.
+        추천 다짐을 불러오지 못했습니다.
       </div>
     );
   }
 
   return (
     <section className="mb-20">
-      <h2 className="text-2xl-semibold mb-5">이런 모임은 어때요?</h2>
+      <h2 className="text-2xl-semibold mb-5">이런 다짐은 어때요?</h2>
 
       <Swiper
         modules={[Grid]}

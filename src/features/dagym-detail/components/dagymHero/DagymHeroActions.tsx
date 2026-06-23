@@ -13,6 +13,7 @@ interface Props {
   isHost: boolean;
   participantCount: number;
   capacity: number;
+  registrationEnd: string;
 }
 
 export default function DagymHeroActions({
@@ -22,24 +23,86 @@ export default function DagymHeroActions({
   isHost,
   participantCount,
   capacity,
+  registrationEnd,
 }: Props) {
   const { mutate: joinMutate, isPending: joinPending } = useJoinMutation(id);
   const { mutate: favoriteMutate } = useFavoriteMutation(id);
 
   const isFull = participantCount >= capacity;
+  const isRegistrationClosed =
+    registrationEnd && new Date(registrationEnd) < new Date();
 
   const handleJoinToggle = () => joinMutate(isJoined);
   const handleFavoriteToggle = () => favoriteMutate(isFavorited);
 
   const handleShare = async () => {
-    const currentUrl = window.location.href;
-
     try {
-      await navigator.clipboard.writeText(currentUrl);
+      await navigator.clipboard.writeText(window.location.href);
       alert("링크가 클립보드에 복사되었습니다.");
     } catch (error) {
       alert("링크 복사에 실패했습니다. 주소창의 링크를 복사해주세요.");
     }
+  };
+
+  const renderActionButton = () => {
+    if (isHost) {
+      if (isRegistrationClosed) {
+        return (
+          <Button variant="primary" isDisabled>
+            모집 마감 (방장)
+          </Button>
+        );
+      }
+      return (
+        <Button variant="secondary" onClick={handleShare}>
+          공유하기
+        </Button>
+      );
+    }
+
+    if (isJoined) {
+      if (isRegistrationClosed) {
+        return (
+          <Button variant="primary" isDisabled>
+            모집 마감
+          </Button>
+        );
+      }
+      return (
+        <Button
+          variant="secondary"
+          onClick={handleJoinToggle}
+          isDisabled={joinPending}
+        >
+          참여 취소하기
+        </Button>
+      );
+    }
+
+    if (isRegistrationClosed) {
+      return (
+        <Button variant="primary" isDisabled>
+          모집 마감
+        </Button>
+      );
+    }
+    if (isFull) {
+      return (
+        <Button variant="primary" isDisabled>
+          정원 마감
+        </Button>
+      );
+    }
+
+    return (
+      <Button
+        variant="primary"
+        onClick={handleJoinToggle}
+        isDisabled={joinPending}
+      >
+        참여하기
+      </Button>
+    );
   };
 
   return (
@@ -49,44 +112,7 @@ export default function DagymHeroActions({
         isFavorited={isFavorited}
         onClick={handleFavoriteToggle}
       />
-
-      {isHost && !isFull && (
-        <Button variant="secondary" onClick={handleShare}>
-          공유하기
-        </Button>
-      )}
-
-      {isHost && isFull && (
-        <Button variant="primary" isDisabled>
-          모집 마감
-        </Button>
-      )}
-
-      {!isHost && !isJoined && !isFull && (
-        <Button
-          variant="primary"
-          onClick={handleJoinToggle}
-          isDisabled={joinPending}
-        >
-          참여하기
-        </Button>
-      )}
-
-      {!isHost && !isJoined && isFull && (
-        <Button variant="primary" isDisabled>
-          모집 마감
-        </Button>
-      )}
-
-      {!isHost && isJoined && (
-        <Button
-          variant="secondary"
-          onClick={handleJoinToggle}
-          isDisabled={joinPending}
-        >
-          참여 취소하기
-        </Button>
-      )}
+      {renderActionButton()}
     </div>
   );
 }

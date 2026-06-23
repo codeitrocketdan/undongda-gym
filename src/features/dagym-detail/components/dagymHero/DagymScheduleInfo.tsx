@@ -33,11 +33,12 @@ export default function DagymScheduleInfo() {
 
     const newDateTime = toISOStringFromLocal(newDate, currentTime);
 
-    setValue("dateTime", newDateTime);
+    setValue("dateTime", newDateTime, { shouldDirty: true });
 
     setValue(
       "registrationEnd",
-      toISOStringFromLocal(subDays(newDate, 1), "23:59")
+      toISOStringFromLocal(subDays(newDate, 1), "23:59"),
+      { shouldDirty: true }
     );
   };
 
@@ -46,7 +47,7 @@ export default function DagymScheduleInfo() {
 
     const newDateTime = toISOStringFromLocal(date, newTime);
 
-    setValue("dateTime", newDateTime);
+    setValue("dateTime", newDateTime, { shouldDirty: true });
   };
 
   return (

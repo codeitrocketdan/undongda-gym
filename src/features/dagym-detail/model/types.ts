@@ -46,7 +46,6 @@ export interface Dagym {
   name: string;
   region: string;
   address: string;
-  addressDetail: string | undefined;
   latitude: number;
   longitude: number;
 
@@ -67,8 +66,8 @@ export interface DagymUpdateForm {
   region: string;
   address: string;
   addressDetail: string;
-  latitude: number;
-  longitude: number;
+  latitude: number | null;
+  longitude: number | null;
   image: string;
   capacity: number;
   dateTime: string;

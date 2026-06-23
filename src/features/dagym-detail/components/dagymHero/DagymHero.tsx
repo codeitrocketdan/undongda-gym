@@ -1,5 +1,6 @@
 "use client";
 import { useAuth } from "@/app/providers/AuthClientProvider";
+import { splitAddress } from "@/shared/lib/address";
 import {
   formatDeadline,
   formatMonthDay,
@@ -12,7 +13,7 @@ import Tag from "@/shared/ui/tag/Tag";
 import { Crown, MapPin } from "lucide-react";
 import Image from "next/image";
 
-import { useModal } from "@/shared/ui/modal";
+import { ConfirmModal, useModal } from "@/shared/ui/modal";
 import { FormProvider, useForm } from "react-hook-form";
 import { useDeleteDagymMutation } from "../../api/useDeleteDagymMutation";
 import { Dagym, DagymUpdateForm } from "../../model/types";
@@ -28,8 +29,8 @@ interface PropsType {
 
 export default function DagymHero({ id, dagym }: PropsType) {
   const { user } = useAuth();
-  const modal = useModal();
-
+  const editModal = useModal();
+  const deleteModal = useModal();
   console.log(dagym);
   const deleteMutation = useDeleteDagymMutation(id);
   const methods = useForm<DagymUpdateForm>({
@@ -39,8 +40,8 @@ export default function DagymHero({ id, dagym }: PropsType) {
       region: "default",
       address: "",
       addressDetail: "",
-      latitude: 0,
-      longitude: 0,
+      latitude: null,
+      longitude: null,
       image: "",
       capacity: 0,
       dateTime: "",
@@ -55,14 +56,16 @@ export default function DagymHero({ id, dagym }: PropsType) {
   const isHost = user?.id === dagym.hostId;
 
   const handleEdit = () => {
+    const { address, addressDetail } = splitAddress(dagym.address ?? "");
+
     methods.reset({
       name: dagym.name,
       type: dagym.type,
       region: dagym.region,
-      address: dagym.address ?? "",
-      addressDetail: dagym?.addressDetail ?? "",
-      latitude: dagym.latitude ?? 0,
-      longitude: dagym.longitude ?? 0,
+      address,
+      addressDetail,
+      latitude: dagym.latitude ?? null,
+      longitude: dagym.longitude ?? null,
       image: dagym.image ?? "",
       capacity: dagym.capacity ?? 0,
       dateTime: dagym.dateTime ?? "",
@@ -70,17 +73,11 @@ export default function DagymHero({ id, dagym }: PropsType) {
       description: dagym.description,
     });
 
-    modal.open();
+    editModal.open();
   };
 
   const handleDelete = () => {
-    const confirmed = window.confirm("정말 모임을 삭제하시겠습니까?");
-
-    if (!confirmed) {
-      return;
-    }
-
-    deleteMutation.mutate();
+    deleteModal.open();
   };
 
   return (
@@ -124,7 +121,11 @@ export default function DagymHero({ id, dagym }: PropsType) {
                   />
 
                   {isHost && (
-                    <Crown size={30} color="#00C3FF" className="mb-2.5" />
+                    <Crown
+                      size={30}
+                      color="#00C3FF"
+                      className="mb-2.5 shrink-0"
+                    />
                   )}
                 </div>
 
@@ -144,6 +145,7 @@ export default function DagymHero({ id, dagym }: PropsType) {
                 isHost={isHost}
                 participantCount={dagym.participantCount}
                 capacity={dagym.capacity}
+                registrationEnd={dagym.registrationEnd}
               />
             </FeedCard>
 
@@ -160,15 +162,12 @@ export default function DagymHero({ id, dagym }: PropsType) {
 
                     <DagymParticipants meetingId={id} />
                   </div>
-
-                  <StatusLabel />
+                  {dagym.participantCount >= 3 && <StatusLabel />}
                 </div>
 
                 <div className="flex flex-col gap-2">
                   <div className="flex justify-between">
-                    <p className="text-sm-medium text-slate-600">
-                      최소 {dagym.participantCount}명
-                    </p>
+                    <p className="text-sm-medium text-slate-600">최소 3명</p>
 
                     <p className="text-sm-medium text-slate-600">
                       최대 {dagym.capacity}명
@@ -185,10 +184,17 @@ export default function DagymHero({ id, dagym }: PropsType) {
           </div>
         </div>
       </section>
-      {modal.isOpen && (
+      {editModal.isOpen && (
         <FormProvider {...methods}>
-          <DagymUpdateModal id={id} onClose={modal.close} />
+          <DagymUpdateModal id={id} onClose={editModal.close} />
         </FormProvider>
+      )}
+      {deleteModal.isOpen && (
+        <ConfirmModal
+          title="정말 다짐을 삭제하시겠습니까?"
+          onConfirm={() => deleteMutation.mutate()}
+          onCancel={deleteModal.close}
+        ></ConfirmModal>
       )}
     </>
   );

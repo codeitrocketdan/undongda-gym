@@ -1,4 +1,5 @@
 "use client";
+import { combineAddress } from "@/shared/lib/address";
 import { ApiError } from "@/shared/api/types";
 import { meetingQueries, userMeetingQueries } from "@/shared/lib/queryKeys";
 import { useQueryClient } from "@tanstack/react-query";
@@ -29,8 +30,7 @@ export function useCreateDagym(onClose: () => void) {
         type: data.type,
         name: data.name,
         region: data.region,
-        address: data.address,
-        addressDetail: data.addressDetail,
+        address: combineAddress(data.address, data.addressDetail),
         latitude: data.latitude ?? 37.4979,
         longitude: data.longitude ?? 127.0276,
         image: finalImageUrl,
