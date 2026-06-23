@@ -21,7 +21,7 @@ export default function ProfileMenu({ onLogout, setIsOpen }: Props) {
           setIsOpen(false);
           router.push("/mypage");
         }}
-        className="w-full px-4 py-3 text-left text-sm hover:bg-gray-50"
+        className="w-full cursor-pointer px-4 py-3 text-left text-sm hover:bg-gray-50"
       >
         마이페이지
       </button>
@@ -32,7 +32,7 @@ export default function ProfileMenu({ onLogout, setIsOpen }: Props) {
             setIsOpen(false);
             router.push("/admin");
           }}
-          className="w-full px-4 py-3 text-left text-sm hover:bg-gray-50"
+          className="w-full cursor-pointer px-4 py-3 text-left text-sm hover:bg-gray-50"
         >
           관리자 페이지
         </button>
