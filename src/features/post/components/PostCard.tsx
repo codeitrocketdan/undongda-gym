@@ -2,6 +2,7 @@ import Author from "@/shared/ui/author/Author";
 import FeedCard from "@/shared/ui/feed-card/FeedCard";
 import PostStats from "@/shared/ui/post-stats/PostStats";
 import Skeleton from "@/shared/ui/skeleton/Skeleton";
+import { Camera } from "lucide-react";
 import Link from "next/link";
 import { PostCardProps } from "../types";
 
@@ -18,10 +19,23 @@ export default function PostCard({
   return (
     <Link href={`/post/${id}`}>
       <FeedCard className="flex h-full w-full md:flex-row md:gap-8">
-        <FeedCard.Image src={image} className="hidden h-50 w-50 shrink-0 rounded-2xl md:block" />
+        <div className="relative hidden h-50 w-50 shrink-0 rounded-2xl md:block">
+          <FeedCard.Image src={image} className="h-full w-full rounded-2xl" />
+          {!image && (
+            <Camera className="absolute inset-0 m-auto h-20 w-20 text-slate-300" />
+          )}
+        </div>
         <div className="flex flex-1 flex-col border-b border-slate-200 pt-2 pb-6 md:pt-4">
-          <FeedCard.Title title={title} className="text-base-bold md:text-xl-bold mb-2" />
-          <FeedCard.Image src={image} className="mb-3 h-36 rounded-xl md:hidden" />
+          <FeedCard.Title
+            title={title}
+            className="text-base-bold md:text-xl-bold mb-2"
+          />
+          <div className="relative mb-3 h-36 rounded-xl md:hidden">
+            <FeedCard.Image src={image} className="h-full w-full rounded-xl" />
+            {!image && (
+              <Camera className="absolute inset-0 m-auto h-20 w-20 text-slate-300" />
+            )}
+          </div>
           <p className="mb-4 line-clamp-2 min-h-[2lh] text-sm md:text-lg">
             {content.replace(/<[^>]*>/g, " ").trim()}
           </p>
@@ -29,7 +43,11 @@ export default function PostCard({
             <div className="flex items-center gap-1.5 md:gap-2">
               <Author name={author.name} image={author.image} />
             </div>
-            <PostStats likeCount={likeCount} commentCount={commentCount} createdAt={createdAt} />
+            <PostStats
+              likeCount={likeCount}
+              commentCount={commentCount}
+              createdAt={createdAt}
+            />
           </div>
         </div>
       </FeedCard>
