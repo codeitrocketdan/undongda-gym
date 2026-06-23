@@ -33,5 +33,5 @@ export function useSuspenseInfiniteList<T>({
     isFetching,
   });
 
-  return { items, observerRef, isError };
+  return { items, observerRef, isError, fetchNextPage, hasNextPage, isFetching };
 }
