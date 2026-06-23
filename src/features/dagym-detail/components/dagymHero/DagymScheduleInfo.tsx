@@ -11,7 +11,7 @@ import {
   toISOStringFromLocal,
 } from "@/shared/ui/datePicker";
 
-import { subDays } from "@/shared/lib/date";
+import { calculateRegistrationEnd } from "@/shared/lib/calculateRegistrationEnd";
 
 export default function DagymScheduleInfo() {
   const { register, setValue, watch } = useFormContext();
@@ -26,28 +26,26 @@ export default function DagymScheduleInfo() {
       ).padStart(2, "0")}`
     : "";
 
+  const applyDateTime = (newDateTime: string) => {
+    setValue("dateTime", newDateTime, { shouldDirty: true });
+
+    setValue("registrationEnd", calculateRegistrationEnd(newDateTime), {
+      shouldDirty: true,
+    });
+  };
+
   const handleDateChange = (newDate?: Date) => {
     if (!newDate) return;
 
     const currentTime = time || "00:00";
 
-    const newDateTime = toISOStringFromLocal(newDate, currentTime);
-
-    setValue("dateTime", newDateTime, { shouldDirty: true });
-
-    setValue(
-      "registrationEnd",
-      toISOStringFromLocal(subDays(newDate, 1), "23:59"),
-      { shouldDirty: true }
-    );
+    applyDateTime(toISOStringFromLocal(newDate, currentTime));
   };
 
   const handleTimeChange = (newTime: string) => {
     if (!date) return;
 
-    const newDateTime = toISOStringFromLocal(date, newTime);
-
-    setValue("dateTime", newDateTime, { shouldDirty: true });
+    applyDateTime(toISOStringFromLocal(date, newTime));
   };
 
   return (

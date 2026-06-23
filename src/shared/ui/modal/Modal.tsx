@@ -2,6 +2,7 @@
 import useScrollLock from "@/shared/hooks/useScrollLock";
 import { createContext, ReactNode, useContext } from "react";
 import { createPortal } from "react-dom";
+import { twMerge } from "tailwind-merge";
 import { useMounted } from "../../hooks/useMounted";
 import { useFocusTrap } from "../../lib/useFocusTrap";
 import ModalBackground from "./Background";
@@ -10,6 +11,13 @@ import CloseButton from "./CloseButton";
 import ModalFooter from "./Footer";
 import ModalHeader from "./Header";
 
+const SIZE_CLASSES = {
+  default: "max-w-136 xs:p-12 px-6 py-8",
+  sm: "max-w-86 p-6",
+} as const;
+
+type ModalSize = keyof typeof SIZE_CLASSES;
+
 interface ModalComponent extends React.FC<ModalProps> {
   Header: typeof ModalHeader;
   Body: typeof ModalBody;
@@ -17,7 +25,10 @@ interface ModalComponent extends React.FC<ModalProps> {
   CloseButton: typeof CloseButton;
 }
 
-const ModalContext = createContext<{ onClose: () => void } | null>(null);
+const ModalContext = createContext<{
+  onClose: () => void;
+  size: ModalSize;
+} | null>(null);
 
 export const useModalContext = () => {
   const context = useContext(ModalContext);
@@ -30,9 +41,15 @@ interface ModalProps {
   children: ReactNode;
   onClose: () => void;
   isClickToClose?: boolean;
+  size?: ModalSize;
 }
 
-const Modal = ({ children, onClose, isClickToClose }: ModalProps) => {
+const Modal = ({
+  children,
+  onClose,
+  isClickToClose,
+  size = "default",
+}: ModalProps) => {
   const trapRef = useFocusTrap<HTMLDivElement>();
   const mounted = useMounted();
 
@@ -41,7 +58,7 @@ const Modal = ({ children, onClose, isClickToClose }: ModalProps) => {
   if (!mounted) return null;
 
   return createPortal(
-    <ModalContext.Provider value={{ onClose }}>
+    <ModalContext.Provider value={{ onClose, size }}>
       <ModalBackground isClickToClose={isClickToClose}>
         <div
           ref={trapRef}
@@ -50,7 +67,10 @@ const Modal = ({ children, onClose, isClickToClose }: ModalProps) => {
             if (e.key === "Escape") onClose();
           }}
           onClick={(e) => e.stopPropagation()}
-          className="xs:p-12 flex max-h-[90vh] w-full max-w-136 flex-col overflow-hidden rounded-xl bg-white px-6 py-8"
+          className={twMerge(
+            "flex max-h-[90vh] w-full flex-col overflow-hidden rounded-xl bg-white",
+            SIZE_CLASSES[size]
+          )}
         >
           {children}
         </div>

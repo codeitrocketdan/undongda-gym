@@ -3,7 +3,7 @@
 import { CAPACITY_MAX, CAPACITY_MIN } from "@/features/create-dagym/constants";
 import { useMeetingTypes } from "@/features/dagym/model/useMeetingTypes";
 import { CENTER_INFO, CENTER_KEYS } from "@/shared/constants/centers";
-import { subDays } from "@/shared/lib/date";
+import { calculateRegistrationEnd } from "@/shared/lib/calculateRegistrationEnd";
 import { parseMeetingTypeDescription } from "@/shared/lib/meetingTypeDescription";
 import { toISOStringFromLocal } from "@/shared/ui/datePicker";
 import { useState } from "react";
@@ -99,6 +99,8 @@ export function useMeetingFormFields(initial?: MeetingFormInitialValues) {
     if (!isValid || !date) return null;
 
     const center = CENTER_INFO[region];
+    const dateTime = toISOStringFromLocal(date, time);
+    const registrationEnd = calculateRegistrationEnd(dateTime);
 
     return {
       type,
@@ -109,8 +111,8 @@ export function useMeetingFormFields(initial?: MeetingFormInitialValues) {
       longitude: center?.longitude ?? 127.0276,
       image: image.trim(),
       description: description.trim(),
-      dateTime: toISOStringFromLocal(date, time),
-      registrationEnd: toISOStringFromLocal(subDays(date, 1), "23:59"),
+      dateTime,
+      registrationEnd,
       capacity,
     };
   };

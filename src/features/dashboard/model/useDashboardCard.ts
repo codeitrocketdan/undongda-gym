@@ -14,11 +14,16 @@ export function calculateTotalHours(meetings: Dagym[]): number {
 }
 
 export function calculateStreak(meetings: Dagym[]): number {
-  const uniqueDates = new Set(meetings.map((m) => format(new Date(m.dateTime))));
+  const now = new Date();
+  const thisMonthMeetings = meetings.filter((meeting) =>
+    isSameMonth(new Date(meeting.dateTime), now)
+  );
+  const uniqueDates = new Set(
+    thisMonthMeetings.map((m) => format(new Date(m.dateTime)))
+  );
 
   if (uniqueDates.size === 0) return 0;
 
-  const now = new Date();
   const todayStr = format(now);
 
   let currentCheck = uniqueDates.has(todayStr) ? now : subDays(now, 1);

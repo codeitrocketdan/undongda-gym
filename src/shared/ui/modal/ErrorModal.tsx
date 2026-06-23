@@ -13,13 +13,13 @@ export default function ErrorModal({
   message = "잠시 후 다시 시도해 주세요.",
 }: Props) {
   return (
-    <Modal onClose={onClose} isClickToClose>
+    <Modal onClose={onClose} isClickToClose size="sm">
       <Modal.Header className="flex-row justify-end">
         <Modal.CloseButton />
       </Modal.Header>
       <Modal.Body>
         <div className="py-1 text-center">
-          <p className="text-2xl font-semibold text-slate-800">
+          <p className="text-xl font-semibold text-slate-800">
             일시적인 오류가 발생했어요
           </p>
           <p className="mt-2 text-sm text-slate-500">{message}</p>

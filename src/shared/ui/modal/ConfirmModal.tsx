@@ -20,13 +20,13 @@ export default function ConfirmModal({
   onCancel,
 }: Props) {
   return (
-    <Modal onClose={onCancel} isClickToClose>
+    <Modal onClose={onCancel} isClickToClose size="sm">
       <Modal.Header className="flex-row justify-end">
         <Modal.CloseButton />
       </Modal.Header>
       <Modal.Body>
         <div className="py-1 text-center">
-          <p className="text-2xl font-semibold text-slate-800">{title}</p>
+          <p className="text-xl font-semibold text-slate-800">{title}</p>
           {description && (
             <p className="mt-2 text-sm text-slate-500">{description}</p>
           )}

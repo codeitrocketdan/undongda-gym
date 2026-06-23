@@ -47,7 +47,9 @@ export default function AdminSidebar({ isOpen, onToggle }: AdminSidebarProps) {
       >
         {isOpen ? (
           <>
-            <Image src={logo} alt="운동다짐" className="w-25 object-cover" />
+            <Link href="/">
+              <Image src={logo} alt="운동다짐" className="w-25 object-cover" />
+            </Link>
             <button
               type="button"
               onClick={onToggle}

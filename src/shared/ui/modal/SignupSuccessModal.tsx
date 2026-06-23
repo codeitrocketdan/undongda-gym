@@ -13,12 +13,12 @@ const SignupSuccessModal = ({ onClose }: Props) => {
     router.refresh();
   };
   return (
-    <Modal onClose={onClose} isClickToClose>
+    <Modal onClose={onClose} isClickToClose size="sm">
       <Modal.Header className="flex-row justify-end">
         <Modal.CloseButton />
       </Modal.Header>
       <main className="py-1 text-center">
-        <p className="text-2xl font-semibold text-slate-800">
+        <p className="text-xl font-semibold text-slate-800">
           회원가입이 완료되었습니다.
         </p>
       </main>

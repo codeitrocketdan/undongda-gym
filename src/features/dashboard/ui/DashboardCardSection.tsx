@@ -14,7 +14,8 @@ export default function DashboardCardSection({
   isLogin: boolean;
 }) {
   const { data: completedMeetings = [], isLoading } = useJoinedMeetings(isLogin, {
-    select: (res) => res.data.filter((dagym) => dagym.isCompleted),
+    select: (res) =>
+      res.data.filter((dagym) => dagym.isCompleted && !!dagym.confirmedAt),
   });
 
   const streak = calculateStreak(completedMeetings);

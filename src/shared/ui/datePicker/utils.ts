@@ -3,6 +3,9 @@ import { format } from "date-fns";
 export const HOURS = Array.from({ length: 24 }, (_, i) => i);
 export const MINUTES = Array.from({ length: 12 }, (_, i) => i * 5);
 
+// 오늘 생성하는 다짐은 현재 시각 기준 이 시간 이후부터만 선택 가능
+export const MIN_BOOKING_LEAD_HOURS = 3;
+
 export const formatDate = (date?: Date) => {
   if (!date) return "";
   return format(date, "yyyy-MM-dd");
@@ -23,45 +26,35 @@ export const toISOStringFromLocal = (date: Date, time: string) => {
   return combinedDate.toISOString();
 };
 
-export const isPastHour = (selectedDate?: Date, hour?: number) => {
+const getMinSelectableDate = (minLeadHours: number) =>
+  new Date(Date.now() + minLeadHours * 60 * 60 * 1000);
+
+export const isPastHour = (
+  selectedDate?: Date,
+  hour?: number,
+  minLeadHours: number = MIN_BOOKING_LEAD_HOURS
+) => {
   if (!selectedDate || hour === undefined) return false;
 
-  const now = new Date();
+  // 그 시간대의 마지막 분(59분)까지가 선택 가능 시각보다 이전이면 통째로 막힘
+  const candidateHourEnd = new Date(selectedDate);
+  candidateHourEnd.setHours(hour, 59, 0, 0);
 
-  // 오늘 아니면 제한 없음
-  if (selectedDate.toDateString() !== now.toDateString()) {
-    return false;
-  }
-
-  return hour < now.getHours();
+  return candidateHourEnd < getMinSelectableDate(minLeadHours);
 };
 
 export const isPastMinute = (
   selectedDate?: Date,
   hour?: number,
-  minute?: number
+  minute?: number,
+  minLeadHours: number = MIN_BOOKING_LEAD_HOURS
 ) => {
   if (!selectedDate || hour === undefined || minute === undefined) {
     return false;
   }
 
-  const now = new Date();
+  const candidate = new Date(selectedDate);
+  candidate.setHours(hour, minute, 0, 0);
 
-  // 오늘 아니면 제한 없음
-  if (selectedDate.toDateString() !== now.toDateString()) {
-    return false;
-  }
-
-  // 현재 시간보다 미래 hour면 제한 없음
-  if (hour > now.getHours()) {
-    return false;
-  }
-
-  // 이전 hour는 막힘
-  if (hour < now.getHours()) {
-    return true;
-  }
-
-  // 같은 hour일 때만 minute 비교
-  return minute < now.getMinutes();
+  return candidate < getMinSelectableDate(minLeadHours);
 };

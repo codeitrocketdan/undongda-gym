@@ -14,6 +14,7 @@ import PostDetailSection, {
   PostDetailSectionSkeleton,
 } from "@/features/post/ui/PostDetailSection";
 import { LoginModal, ErrorModal, useModal } from "@/shared/ui/modal";
+import { ApiError } from "@/shared/api/types";
 import { useParams, useRouter } from "next/navigation";
 
 export default function PostDetailPage() {
@@ -21,7 +22,12 @@ export default function PostDetailPage() {
   const router = useRouter();
 
   const errorModal = useModal();
-  const { data: post, isLoading, isError } = usePostDetail(id, { onError: errorModal.open });
+  const { data: post, isLoading, isError, error } = usePostDetail(id, {
+    onError: (err) => {
+      if (!(err instanceof ApiError && err.status === 404)) errorModal.open();
+    },
+  });
+  const isNotFound = error instanceof ApiError && error.status === 404;
   const { user } = useUser();
   const like = usePostLike(id);
   const del = useDeletePost();
@@ -49,9 +55,15 @@ export default function PostDetailPage() {
       <main className="inner mx-auto mt-6 max-w-215 md:mt-8 lg:mt-9">
         <div className="flex flex-col items-center justify-center gap-4 py-20 text-slate-400">
           <p className="text-center text-sm">
-            페이지를 불러오는데 문제가 발생하였습니다.
-            <br />
-            잠시후 다시 시도해주세요.
+            {isNotFound ? (
+              "삭제되었거나 존재하지 않는 게시글입니다."
+            ) : (
+              <>
+                페이지를 불러오는데 문제가 발생하였습니다.
+                <br />
+                잠시후 다시 시도해주세요.
+              </>
+            )}
           </p>
           <button
             type="button"

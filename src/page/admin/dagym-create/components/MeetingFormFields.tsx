@@ -121,7 +121,12 @@ export default function MeetingFormFields({
       <InputField label="다짐 일정" htmlFor="">
         <div className="flex flex-row items-end gap-4">
           <DatePicker value={date} onChange={setDate} />
-          <TimePicker selectedDate={date} value={time} onChange={setTime} />
+          <TimePicker
+            selectedDate={date}
+            value={time}
+            onChange={setTime}
+            minLeadHours={0}
+          />
         </div>
       </InputField>
 
