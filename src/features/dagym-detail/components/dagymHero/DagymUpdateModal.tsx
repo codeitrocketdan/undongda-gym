@@ -8,6 +8,7 @@ import { twMerge } from "tailwind-merge";
 
 import { uploadImageToStorage } from "@/features/create-dagym/lib/uploadImage";
 import { combineAddress } from "@/shared/lib/address";
+import UpdateSuccessModal from "@/shared/ui/modal/UpdateSuccessModal";
 import { useUpdateDagymMutation } from "../../api/useUpdateDagymMutation";
 import { DagymUpdateForm } from "../../model/types";
 import DagymBasicInfo from "./DagymBasicInfo";
@@ -29,6 +30,7 @@ export default function DagymUpdateModal({ id, onClose }: PropsType) {
     parseAsString.withDefault("기본 정보")
   );
   const successModal = useModal();
+
   const {
     handleSubmit,
     formState: { isDirty },
@@ -120,24 +122,14 @@ export default function DagymUpdateModal({ id, onClose }: PropsType) {
         </Modal.Footer>
       </Modal>
       {successModal.isOpen && (
-        <Modal onClose={successModal.close}>
-          <Modal.Body>
-            <p className="text-xl-semibold text-center">
-              수정이 완료되었습니다
-            </p>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button
-              variant="primary"
-              onClick={() => {
-                successModal.close();
-                onClose();
-              }}
-            >
-              확인
-            </Button>
-          </Modal.Footer>
-        </Modal>
+        <UpdateSuccessModal
+          onClose={() => {
+            successModal.close();
+            setTimeout(() => {
+              onClose();
+            }, 0);
+          }}
+        />
       )}
     </>
   );
