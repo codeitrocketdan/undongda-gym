@@ -18,6 +18,12 @@ export async function GET() {
   const accessToken = cookieStore.get("accessToken")?.value;
   const refreshToken = cookieStore.get("refreshToken")?.value;
 
+  // 토큰이 둘 다 없으면 비로그인 상태(로그아웃/최초방문/세션만료)이므로
+  // 백엔드 호출 없이 정상 응답으로 처리 (콘솔에 401 에러가 찍히지 않도록)
+  if (!accessToken && !refreshToken) {
+    return NextResponse.json(null);
+  }
+
   // 백엔드 API에 유저 정보 첫 요청
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/me`, {
     method: "GET",

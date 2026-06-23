@@ -4,6 +4,7 @@ import { PostDetailDTO } from "@/features/post/types";
 import { formatRelativeDate } from "@/shared/lib/formatDate";
 import Author from "@/shared/ui/author/Author";
 import Dropdown from "@/shared/ui/dropdown/Dropdown";
+import { ProfileModal, useProfileModal } from "@/shared/ui/modal";
 import Skeleton from "@/shared/ui/skeleton/Skeleton";
 import { MessageCircle, MoreHorizontal, ThumbsUp } from "lucide-react";
 import Image from "next/image";
@@ -23,6 +24,8 @@ export default function PostDetailSection({
   onEdit,
   onDelete,
 }: PostDetailSectionProps) {
+  const profileModal = useProfileModal();
+
   return (
     <div className="rounded-2xl bg-white p-8 md:rounded-3xl md:p-14 lg:p-16">
       {/* 제목 + 작성자 + 더보기 */}
@@ -32,7 +35,11 @@ export default function PostDetailSection({
             {post.title}
           </span>
           <div className="flex items-center gap-2">
-            <Author name={post.author.name} image={post.author.image} />
+            <Author
+              name={post.author.name}
+              image={post.author.image}
+              onClick={() => profileModal.open(post.author.id)}
+            />
             <span className="text-sm text-slate-500">
               {formatRelativeDate(post.createdAt)}
             </span>
@@ -41,7 +48,7 @@ export default function PostDetailSection({
         {isOwner && (
           <Dropdown>
             <Dropdown.Trigger>
-              <MoreHorizontal className="h-6 w-6 text-slate-400 cursor-pointer hover:text-slate-600" />
+              <MoreHorizontal className="h-6 w-6 cursor-pointer text-slate-400 hover:text-slate-600" />
             </Dropdown.Trigger>
             <Dropdown.Menu>
               <Dropdown.Item onClick={onEdit}>수정</Dropdown.Item>
@@ -75,7 +82,7 @@ export default function PostDetailSection({
         <button
           type="button"
           onClick={onLike}
-          className="flex items-center gap-0.5 cursor-pointer hover:text-slate-600"
+          className="flex cursor-pointer items-center gap-0.5 hover:text-slate-600"
         >
           <ThumbsUp
             className={`h-4 w-4 ${post.isLiked ? "fill-blue-300 text-blue-500" : ""}`}
@@ -87,6 +94,14 @@ export default function PostDetailSection({
           <span>{post.comments.length}</span>
         </div>
       </div>
+
+      {profileModal.isOpen && profileModal.userId !== null && (
+        <ProfileModal
+          mode="read"
+          userId={profileModal.userId}
+          onClose={profileModal.close}
+        />
+      )}
     </div>
   );
 }

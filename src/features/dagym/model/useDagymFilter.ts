@@ -1,12 +1,9 @@
 "use client";
 
 import { DagymSort } from "@/features/dagym/components/DagymFilterBar";
-import {
-  COMMUNITY_TYPES,
-  REGULAR_CLASS_TYPES,
-} from "@/features/dagym/constants/meetingTypes";
 import { BRANCH_OPTIONS } from "@/features/dagym/constants/region";
 import { useMeetingCategoryTab } from "@/shared/hooks/useMeetingCategoryTab";
+import { useMeetingTypeList } from "@/shared/hooks/useMeetingTypeList";
 import { SortOption } from "@/shared/ui/filter/SortFilter";
 import { parseAsString, useQueryState } from "nuqs";
 import { useEffect } from "react";
@@ -32,7 +29,7 @@ export function useDagymFilter() {
   );
 
   const { tab } = useMeetingCategoryTab();
-  const typeList = tab === "정규수업" ? REGULAR_CLASS_TYPES : COMMUNITY_TYPES;
+  const { typeList, isReady } = useMeetingTypeList();
   const centerOptions = BRANCH_OPTIONS;
 
   // 탭이 바뀔 때만 카테고리/지역 필터를 초기화한다 (selectedCategoryValue, regionValue를
@@ -61,13 +58,14 @@ export function useDagymFilter() {
   const tabs = [
     { id: 0, name: "전체" },
     ...categories
-      .filter((c) => typeList.includes(c.name))
+      .filter((c) => !isReady || typeList.includes(c.name))
       .map((c) => ({ id: c.id, name: c.name })),
   ];
 
   return {
     tab,
     tabs,
+    selectedCategoryValue,
     date,
     centerOptions,
     regionFilter,

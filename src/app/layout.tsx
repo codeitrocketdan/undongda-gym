@@ -1,8 +1,8 @@
+import { Header } from "@/shared/ui/header";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import Script from "next/script";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
-import { Header } from "@/shared/ui/header";
 import "./globals.css";
 import AppShell from "./providers/AppShell";
 import AuthHydration from "./providers/AuthHydration";

@@ -1,13 +1,14 @@
 "use client";
-import { useUser } from "@/shared/hooks/useUser";
 import avatar from "@/shared/assets/images/avatar.svg";
+import { useUser } from "@/shared/hooks/useUser";
+import { useLogout } from "@/shared/ui/header/useLogout";
+import { ProfileModal, useModal } from "@/shared/ui/modal";
 import Skeleton from "@/shared/ui/skeleton/Skeleton";
-import { useModal } from "@/shared/ui/modal";
 import { Pencil } from "lucide-react";
 import Image from "next/image";
-import ProfileEditModal from "./ProfileEditModal";
 
 export default function ProfileSection() {
+  const logout = useLogout();
   const { user: profile, isLoading, isError } = useUser();
   const editModal = useModal();
 
@@ -33,16 +34,16 @@ export default function ProfileSection() {
 
   return (
     <div className="gradient-blue-light relative flex flex-row gap-6 rounded-2xl border border-blue-300 p-4 md:rounded-3xl md:p-6 lg:flex-col lg:items-center lg:justify-center lg:gap-4 lg:px-10 lg:py-8">
-      <div className="relative flex h-20 w-20 items-center justify-center rounded-full bg-white md:h-28 md:w-28">
+      <div className="relative flex h-20 w-20 items-center justify-center overflow-hidden rounded-full bg-white md:h-28 md:w-28">
         {profile.image ? (
           <Image
             src={profile.image}
             alt={profile.name}
             fill
-            className="rounded-full"
+            className="object-cover"
           />
         ) : (
-          <Image src={avatar} alt="기본 이미지" fill className="rounded-full" />
+          <Image src={avatar} alt="기본 이미지" fill className="object-cover" />
         )}
       </div>
       <div className="flex flex-col justify-center lg:items-center">
@@ -66,12 +67,14 @@ export default function ProfileSection() {
       </div>
       <button
         type="button"
+        onClick={logout}
         className="absolute right-4 bottom-4 text-sm text-slate-400 underline hover:cursor-pointer hover:text-slate-600 lg:bottom-1"
       >
         로그아웃
       </button>
       {editModal.isOpen && (
-        <ProfileEditModal
+        <ProfileModal
+          mode="edit"
           initialName={profile.name}
           initialEmail={profile.email}
           initialImage={profile.image ?? null}

@@ -4,13 +4,13 @@ import DagymFilterBar, {
   DagymSortBy,
   DagymSortOrder,
 } from "@/features/dagym/components/DagymFilterBar";
+import { useDagymFilter } from "@/features/dagym/model/useDagymFilter";
+import { useUser } from "@/shared/hooks/useUser";
 import AsyncBoundary from "@/shared/ui/AsyncBoundary";
 import { formatDate } from "@/shared/ui/datePicker/utils";
 import Filter from "@/shared/ui/filter/Filter";
 import MeetingCategoryTabs from "@/shared/ui/tab/MeetingCategoryTabs";
 import PillTabs from "@/shared/ui/tab/PillTabs";
-import { useDagymFilter } from "@/features/dagym/model/useDagymFilter";
-import { useUser } from "@/shared/hooks/useUser";
 import { useRouter } from "next/navigation";
 import FavoriteList, { FavoriteListSkeleton } from "./FavoriteList";
 
@@ -23,7 +23,7 @@ function FavoriteListError() {
 }
 
 export default function FavoriteSection() {
-  const { user } = useUser();
+  const { user, isLoading } = useUser();
   const router = useRouter();
 
   const {
@@ -39,6 +39,10 @@ export default function FavoriteSection() {
     setRegion,
     handleSortChange,
   } = useDagymFilter();
+
+  if (isLoading) {
+    return <FavoriteListSkeleton />;
+  }
 
   if (!user) {
     return (

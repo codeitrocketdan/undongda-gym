@@ -43,21 +43,17 @@ export default function ProfileIcon({ className, asLink }: Props) {
       alt={profile.name}
       width={40}
       height={40}
-      className="rounded-full"
+      className="object-cover"
     />
   ) : (
-    <Image
-      src={avatar}
-      alt="기본 이미지"
-      className={twMerge("rounded-full", className)}
-    />
+    <Image src={avatar} alt="기본 이미지" className={twMerge(className)} />
   );
 
   if (asLink) {
     return (
       <Link
         href="/mypage"
-        className="flex h-10 w-10 items-center justify-center rounded-full bg-white"
+        className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-white"
         aria-label="마이페이지"
       >
         {imageContent}
@@ -69,7 +65,7 @@ export default function ProfileIcon({ className, asLink }: Props) {
     <div ref={wrapperRef} className="relative">
       <button
         onClick={() => setIsOpen((prev) => !prev)}
-        className="flex h-10 w-10 items-center justify-center rounded-full bg-white"
+        className="flex h-10 w-10 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-white"
         aria-label="프로필 메뉴"
       >
         {imageContent}

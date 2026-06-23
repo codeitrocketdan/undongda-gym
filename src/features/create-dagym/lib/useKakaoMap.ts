@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 
-export function useKakaoMap() {
+export function useKakaoMap(shouldGeocode: boolean) {
   const { watch, setValue } = useFormContext();
   const address = watch("address");
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
+    if (!shouldGeocode) return;
+
     setValue("latitude", undefined);
     setValue("longitude", undefined);
 
@@ -23,7 +25,7 @@ export function useKakaoMap() {
         }
       });
     });
-  }, [address, isLoaded, setValue]);
+  }, [address, isLoaded, shouldGeocode, setValue]);
 
   return { onScriptLoad: () => setIsLoaded(true) };
 }

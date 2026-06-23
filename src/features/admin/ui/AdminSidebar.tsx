@@ -3,6 +3,7 @@
 import { useUserProfile } from "@/features/my-page/model/useUserProfile";
 import avatar from "@/shared/assets/images/avatar.svg";
 import logo from "@/shared/assets/images/logo.png";
+import logoV from "@/shared/assets/images/logo_v.png";
 import { useLogout } from "@/shared/ui/header/useLogout";
 import {
   LayoutDashboard,
@@ -46,16 +47,12 @@ export default function AdminSidebar({ isOpen, onToggle }: AdminSidebarProps) {
       >
         {isOpen ? (
           <>
-            <Image
-              src={logo}
-              alt="운동다짐"
-              className="h-8 w-8 rounded-lg object-cover"
-            />
+            <Image src={logo} alt="운동다짐" className="w-25 object-cover" />
             <button
               type="button"
               onClick={onToggle}
               aria-label="사이드바 닫기"
-              className="rounded-lg p-1.5 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+              className="cursor-pointer rounded-lg p-1.5 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
             >
               <PanelLeftClose size={18} />
             </button>
@@ -65,12 +62,12 @@ export default function AdminSidebar({ isOpen, onToggle }: AdminSidebarProps) {
             type="button"
             onClick={onToggle}
             aria-label="사이드바 열기"
-            className="group relative flex h-9 w-9 items-center justify-center"
+            className="group relative flex h-9 w-9 cursor-pointer items-center justify-center"
           >
             <Image
-              src={logo}
+              src={logoV}
               alt="운동다짐"
-              className="h-8 w-8 rounded-lg object-cover transition-opacity group-hover:opacity-0"
+              className="w-full object-cover transition-opacity group-hover:opacity-0"
             />
             <PanelLeftOpen
               size={18}
@@ -86,13 +83,13 @@ export default function AdminSidebar({ isOpen, onToggle }: AdminSidebarProps) {
       >
         <Image
           src={(isLoggedIn && user?.image) || avatar}
-          alt={isLoggedIn ? user?.name ?? "사용자" : "게스트"}
+          alt={isLoggedIn ? (user?.name ?? "사용자") : "게스트"}
           width={36}
           height={36}
-          className="shrink-0 rounded-full"
+          className="h-9 w-9 shrink-0 rounded-full object-cover"
         />
-        {isOpen && (
-          isLoggedIn ? (
+        {isOpen &&
+          (isLoggedIn ? (
             <>
               <div className="flex min-w-0 flex-1 flex-col">
                 <p className="truncate text-sm font-semibold text-gray-800">
@@ -103,7 +100,7 @@ export default function AdminSidebar({ isOpen, onToggle }: AdminSidebarProps) {
               <button
                 type="button"
                 onClick={logout}
-                className="shrink-0 rounded-lg px-2 py-1.5 text-xs font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+                className="shrink-0 cursor-pointer rounded-lg px-2 py-1.5 text-xs font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
               >
                 로그아웃
               </button>
@@ -115,8 +112,7 @@ export default function AdminSidebar({ isOpen, onToggle }: AdminSidebarProps) {
             >
               로그인
             </Link>
-          )
-        )}
+          ))}
       </div>
 
       <nav className={`flex flex-1 flex-col gap-1 p-4 ${isOpen ? "" : "px-2"}`}>

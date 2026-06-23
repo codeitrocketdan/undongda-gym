@@ -2,8 +2,8 @@
 import { formatMonthDay, formatTime } from "@/shared/lib/formatDate";
 import { formatRegion } from "@/shared/lib/formatRegion";
 import {
+  getMeetingStateText,
   getMeetingStatus,
-  getOverlayText,
 } from "@/shared/lib/getMeetingStatus";
 import ConfirmBadge from "@/shared/ui/badge/ConfirmBadge";
 import StatusBadge from "@/shared/ui/badge/StatusBadge";
@@ -63,13 +63,17 @@ export default function MyPageCard({
 }: MyPageCardProps) {
   const status = getMeetingStatus({ canceledAt, isCompleted });
   const showBadge = variant === "my-dagym";
-  const isCanceled = !!canceledAt;
   const showCancelButton = variant === "my-dagym" && !isCompleted;
   const showReviewButton = variant === "my-review";
 
   const overlayText =
     variant === "my-dagym" || variant === "created-dagym"
-      ? getOverlayText(canceledAt, registrationEnd, participantCount, capacity)
+      ? getMeetingStateText(
+          canceledAt,
+          registrationEnd,
+          participantCount,
+          capacity
+        )
       : null;
 
   const badges = showBadge && (
@@ -83,18 +87,14 @@ export default function MyPageCard({
     <Button
       variant={showReviewButton ? "primary" : "secondary"}
       size="sm"
-      className={`w-auto${showCancelButton && !isCanceled ? "border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white" : ""}`}
-      isDisabled={showCancelButton && isCanceled}
+      className={`w-auto! ${showCancelButton && !overlayText ? "border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white" : ""}`}
+      isDisabled={showCancelButton && !!overlayText}
       onClick={(e) => {
         e?.preventDefault();
         onClick?.();
       }}
     >
-      {showReviewButton
-        ? "리뷰 작성하기"
-        : isCanceled
-          ? "취소됨"
-          : "예약 취소하기"}
+      {showReviewButton ? "리뷰작성" : overlayText || "참여취소"}
     </Button>
   );
 

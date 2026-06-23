@@ -24,12 +24,14 @@ export default function ConfirmModal({
       <Modal.Header className="flex-row justify-end">
         <Modal.CloseButton />
       </Modal.Header>
-      <main className="py-1 text-center">
-        <p className="text-2xl font-semibold text-slate-800">{title}</p>
-        {description && (
-          <p className="mt-2 text-sm text-slate-500">{description}</p>
-        )}
-      </main>
+      <Modal.Body>
+        <div className="py-1 text-center">
+          <p className="text-2xl font-semibold text-slate-800">{title}</p>
+          {description && (
+            <p className="mt-2 text-sm text-slate-500">{description}</p>
+          )}
+        </div>
+      </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={onCancel} className="flex-1">
           {cancelLabel}

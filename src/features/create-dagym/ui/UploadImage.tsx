@@ -1,24 +1,15 @@
 import { X } from "lucide-react";
 import Image from "next/image";
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { ChangeEvent, useRef } from "react";
 import { useFormContext } from "react-hook-form";
 
-export default function UploadImage() {
-  const { register, setValue, getValues } = useFormContext();
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(() => {
-    const existingFile = getValues("image");
-    if (existingFile instanceof File) {
-      return URL.createObjectURL(existingFile);
-    }
-    return null;
-  });
+interface UploadImageProps {
+  imagePreview: string | null;
+}
 
-  useEffect(() => {
-    return () => {
-      if (imagePreview?.startsWith("blob:")) URL.revokeObjectURL(imagePreview);
-    };
-  }, [imagePreview]);
+export default function UploadImage({ imagePreview }: UploadImageProps) {
+  const { register, setValue } = useFormContext();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleBoxClick = () => {
     fileInputRef.current?.click();
@@ -27,16 +18,12 @@ export default function UploadImage() {
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    if (imagePreview?.startsWith("blob:")) URL.revokeObjectURL(imagePreview);
     setValue("image", file);
-    setImagePreview(URL.createObjectURL(file));
     e.target.value = "";
   };
 
   const handleRemove = () => {
-    if (imagePreview?.startsWith("blob:")) URL.revokeObjectURL(imagePreview);
     setValue("image", null);
-    setImagePreview(null);
   };
 
   const { ref: registerRef } = register("image");

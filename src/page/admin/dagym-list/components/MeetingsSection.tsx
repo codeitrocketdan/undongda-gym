@@ -51,7 +51,7 @@ export default function MeetingsSection() {
             onClick={() => setTab(value)}
             className={`cursor-pointer rounded-2xl px-4 py-2 text-sm font-semibold transition-colors ${
               tab === value
-                ? "bg-blue-700 text-white"
+                ? "bg-blue-700 text-white hover:bg-blue-800"
                 : "bg-gray-100 text-gray-600 hover:bg-gray-200"
             }`}
           >
@@ -114,11 +114,17 @@ export default function MeetingsSection() {
       <div ref={observerRef} />
 
       {detailModal.isOpen && selectedMeeting && (
-        <MeetingDetailModal meeting={selectedMeeting} onClose={detailModal.close} />
+        <MeetingDetailModal
+          meeting={selectedMeeting}
+          onClose={detailModal.close}
+        />
       )}
 
       {editModal.isOpen && editingMeeting && (
-        <EditMeetingModal meeting={editingMeeting} onClose={handleCloseEditModal} />
+        <EditMeetingModal
+          meeting={editingMeeting}
+          onClose={handleCloseEditModal}
+        />
       )}
 
       {deleteModal.isOpen && deletingMeeting && (

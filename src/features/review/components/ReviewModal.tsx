@@ -75,7 +75,7 @@ export default function ReviewModal(props: ReviewModalProps) {
         <Modal.CloseButton />
       </Modal.Header>
 
-      <main>
+      <Modal.Body>
         {/* 평점 섹션 */}
         <div className="mb-8">
           <p className="text-base-semibold mb-4 text-slate-800">
@@ -144,7 +144,7 @@ export default function ReviewModal(props: ReviewModalProps) {
         {mode === "write" && error && (
           <p className="mb-4 text-center text-sm text-red-500">{error}</p>
         )}
-      </main>
+      </Modal.Body>
 
       <Modal.Footer>
         {mode === "write" ? (
@@ -171,7 +171,7 @@ export default function ReviewModal(props: ReviewModalProps) {
               variant="secondary"
               onClick={() => {
                 onClose();
-                router.push(`/meetings/${props.review.meetingId}`);
+                router.push(`/dagym-detail/${props.review.meetingId}`);
               }}
               className="flex-1"
             >

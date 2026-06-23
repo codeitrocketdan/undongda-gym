@@ -1,6 +1,6 @@
 "use client";
-import { Modal } from "@/shared/ui/modal";
-import { useState } from "react";
+import { ErrorModal, Modal } from "@/shared/ui/modal";
+import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { CAPACITY_MIN, DAGYM_STEP, TOTAL_STEPS } from "../constants";
 import { DagymFormData } from "../model/types";
@@ -17,7 +17,7 @@ interface useModalTypeProps {
 
 export default function CreateDagymForm({ onClose }: useModalTypeProps) {
   const [step, setStep] = useState(1);
-  const { onSubmit } = useCreateDagym(onClose);
+  const { onSubmit, errorMessage, clearError } = useCreateDagym(onClose);
 
   const methods = useForm<DagymFormData>({
     defaultValues: {
@@ -47,6 +47,18 @@ export default function CreateDagymForm({ onClose }: useModalTypeProps) {
   const currentdescription = watch("description");
   const currentDateTime = watch("dateTime");
   const currentCapacity = watch("capacity");
+
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!(currentAttachedImage instanceof File)) {
+      setImagePreview(null);
+      return;
+    }
+    const url = URL.createObjectURL(currentAttachedImage);
+    setImagePreview(url);
+    return () => URL.revokeObjectURL(url);
+  }, [currentAttachedImage]);
 
   const isNextDisabled = () => {
     if (step === DAGYM_STEP.CATEGORY)
@@ -80,17 +92,19 @@ export default function CreateDagymForm({ onClose }: useModalTypeProps) {
           </p>
           <Modal.CloseButton />
         </Modal.Header>
-        <main>
+        <Modal.Body>
           <form
             id="meeting-multi-step-form"
             onSubmit={methods.handleSubmit(onSubmit)}
           >
             {step === DAGYM_STEP.CATEGORY && <SetCategories />}
-            {step === DAGYM_STEP.INFO && <SetInfo />}
+            {step === DAGYM_STEP.INFO && (
+              <SetInfo imagePreview={imagePreview} />
+            )}
             {step === DAGYM_STEP.DESCRIPTION && <SetDescription />}
             {step === DAGYM_STEP.DATE && <SetDate />}
           </form>
-        </main>
+        </Modal.Body>
         <Modal.Footer>
           <StepButtons
             formId="meeting-multi-step-form"
@@ -104,6 +118,9 @@ export default function CreateDagymForm({ onClose }: useModalTypeProps) {
           />
         </Modal.Footer>
       </Modal>
+      {errorMessage && (
+        <ErrorModal message={errorMessage} onClose={clearError} />
+      )}
     </FormProvider>
   );
 }
