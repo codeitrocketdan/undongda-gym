@@ -8,6 +8,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 
 import { useDagymSuggestQuery } from "../../api/useDagymSuggestQuery";
 
+import { getRecommendedMeetings } from "../../lib/getRecommendedMeetings";
 import { Dagym } from "../../model/types";
 import SuggestItem from "./SuggestItem";
 
@@ -17,18 +18,13 @@ interface PropsType {
 }
 
 const DagymSuggest = ({ dagym, meetingId }: PropsType) => {
-  const { data, isLoading, isError } = useDagymSuggestQuery(dagym.region);
+  const { data, isLoading, isError } = useDagymSuggestQuery();
 
-  const meetings =
-    data?.data
-      ?.filter((meeting) => meeting.id.toString() !== meetingId)
-      .sort((a, b) => {
-        const aScore = Number(a.type === dagym.type);
-        const bScore = Number(b.type === dagym.type);
-
-        return bScore - aScore;
-      })
-      .slice(0, 6) ?? [];
+  const meetings = getRecommendedMeetings(
+    data?.data ?? [],
+    meetingId,
+    dagym.type
+  );
 
   if (isLoading) {
     return (

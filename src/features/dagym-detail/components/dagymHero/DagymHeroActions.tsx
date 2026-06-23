@@ -56,7 +56,7 @@ export default function DagymHeroActions({
       if (isRegistrationClosed) {
         return (
           <Button variant="primary" isDisabled>
-            모집 마감 (방장)
+            모집 마감
           </Button>
         );
       }
