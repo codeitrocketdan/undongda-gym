@@ -11,3 +11,5 @@ export const DAGYM_STEP = {
 
 export const CAPACITY_MIN = 3;
 export const CAPACITY_MAX = 20;
+
+export const REGISTRATION_END_HOURS_BEFORE = 2;

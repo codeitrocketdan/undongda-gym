@@ -7,13 +7,21 @@ import { Clock4 } from "lucide-react";
 import { TimePickerProps } from "./types";
 import { useDatePicker } from "./usePicker";
 import { useTimePicker } from "./useTimePicker";
-import { HOURS, MINUTES, formatTime, isPastHour, isPastMinute } from "./utils";
+import {
+  HOURS,
+  MINUTES,
+  MIN_BOOKING_LEAD_HOURS,
+  formatTime,
+  isPastHour,
+  isPastMinute,
+} from "./utils";
 
 export default function TimePicker({
   value,
   onChange,
   selectedDate,
   label,
+  minLeadHours = MIN_BOOKING_LEAD_HOURS,
 }: TimePickerProps) {
   const [innerValue, setInnerValue] = useState("");
   const currentValue = value ?? innerValue;
@@ -142,7 +150,7 @@ export default function TimePicker({
               >
                 <div className="flex flex-col gap-1 pb-1">
                   {HOURS.map((hour) => {
-                    const disabled = isPastHour(selectedDate, hour);
+                    const disabled = isPastHour(selectedDate, hour, minLeadHours);
 
                     return (
                       <button
@@ -172,7 +180,12 @@ export default function TimePicker({
                   {MINUTES.map((minute) => {
                     const disabled =
                       selectedHour !== null
-                        ? isPastMinute(selectedDate, selectedHour, minute)
+                        ? isPastMinute(
+                            selectedDate,
+                            selectedHour,
+                            minute,
+                            minLeadHours
+                          )
                         : false;
 
                     return (

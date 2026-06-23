@@ -3,6 +3,7 @@ import { getNextDagym } from "@/entities/meeting/lib/getNextDagym";
 import { useJoinedMeetings } from "@/entities/meeting/lib/useJoinedMeetings";
 import bgCharacter from "@/shared/assets/images/bg_character.png";
 import { DATE_FORMAT, format } from "@/shared/lib/date";
+import { formatRegion } from "@/shared/lib/formatRegion";
 import Skeleton from "@/shared/ui/skeleton/Skeleton";
 
 export default function ReservationCard({ isLogin }: { isLogin: boolean }) {
@@ -28,7 +29,7 @@ export default function ReservationCard({ isLogin }: { isLogin: boolean }) {
         </div>
         <div className="xs:flex-row xs:items-center flex flex-col items-start gap-x-2">
           <p className="flex flex-row flex-wrap items-center gap-x-2 text-lg font-black">
-            <span>{nextDagym.region}점</span>
+            <span>{formatRegion(nextDagym.region, nextDagym.address)}</span>
             <span>
               {format(nextDagym.dateTime, DATE_FORMAT.TIME)} ~
               {format(nextDagym.dateTime, DATE_FORMAT.TIME_END)}

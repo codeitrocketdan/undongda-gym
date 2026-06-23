@@ -1,6 +1,5 @@
 "use client";
 
-import { subDays } from "@/shared/lib/date";
 import {
   DatePicker,
   TimePicker,
@@ -10,6 +9,7 @@ import Input from "@/shared/ui/input/Input";
 import InputField from "@/shared/ui/input/InputFiled";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
+import { calculateRegistrationEnd } from "@/shared/lib/calculateRegistrationEnd";
 import { CAPACITY_MAX, CAPACITY_MIN } from "../constants";
 
 export default function SetDate() {
@@ -24,10 +24,14 @@ export default function SetDate() {
 
     if (value < CAPACITY_MIN) {
       setValue("capacity", CAPACITY_MIN);
-      setCapacityMessage(`모집 정원은 최소 ${CAPACITY_MIN}명 부터 설정 가능합니다.`);
+      setCapacityMessage(
+        `모집 정원은 최소 ${CAPACITY_MIN}명 부터 설정 가능합니다.`
+      );
     } else if (value > CAPACITY_MAX) {
       setValue("capacity", CAPACITY_MAX);
-      setCapacityMessage(`모집 정원은 최대 ${CAPACITY_MAX}명까지 설정 가능합니다.`);
+      setCapacityMessage(
+        `모집 정원은 최대 ${CAPACITY_MAX}명까지 설정 가능합니다.`
+      );
     } else {
       setValue("capacity", value);
       setCapacityMessage("");
@@ -40,10 +44,9 @@ export default function SetDate() {
       return;
     }
     const formattedDateTime = toISOStringFromLocal(date, time);
-    const formattedRegistrationEnd = toISOStringFromLocal(
-      subDays(date, 1),
-      "23:59"
-    );
+    if (!formattedDateTime) return;
+
+    const formattedRegistrationEnd = calculateRegistrationEnd(formattedDateTime);
 
     setValue("dateTime", formattedDateTime);
     setValue("registrationEnd", formattedRegistrationEnd);
@@ -52,6 +55,10 @@ export default function SetDate() {
   return (
     <div className="set-date">
       <InputField label="다짐 일정" htmlFor="">
+        <p className="-mt-1 mb-1 ml-1 text-xs text-gray-500">
+          - 당일 다짐 생성은 3시간 뒤부터 진행 가능합니다.
+          <br />- 참여 모집은 다짐 시작 2시간 전에 자동 마감됩니다.
+        </p>
         <div className="mb-5 flex flex-row items-end gap-4">
           <DatePicker onChange={setDate} value={date} />
           <TimePicker selectedDate={date} onChange={setTime} value={time} />
