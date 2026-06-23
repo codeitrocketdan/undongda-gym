@@ -169,8 +169,10 @@ export default function LandingHero() {
         </div>
       </div>
 
-      <div className="relative h-96 w-full md:h-110 md:overflow-hidden md:flex-1">
-        <div className="absolute top-1/2 left-1/2 h-90 w-90 -translate-x-1/2 -translate-y-1/2 rounded-[40%] bg-linear-to-br from-blue-200 to-green-100 opacity-80" />
+      <div className="relative h-96 w-full md:h-110 md:flex-1">
+        <div className="absolute inset-0 md:overflow-hidden">
+          <div className="absolute top-1/2 left-1/2 h-90 w-90 -translate-x-1/2 -translate-y-1/2 rounded-[40%] bg-linear-to-br from-blue-200 to-green-100 opacity-80" />
+        </div>
         <PhoneMock />
         <div
           className="absolute top-[14%] left-[2%] flex items-center gap-2 rounded-2xl bg-white px-3.5 py-2.5 shadow-lg"
