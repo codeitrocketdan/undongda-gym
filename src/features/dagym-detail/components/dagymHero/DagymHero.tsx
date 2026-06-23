@@ -1,5 +1,6 @@
 "use client";
 import { useAuth } from "@/app/providers/AuthClientProvider";
+import { splitAddress } from "@/shared/lib/address";
 import {
   formatDeadline,
   formatMonthDay,
@@ -55,12 +56,14 @@ export default function DagymHero({ id, dagym }: PropsType) {
   const isHost = user?.id === dagym.hostId;
 
   const handleEdit = () => {
+    const { address, addressDetail } = splitAddress(dagym.address ?? "");
+
     methods.reset({
       name: dagym.name,
       type: dagym.type,
       region: dagym.region,
-      address: dagym.address ?? "",
-      addressDetail: dagym?.addressDetail ?? "",
+      address,
+      addressDetail,
       latitude: dagym.latitude ?? null,
       longitude: dagym.longitude ?? null,
       image: dagym.image ?? "",
