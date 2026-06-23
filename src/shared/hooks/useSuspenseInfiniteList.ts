@@ -8,9 +8,11 @@ type CursorPage<T> = { data: T[]; nextCursor?: string | null };
 export function useSuspenseInfiniteList<T>({
   queryKey,
   queryFn,
+  staleTime,
 }: {
   queryKey: readonly unknown[];
   queryFn: (pageParam: unknown) => Promise<CursorPage<T>>;
+  staleTime?: number;
 }) {
   const { data, fetchNextPage, hasNextPage, isFetching, isError } =
     useSuspenseInfiniteQuery<
@@ -24,6 +26,7 @@ export function useSuspenseInfiniteList<T>({
       queryFn: ({ pageParam }) => queryFn(pageParam),
       getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
       initialPageParam: null,
+      staleTime,
     });
 
   const items = data.pages.flatMap((page) => page.data);
@@ -33,5 +36,12 @@ export function useSuspenseInfiniteList<T>({
     isFetching,
   });
 
-  return { items, observerRef, isError, fetchNextPage, hasNextPage, isFetching };
+  return {
+    items,
+    observerRef,
+    isError,
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+  };
 }

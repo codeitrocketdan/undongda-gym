@@ -49,7 +49,7 @@ export default function FavoriteList() {
               key={meeting.id}
               id={meeting.id}
               image={meeting.image}
-              isFavorited={true}
+              isFavorited={meeting.isFavorited}
               confirmedAt={meeting.confirmedAt}
               canceledAt={meeting.canceledAt}
               isJoined={meeting.isJoined}
@@ -61,7 +61,9 @@ export default function FavoriteList() {
               registrationEnd={meeting.registrationEnd}
               participantCount={meeting.participantCount}
               capacity={meeting.capacity}
-              onToggleFavorite={() => toggleFavorite(meeting.id, true)}
+              onToggleFavorite={() =>
+                toggleFavorite(meeting.id, meeting.isFavorited)
+              }
               onJoin={() => toggleJoin(meeting.id, meeting.isJoined)}
             />
           ))}

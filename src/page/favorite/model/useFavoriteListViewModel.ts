@@ -32,10 +32,19 @@ export function useFavoriteListViewModel({ userId }: { userId?: number } = {}) {
       sortBy,
       sortOrder,
     }),
-    queryFn: (pageParam) =>
-      clientFetcher.get<FavoriteListResponse>(
+    staleTime: 0,
+    queryFn: async (pageParam) => {
+      const response = await clientFetcher.get<FavoriteListResponse>(
         `/api/favorites?${buildListParams({ type: selectedCategory, date, region, sortBy, sortOrder, cursor: pageParam })}`
-      ),
+      );
+      return {
+        ...response,
+        data: response.data.map((item) => ({
+          ...item,
+          meeting: { ...item.meeting, isFavorited: true },
+        })),
+      };
+    },
   });
 
   const allMeetings = favoriteItems
@@ -46,7 +55,15 @@ export function useFavoriteListViewModel({ userId }: { userId?: number } = {}) {
       ? allMeetings
       : allMeetings.filter((m) => typeList.includes(m.type));
 
-  const isEmpty = meetings.length === 0 && isReady && !hasNextPage && !isFetching;
+  const isEmpty =
+    meetings.length === 0 && isReady && !hasNextPage && !isFetching;
 
-  return { meetings, observerRef, toggleFavorite, toggleJoin, isError, isEmpty };
+  return {
+    meetings,
+    observerRef,
+    toggleFavorite,
+    toggleJoin,
+    isError,
+    isEmpty,
+  };
 }
