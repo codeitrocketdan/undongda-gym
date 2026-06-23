@@ -3,11 +3,6 @@ import {
   decrementFavoritesCount,
   incrementFavoritesCount,
 } from "@/shared/hooks/useNewFavoritesCount";
-import {
-  favoriteQueries,
-  meetingQueries,
-  userMeetingQueries,
-} from "@/shared/lib/queryKeys";
 import { dagymQueries } from "@/features/dagym-detail/api/queries";
 import { patchMeetingListCaches } from "@/features/dagym/lib/patchMeetingListCaches";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -15,15 +10,16 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 export function useFavorite() {
   const queryClient = useQueryClient();
 
-  const invalidateAll = () => {
-    queryClient.invalidateQueries({ queryKey: favoriteQueries.all });
-    queryClient.invalidateQueries({ queryKey: meetingQueries.all });
-    queryClient.invalidateQueries({ queryKey: userMeetingQueries.all });
+  // 다짐 상세 캐시는 patchMeetingListCaches가 직접 고치지 않으므로(상세는 id를
+  // 문자열 라우트 파라미터로 캐싱해 목록과 키 형식이 다름), 상세 화면에 들어가 있을
+  // 때를 위해 계속 무효화한다. 반면 목록(홈/찜/내 다짐)은 isFavorited가 본인만
+  // 바꿀 수 있는 값이라 서버와 어긋날 일이 없어 이미 위에서 낙관적으로 고친 캐시를
+  // 그대로 믿어도 되고, 여기서 다시 무효화하면 무한스크롤로 불러온 페이지 수만큼
+  // 불필요한 재요청이 따라붙는다.
+  const invalidateDetail = () => {
     queryClient.invalidateQueries({ queryKey: dagymQueries.all });
   };
 
-  // 목록 캐시(홈/찜/내 다짐)를 즉시 고쳐서 버튼을 누르는 즉시 화면에 반영하고,
-  // 서버 응답이 오면 onSettled에서 백그라운드로 정합성을 다시 맞춘다.
   const { mutate: add } = useMutation({
     mutationFn: (id: number) =>
       clientFetcher.post(`/api/meetings/${id}/favorites`),
@@ -40,7 +36,7 @@ export function useFavorite() {
       decrementFavoritesCount();
       context?.restore();
     },
-    onSettled: invalidateAll,
+    onSettled: invalidateDetail,
   });
 
   const { mutate: remove } = useMutation({
@@ -59,7 +55,7 @@ export function useFavorite() {
       incrementFavoritesCount();
       context?.restore();
     },
-    onSettled: invalidateAll,
+    onSettled: invalidateDetail,
   });
 
   const toggleFavorite = (id: number, isFavorited: boolean) => {
