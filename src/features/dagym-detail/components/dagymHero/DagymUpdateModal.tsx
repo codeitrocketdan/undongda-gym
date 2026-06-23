@@ -27,8 +27,10 @@ export default function DagymUpdateModal({ id, onClose }: PropsType) {
     "tab",
     parseAsString.withDefault("기본 정보")
   );
-
-  const { handleSubmit } = useFormContext<DagymUpdateForm>();
+  const {
+    handleSubmit,
+    formState: { isDirty },
+  } = useFormContext<DagymUpdateForm>();
 
   const updateMutation = useUpdateDagymMutation(id);
 
@@ -54,23 +56,23 @@ export default function DagymUpdateModal({ id, onClose }: PropsType) {
         longitude: values.longitude,
         addressDetail: values.addressDetail,
       };
-      console.log(values, "<====values");
-      console.log(finalPayload, "<====final");
+
       updateMutation.mutate(finalPayload, {
         onSuccess: () => {
           onClose();
+          alert("수정이 완료되었습니다.");
         },
       });
     } catch (error) {
       console.error("수정 프로세스 중 에러 발생:", error);
-      alert("모임 수정에 실패했습니다. 입력 값을 다시 확인해 주세요.");
+      alert("다짐 수정에 실패했습니다. 입력 값을 다시 확인해 주세요.");
     }
   };
 
   return (
     <Modal onClose={onClose}>
       <Modal.Header className="mb-6 flex-row justify-between">
-        <p className="text-lg-bold">모임 수정하기</p>
+        <p className="text-lg-bold">다짐 수정하기</p>
         <Modal.CloseButton />
       </Modal.Header>
 
@@ -82,7 +84,7 @@ export default function DagymUpdateModal({ id, onClose }: PropsType) {
               type="button"
               onClick={() => setActiveTab(tab.name)}
               className={twMerge(
-                "-mb-0.5 w-1/2 flex-1 border-b-2 px-8 py-2",
+                "-mb-0.5 w-1/2 flex-1 cursor-pointer border-b-2 px-8 py-2",
                 activeTab === tab.name
                   ? "border-blue-500 text-blue-600"
                   : "border-transparent"
@@ -108,7 +110,7 @@ export default function DagymUpdateModal({ id, onClose }: PropsType) {
           type="submit"
           form="meeting-multi-step-form"
           variant="primary"
-          isDisabled={updateMutation.isPending}
+          isDisabled={updateMutation.isPending || !isDirty}
         >
           {updateMutation.isPending ? "수정 중..." : "수정하기"}
         </Button>

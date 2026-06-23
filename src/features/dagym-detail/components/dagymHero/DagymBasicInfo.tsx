@@ -15,31 +15,34 @@ const centerLists = ["강남", "판교", "마곡", "광교", "동탄", "성수",
 export default function DagymBasicInfo() {
   const { register, setValue, watch } = useFormContext();
 
-  const currentRegion = watch("region") || "default";
-  const currentAddress = watch("address");
+  const region = watch("region");
+  const address = watch("address");
+
   const { isPostcodeOpen, postcodeContainerRef, openPostcode, closePostcode } =
     useKakaoPostcodePopup({
       onCompleteAddress: ({ address, latitude, longitude }) => {
-        setValue("address", address);
-        setValue("latitude", latitude);
-        setValue("longitude", longitude);
+        setValue("address", address, { shouldDirty: true });
+        setValue("latitude", latitude, { shouldDirty: true });
+        setValue("longitude", longitude, { shouldDirty: true });
       },
     });
 
   const handleRegionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const region = e.target.value;
-    setValue("region", region);
-    setValue("addressDetail", "");
+    const value = e.target.value;
 
-    const center = CENTER_INFO[region];
+    setValue("region", value, { shouldDirty: true });
+    setValue("addressDetail", "", { shouldDirty: true });
+
+    const center = CENTER_INFO[value];
+
     if (center) {
-      setValue("address", center.address);
-      setValue("latitude", center.latitude);
-      setValue("longitude", center.longitude);
+      setValue("address", center.address, { shouldDirty: true });
+      setValue("latitude", center.latitude, { shouldDirty: true });
+      setValue("longitude", center.longitude, { shouldDirty: true });
     } else {
-      setValue("address", "");
-      setValue("latitude", undefined);
-      setValue("longitude", undefined);
+      setValue("address", "", { shouldDirty: true });
+      setValue("latitude", null, { shouldDirty: true });
+      setValue("longitude", null, { shouldDirty: true });
     }
   };
 
@@ -49,7 +52,6 @@ export default function DagymBasicInfo() {
         src="//t1.kakaocdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"
         strategy="lazyOnload"
       />
-
       <InputField label="다짐 이름" htmlFor="dagymName">
         <Input
           id="dagymName"
@@ -57,17 +59,16 @@ export default function DagymBasicInfo() {
           {...register("name")}
         />
       </InputField>
-
       <InputField label="지점을 선택하세요" htmlFor="dagymCenter">
         <select
-          value={currentRegion}
+          value={region || "default"}
           onChange={handleRegionChange}
           className={clsx(
-            "w-full rounded-xl border border-transparent bg-gray-50 p-3 outline-none focus:border-blue-500",
-            currentRegion === "default" ? "text-gray-400" : "text-inherit"
+            "w-full rounded-xl border bg-gray-50 p-3 outline-none focus:border-blue-500",
+            region === "default" ? "text-gray-400" : "text-inherit"
           )}
         >
-          <option hidden disabled value="default">
+          <option hidden value="default">
             지점선택
           </option>
 
@@ -81,43 +82,36 @@ export default function DagymBasicInfo() {
         </select>
       </InputField>
 
-      {currentRegion === "지점 외 장소" && (
+      {region === "지점 외 장소" && (
         <>
           <InputField label="주소" htmlFor="address">
             <div className="relative">
               <Input
                 id="address"
-                value={currentAddress || ""}
                 onClick={openPostcode}
                 readOnly
                 {...register("address")}
               />
-
               <MapPin className="absolute top-1/2 right-3 -translate-y-1/2" />
             </div>
           </InputField>
 
-          <InputField label="상세주소" htmlFor="addressDetail" required={false}>
-            <Input
-              id="addressDetail"
-              placeholder="상세주소"
-              {...register("addressDetail")}
-            />
+          <InputField label="상세주소" htmlFor="addressDetail">
+            <Input id="addressDetail" {...register("addressDetail")} />
           </InputField>
         </>
       )}
 
       {isPostcodeOpen && (
-        <div className="absolute inset-0 z-50 flex flex-col overflow-hidden rounded-2xl bg-white">
-          <div className="flex items-center justify-between border-b p-4">
-            <span className="font-semibold">주소 검색</span>
-
+        <div className="absolute inset-0 z-50 flex flex-col bg-white">
+          <div className="flex justify-between border-b p-4">
+            <span>주소 검색</span>
             <button type="button" onClick={closePostcode}>
-              이전
+              닫기
             </button>
           </div>
 
-          <div ref={postcodeContainerRef} className="w-full flex-1" />
+          <div ref={postcodeContainerRef} className="flex-1" />
         </div>
       )}
 

@@ -31,15 +31,11 @@ export default function UploadImage() {
     const file = e.target.files?.[0];
     if (!file) return;
     if (imagePreview?.startsWith("blob:")) URL.revokeObjectURL(imagePreview);
-    setValue("image", file);
+    setValue("image", file, {
+      shouldDirty: true,
+    });
     setImagePreview(URL.createObjectURL(file));
     e.target.value = "";
-  };
-
-  const handleRemove = () => {
-    if (imagePreview?.startsWith("blob:")) URL.revokeObjectURL(imagePreview);
-    setValue("image", null);
-    setImagePreview(null);
   };
 
   const { ref: registerRef } = register("image");

@@ -34,7 +34,7 @@ const DagymLocation = ({ dagym }: Props) => {
 
   return (
     <section className="mb-20">
-      <h2 className="text-2xl-semibold mb-5">모임 장소</h2>
+      <h2 className="text-2xl-semibold mb-5">다짐 장소</h2>
 
       <div className="rounded-4xl border border-gray-200 bg-white px-4 py-3.5 sm:px-8 sm:py-5.5">
         <div className="-mx-4 -my-3.5 mb-3.5 overflow-hidden rounded-t-4xl sm:-mx-8 sm:-my-5.5 sm:mb-5.5">
