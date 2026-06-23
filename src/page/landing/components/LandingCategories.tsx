@@ -67,7 +67,7 @@ export default function LandingCategories() {
               href={`/dagym?type=${encodeURIComponent(category.name)}`}
               style={{
                 animation: isInView
-                  ? `fadeInUp 1s ease-out ${index * 0.1}s forwards`
+                  ? `fadeInUp 1s ease-out ${index * 0.1}s both`
                   : "none",
               }}
               className={`flex h-36 w-36 flex-col items-center justify-center gap-4 rounded-3xl px-1 py-1 shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl ${bgColor} ${

@@ -21,7 +21,7 @@ export function DagymListSkeleton() {
 
 export default function DagymList() {
   const errorModal = useModal();
-  const { meetings, observerRef, toggleFavorite, toggleJoin } =
+  const { meetings, observerRef, toggleFavorite, toggleJoin, isEmpty } =
     useDagymListViewModel();
   const { user } = useUser();
   const loginModal = useModal();
@@ -37,16 +37,20 @@ export default function DagymList() {
   return (
     <>
       {meetings.length === 0 ? (
-        <div className="mt-6 flex flex-col items-center justify-center gap-4 py-20">
-          <Image
-            src={emptyImage}
-            alt="데이터가 없습니다"
-            className="h-50 w-50"
-          />
-          <p className="text-center text-sm text-slate-400">
-            아직 다짐이 없어요 <br /> 지금 바로 다짐을 만들어보세요!
-          </p>
-        </div>
+        isEmpty ? (
+          <div className="mt-6 flex flex-col items-center justify-center gap-4 py-20">
+            <Image
+              src={emptyImage}
+              alt="데이터가 없습니다"
+              className="h-50 w-50"
+            />
+            <p className="text-center text-sm text-slate-400">
+              아직 다짐이 없어요 <br /> 지금 바로 다짐을 만들어보세요!
+            </p>
+          </div>
+        ) : (
+          <DagymListSkeleton />
+        )
       ) : (
         <div className="mt-6 grid grid-cols-1 gap-4 xl:grid-cols-2">
           {meetings.map((meeting) => (

@@ -2,7 +2,9 @@
 
 import { MyReviewListResponse, UserReviewDTO } from "@/features/my-page/types";
 import { useUser } from "@/shared/hooks/useUser";
-import ReviewCard from "@/features/review/components/ReviewCard";
+import ReviewCard, {
+  ReviewCardSkeleton,
+} from "@/features/review/components/ReviewCard";
 import ReviewModal from "@/features/review/components/ReviewModal";
 import { clientFetcher } from "@/shared/api/clientFetcher";
 import { useModal } from "@/shared/ui/modal";
@@ -19,7 +21,12 @@ export default function WrittenReviewList() {
   const detailModal = useModal();
   const [selectedReview, setSelectedReview] = useState<UserReviewDTO | null>(null);
 
-  const { items: reviews, observerRef } = useSuspenseInfiniteList({
+  const {
+    items: reviews,
+    observerRef,
+    hasNextPage,
+    isFetching,
+  } = useSuspenseInfiniteList({
     queryKey: userReviewQueries.all,
     queryFn: (pageParam) =>
       clientFetcher.get<MyReviewListResponse>(
@@ -27,14 +34,22 @@ export default function WrittenReviewList() {
       ),
   });
 
+  const isEmpty = reviews.length === 0 && !hasNextPage && !isFetching;
+
   return (
     <>
       <div className="mt-4 flex flex-col gap-4 rounded-3xl bg-white px-6 py-4 md:gap-8 md:rounded-4xl md:p-6 lg:p-8">
         {reviews.length === 0 ? (
-          <div className="flex flex-col items-center justify-center gap-4 py-20">
-            <Image src={emptyImage} alt="빈 목록" className="h-50 w-50" />
-            <p className="text-center text-sm text-slate-400">작성한 리뷰가 없어요</p>
-          </div>
+          isEmpty ? (
+            <div className="flex flex-col items-center justify-center gap-4 py-20">
+              <Image src={emptyImage} alt="빈 목록" className="h-50 w-50" />
+              <p className="text-center text-sm text-slate-400">작성한 리뷰가 없어요</p>
+            </div>
+          ) : (
+            Array.from({ length: 5 }).map((_, i) => (
+              <ReviewCardSkeleton key={i} />
+            ))
+          )
         ) : (
           reviews.map((review: UserReviewDTO) => (
             <button

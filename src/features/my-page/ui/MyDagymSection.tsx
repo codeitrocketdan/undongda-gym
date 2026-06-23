@@ -13,6 +13,7 @@ import Button from "@/shared/ui/button/Button";
 import Image from "next/image";
 import Link from "next/link";
 import MyPageCard from "./MyPageCard";
+import MyPageCardSkeleton from "./MyPageCardSkeleton";
 
 const LIMIT = 5;
 
@@ -21,7 +22,12 @@ export default function MyDagymSection() {
   const { toggleJoin } = useJoinMeeting();
   const { user } = useUser();
 
-  const { items: meetings, observerRef } = useSuspenseInfiniteList({
+  const {
+    items: meetings,
+    observerRef,
+    hasNextPage,
+    isFetching,
+  } = useSuspenseInfiniteList({
     queryKey: [...userMeetingQueries.all, "all"],
     queryFn: (pageParam) =>
       clientFetcher.get<MyMeetingListResponse>(
@@ -29,20 +35,28 @@ export default function MyDagymSection() {
       ),
   });
 
+  const isEmpty = meetings.length === 0 && !hasNextPage && !isFetching;
+
   return (
     <div className="flex flex-col gap-4 lg:gap-6">
       {meetings.length === 0 ? (
-        <div className="flex flex-col items-center justify-center gap-4 py-20">
-          <Image src={emptyImage} alt="빈 목록" className="h-50 w-50" />
-          <p className="text-center text-sm text-slate-400">
-            참여한 다짐이 없어요 <br /> 다양한 다짐에 참여해보세요!
-          </p>
-          <Link href="/dagym">
-            <Button variant="primary" size="sm">
-              다짐 보기
-            </Button>
-          </Link>
-        </div>
+        isEmpty ? (
+          <div className="flex flex-col items-center justify-center gap-4 py-20">
+            <Image src={emptyImage} alt="빈 목록" className="h-50 w-50" />
+            <p className="text-center text-sm text-slate-400">
+              참여한 다짐이 없어요 <br /> 다양한 다짐에 참여해보세요!
+            </p>
+            <Link href="/dagym">
+              <Button variant="primary" size="sm">
+                다짐 보기
+              </Button>
+            </Link>
+          </div>
+        ) : (
+          Array.from({ length: 3 }).map((_, i) => (
+            <MyPageCardSkeleton key={i} />
+          ))
+        )
       ) : (
         meetings.map((meeting: MeetingWithHostDTO) => {
           const isOwner = meeting.host.id === user?.id;

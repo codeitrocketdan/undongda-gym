@@ -22,22 +22,26 @@ export function FavoriteListSkeleton() {
 export default function FavoriteList() {
   const errorModal = useModal();
   const { user } = useUser();
-  const { meetings, observerRef, toggleFavorite, toggleJoin } =
+  const { meetings, observerRef, toggleFavorite, toggleJoin, isEmpty } =
     useFavoriteListViewModel({ userId: user?.id });
 
   return (
     <>
       {meetings.length === 0 ? (
-        <div className="mt-6 flex flex-col items-center justify-center gap-4 py-20">
-          <Image
-            src={emptyImage}
-            alt="찜한 다짐이 없습니다"
-            className="h-50 w-50"
-          />
-          <p className="text-center text-sm text-slate-400">
-            아직 찜한 다짐이 없어요 <br /> 마음에 드는 다짐을 찜해보세요!
-          </p>
-        </div>
+        isEmpty ? (
+          <div className="mt-6 flex flex-col items-center justify-center gap-4 py-20">
+            <Image
+              src={emptyImage}
+              alt="찜한 다짐이 없습니다"
+              className="h-50 w-50"
+            />
+            <p className="text-center text-sm text-slate-400">
+              아직 찜한 다짐이 없어요 <br /> 마음에 드는 다짐을 찜해보세요!
+            </p>
+          </div>
+        ) : (
+          <FavoriteListSkeleton />
+        )
       ) : (
         <div className="mt-6 grid grid-cols-1 gap-4 xl:grid-cols-2">
           {meetings.map((meeting) => (
@@ -45,7 +49,7 @@ export default function FavoriteList() {
               key={meeting.id}
               id={meeting.id}
               image={meeting.image}
-              isFavorited={true}
+              isFavorited={meeting.isFavorited}
               confirmedAt={meeting.confirmedAt}
               canceledAt={meeting.canceledAt}
               isJoined={meeting.isJoined}
@@ -57,7 +61,9 @@ export default function FavoriteList() {
               registrationEnd={meeting.registrationEnd}
               participantCount={meeting.participantCount}
               capacity={meeting.capacity}
-              onToggleFavorite={() => toggleFavorite(meeting.id, true)}
+              onToggleFavorite={() =>
+                toggleFavorite(meeting.id, meeting.isFavorited)
+              }
               onJoin={() => toggleJoin(meeting.id, meeting.isJoined)}
             />
           ))}

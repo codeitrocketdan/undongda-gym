@@ -17,6 +17,8 @@ export function useReviewListViewModel() {
     items: allReviews,
     observerRef,
     isError,
+    hasNextPage,
+    isFetching,
   } = useSuspenseInfiniteList({
     queryKey: reviewQueries.list({
       type: selectedCategory || undefined,
@@ -36,5 +38,7 @@ export function useReviewListViewModel() {
       ? allReviews
       : allReviews.filter((r) => typeList.includes(r.meeting.type));
 
-  return { reviews, observerRef, isError };
+  const isEmpty = reviews.length === 0 && isReady && !hasNextPage && !isFetching;
+
+  return { reviews, observerRef, isError, isEmpty };
 }

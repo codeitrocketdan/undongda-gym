@@ -9,13 +9,19 @@ import { useSuspenseInfiniteList } from "@/shared/hooks/useSuspenseInfiniteList"
 import { userMeetingQueries } from "@/shared/lib/queryKeys";
 import Image from "next/image";
 import MyPageCard from "./MyPageCard";
+import MyPageCardSkeleton from "./MyPageCardSkeleton";
 
 const LIMIT = 5;
 
 export default function MyCreatedDagymSection() {
   const { toggleFavorite } = useFavorite();
 
-  const { items: meetings, observerRef } = useSuspenseInfiniteList({
+  const {
+    items: meetings,
+    observerRef,
+    hasNextPage,
+    isFetching,
+  } = useSuspenseInfiniteList({
     queryKey: userMeetingQueries.created(),
     queryFn: (pageParam) =>
       clientFetcher.get<CreatedMeetingListResponse>(
@@ -23,15 +29,23 @@ export default function MyCreatedDagymSection() {
       ),
   });
 
+  const isEmpty = meetings.length === 0 && !hasNextPage && !isFetching;
+
   return (
     <div className="flex flex-col gap-4 lg:gap-6">
       {meetings.length === 0 ? (
-        <div className="flex flex-col items-center justify-center gap-4 py-20">
-          <Image src={emptyImage} alt="빈 목록" className="h-50 w-50" />
-          <p className="text-center text-sm text-slate-400">
-            아직 만든 다짐이 없어요
-          </p>
-        </div>
+        isEmpty ? (
+          <div className="flex flex-col items-center justify-center gap-4 py-20">
+            <Image src={emptyImage} alt="빈 목록" className="h-50 w-50" />
+            <p className="text-center text-sm text-slate-400">
+              아직 만든 다짐이 없어요
+            </p>
+          </div>
+        ) : (
+          Array.from({ length: 3 }).map((_, i) => (
+            <MyPageCardSkeleton key={i} />
+          ))
+        )
       ) : (
         meetings.map((meeting: MeetingWithHostDTO) => (
           <MyPageCard
