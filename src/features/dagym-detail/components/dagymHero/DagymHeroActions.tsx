@@ -4,9 +4,7 @@ import Button from "@/shared/ui/button/Button";
 import { HeartButton } from "@/shared/ui/heart-button/HeartButton";
 
 import { useRequireAuth } from "@/shared/hooks/useRequireAuth";
-// ConfirmModal이나 Modal을 사용해 알림 모달을 띄울 수 있도록 import 확인이 필요합니다.
-// 여기서는 기존에 import 구조를 참고하여 ConfirmModal 또는 일반 Modal로 대체할 수 있게 세팅합니다.
-import { LoginModal, Modal, useModal } from "@/shared/ui/modal";
+import { CopyModal, LoginModal, useModal } from "@/shared/ui/modal";
 import { useState } from "react";
 import { useFavoriteMutation } from "../../api/useFavoriteMutation";
 import { useJoinMutation } from "../../api/useJoinMutation";
@@ -31,8 +29,8 @@ export default function DagymHeroActions({
   registrationEnd,
 }: Props) {
   const { requireAuth, loginModal } = useRequireAuth();
-  const alertModal = useModal();
-  const [alertMessage, setAlertMessage] = useState("");
+  const copyModal = useModal();
+  const [copyMessage, setCopyMessage] = useState("");
 
   const { mutate: joinMutate, isPending: joinPending } = useJoinMutation(id);
   const { mutate: favoriteMutate } = useFavoriteMutation(id);
@@ -52,14 +50,11 @@ export default function DagymHeroActions({
   const handleShare = async () => {
     try {
       await navigator.clipboard.writeText(window.location.href);
-      setAlertMessage("링크가 클립보드에 복사되었습니다.");
-      alertModal.open();
-    } catch (error) {
-      setAlertMessage(
-        "링크 복사에 실패했습니다. \n주소창의 링크를 복사해주세요."
-      );
-      alertModal.open();
+      setCopyMessage("링크가 클립보드에 복사되었습니다.");
+    } catch {
+      setCopyMessage("링크 복사에 실패했습니다. \n주소창의 링크를 복사해주세요.");
     }
+    copyModal.open();
   };
 
   const renderActionButton = () => {
@@ -134,23 +129,8 @@ export default function DagymHeroActions({
 
       {loginModal.isOpen && <LoginModal onClose={loginModal.close} />}
 
-      {alertModal.isOpen && (
-        <Modal onClose={alertModal.close}>
-          <Modal.Body>
-            <p className="text-xl-semibold py-4 text-center break-keep whitespace-pre-line">
-              {alertMessage}
-            </p>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button
-              variant="primary"
-              onClick={alertModal.close}
-              className="w-full"
-            >
-              확인
-            </Button>
-          </Modal.Footer>
-        </Modal>
+      {copyModal.isOpen && (
+        <CopyModal onClose={copyModal.close} message={copyMessage} />
       )}
     </div>
   );

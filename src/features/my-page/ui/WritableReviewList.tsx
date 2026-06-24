@@ -14,7 +14,7 @@ import { useUser } from "@/shared/hooks/useUser";
 import { userMeetingQueries } from "@/shared/lib/queryKeys";
 import { InfiniteData, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MyPageCard from "./MyPageCard";
 import MyPageCardSkeleton from "./MyPageCardSkeleton";
 
@@ -23,6 +23,11 @@ const LIMIT = 20;
 export default function WritableReviewList() {
   const { toggleFavorite } = useFavorite();
   const { user } = useUser();
+  // useUser는 suspense 쿼리가 아니라 SSR에서 user가 undefined로 렌더링되어
+  // 필터링 결과가 서버/클라이언트 간에 달라진다. 마운트 전엔 서버와 동일하게 둔다.
+  const [mounted, setMounted] = useState(false);
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  useEffect(() => setMounted(true), []);
   const reviewModal = useModal();
   const [selectedMeeting, setSelectedMeeting] =
     useState<JoinedMeetingDTO | null>(null);
@@ -41,7 +46,9 @@ export default function WritableReviewList() {
       ),
   });
 
-  const meetings = allMeetings.filter((m) => m.host.id !== user?.id);
+  const meetings = mounted
+    ? allMeetings.filter((m) => m.host.id !== user?.id)
+    : allMeetings;
   const isEmpty = meetings.length === 0 && !hasNextPage && !isFetching;
 
   return (

@@ -37,7 +37,7 @@ export const useKakaoLogin = () => {
           throw new Error(data.message || "카카오 로그인에 실패했습니다.");
         }
         queryClient.invalidateQueries();
-        router.push("/");
+        router.push("/dagym");
       } catch (error) {
         console.error(error);
       }

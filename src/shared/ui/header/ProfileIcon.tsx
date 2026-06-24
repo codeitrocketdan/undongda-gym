@@ -43,7 +43,7 @@ export default function ProfileIcon({ className, asLink }: Props) {
       alt={profile.name}
       width={40}
       height={40}
-      className="object-cover"
+      className="h-10 w-10 object-cover"
     />
   ) : (
     <Image src={avatar} alt="기본 이미지" className={twMerge(className)} />
