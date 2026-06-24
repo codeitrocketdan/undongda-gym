@@ -15,6 +15,13 @@
 
 [https://undongda-gym.vercel.app/](https://undongda-gym.vercel.app/)
 
+## 테스트 계정
+
+- 관리자
+  admin@admin.com / admin123!
+- 회원
+  rocket@example.com / password123
+
 ## 시작하기
 
 ```bash
