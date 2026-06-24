@@ -166,6 +166,8 @@ export function useAdminMeetingsViewModel() {
   };
 
   const [sharedMeetingId, setSharedMeetingId] = useState<number | null>(null);
+  const copyModal = useModal();
+  const [copyMessage, setCopyMessage] = useState("");
   const handleShare = async (meeting: MeetingWithHostDTO) => {
     const url = `${window.location.origin}/dagym-detail/${meeting.id}`;
     try {
@@ -175,10 +177,11 @@ export function useAdminMeetingsViewModel() {
         () => setSharedMeetingId((prev) => (prev === meeting.id ? null : prev)),
         2000
       );
-      alert("링크가 클립보드에 복사되었습니다.");
+      setCopyMessage("링크가 클립보드에 복사되었습니다.");
     } catch {
-      alert("링크 복사에 실패했습니다. 주소창의 링크를 복사해주세요.");
+      setCopyMessage("링크 복사에 실패했습니다. 주소창의 링크를 복사해주세요.");
     }
+    copyModal.open();
   };
 
   return {
@@ -188,8 +191,8 @@ export function useAdminMeetingsViewModel() {
     setRegion,
     regionOptions: REGION_FILTER_OPTIONS,
     meetings,
-    isLoading: activeQuery.isLoading,
-    isEmpty: !activeQuery.isLoading && meetings.length === 0,
+    isLoading: activeQuery.isPending,
+    isEmpty: !activeQuery.isPending && meetings.length === 0,
     observerRef,
     detailModal,
     selectedMeeting,
@@ -205,5 +208,7 @@ export function useAdminMeetingsViewModel() {
     handleConfirmDelete,
     sharedMeetingId,
     handleShare,
+    copyModal,
+    copyMessage,
   };
 }

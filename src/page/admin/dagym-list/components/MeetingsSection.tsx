@@ -1,6 +1,6 @@
 "use client";
 
-import { DeleteConfirmModal } from "@/shared/ui/modal";
+import { CopyModal, DeleteConfirmModal } from "@/shared/ui/modal";
 import Skeleton from "@/shared/ui/skeleton/Skeleton";
 import { CalendarX2 } from "lucide-react";
 import Link from "next/link";
@@ -39,6 +39,8 @@ export default function MeetingsSection() {
     handleConfirmDelete,
     sharedMeetingId,
     handleShare,
+    copyModal,
+    copyMessage,
   } = useAdminMeetingsViewModel();
 
   return (
@@ -135,6 +137,10 @@ export default function MeetingsSection() {
           onConfirm={handleConfirmDelete}
           onClose={deleteModal.close}
         />
+      )}
+
+      {copyModal.isOpen && (
+        <CopyModal onClose={copyModal.close} message={copyMessage} />
       )}
     </section>
   );
