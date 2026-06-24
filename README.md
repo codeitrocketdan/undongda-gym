@@ -85,9 +85,9 @@ pnpm test     # Jest 테스트 실행
 
 ## 아키텍처
 
-Feature-Sliced 유사 구조로 구성되어 있습니다.
+Feature-Sliced Design 구조로 구성되어 있습니다.
 
-```
+```text
 src/
 ├── app/         # Next.js App Router 엔트리, 라우팅
 ├── page/        # 페이지 단위 컴포넌트 (실제 화면 조립)
