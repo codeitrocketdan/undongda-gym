@@ -28,7 +28,7 @@ export const useLoginForm = () => {
 
       queryClient.invalidateQueries();
 
-      router.replace("/");
+      router.replace("/dagym");
       router.refresh();
     } catch (error) {
       form.setError("root", {

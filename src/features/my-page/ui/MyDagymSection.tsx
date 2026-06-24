@@ -12,6 +12,7 @@ import { userMeetingQueries } from "@/shared/lib/queryKeys";
 import Button from "@/shared/ui/button/Button";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import MyPageCard from "./MyPageCard";
 import MyPageCardSkeleton from "./MyPageCardSkeleton";
 
@@ -21,6 +22,11 @@ export default function MyDagymSection() {
   const { toggleFavorite } = useFavorite();
   const { toggleJoin } = useJoinMeeting();
   const { user } = useUser();
+  // useUser는 suspense 쿼리가 아니라 SSR에서 항상 user가 undefined로 렌더링된다.
+  // 마운트 전까지는 서버와 동일하게 "내 다짐 아님"으로 둬서 하이드레이션 불일치를 막는다.
+  const [mounted, setMounted] = useState(false);
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  useEffect(() => setMounted(true), []);
 
   const {
     items: meetings,
@@ -59,7 +65,7 @@ export default function MyDagymSection() {
         )
       ) : (
         meetings.map((meeting: MeetingWithHostDTO) => {
-          const isOwner = meeting.host.id === user?.id;
+          const isOwner = mounted && meeting.host.id === user?.id;
           return (
             <MyPageCard
               key={meeting.id}

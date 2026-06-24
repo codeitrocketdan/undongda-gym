@@ -15,7 +15,7 @@ export const useDeleteDagymMutation = (meetingId: string) => {
         queryKey: dagymQueries.all,
       });
 
-      router.push("/");
+      router.push("/dagym");
     },
   });
 };

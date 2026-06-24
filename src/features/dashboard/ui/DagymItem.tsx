@@ -15,12 +15,12 @@ export default function DagymItem({ dagym }: { dagym: Dagym }) {
       </div>
       <span
         className={`rounded-full px-2.5 py-1 text-xs font-medium ${
-          dagym.isCompleted
+          dagym.isCompleted && dagym.confirmedAt
             ? "bg-blue-100 text-blue-700"
             : "bg-orange-100 text-orange-600"
         }`}
       >
-        {dagym.isCompleted ? "완료" : "예정"}
+        {dagym.isCompleted && dagym.confirmedAt ? "완료" : "예정"}
       </span>
     </li>
   );

@@ -43,7 +43,7 @@ export const useGoogleLogin = () => {
           return;
         }
 
-        window.location.href = "/";
+        window.location.href = "/dagym";
       },
     });
 

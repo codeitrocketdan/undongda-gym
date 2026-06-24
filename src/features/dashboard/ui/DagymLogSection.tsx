@@ -23,7 +23,7 @@ export default function MainContent() {
     () =>
       new Set(
         dagyms
-          .filter((dagym) => dagym.isCompleted)
+          .filter((dagym) => dagym.isCompleted && !!dagym.confirmedAt)
           .map((dagym) => format(new Date(dagym.dateTime)))
       ),
     [dagyms]
