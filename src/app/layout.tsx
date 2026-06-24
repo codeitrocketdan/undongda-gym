@@ -18,6 +18,8 @@ const Pretendard = localFont({
 
 export const metadata: Metadata = {
   title: "운동다짐",
+  description:
+    "다양한 그룹 운동 클래스를 만들고 찾아 예약·참여하고 후기를 남기는 운동 커뮤니티 플랫폼, 운동다짐.",
 };
 
 export default async function RootLayout({
