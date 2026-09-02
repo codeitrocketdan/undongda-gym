@@ -7,6 +7,7 @@
 ## 변경 이력
 
 - 2026-09-02: 최초 작성 — 첫 파티 JS 청크 축소, 스크립트 지연 로딩, `/dagym` 배포 리포트 기반 LCP/접근성 수정
+- 2026-09-02: 배포 후 재측정에서 배너 이미지 `fetchpriority=high` 경고 발견 및 원인/수정 추가 (Next 16 `priority` prop deprecated 이슈)
 
 ## 0. 계기
 
@@ -83,6 +84,27 @@ Lighthouse에서 "Reduce unused JavaScript" 경고(퍼스트 파티 청크 약 7
 - **bfcache 차단 (`Cache-Control: no-store`)**: `/dagym`이 `cookies()`를 읽는 서버 컴포넌트라 Next가 자동으로 no-store를 붙이는 것으로 추정. 인증 체크 방식 자체를 바꿔야 해서 손대지 않음.
 - 서드파티 쿠키 32개, 색상 대비 부족 등 — 권장사항/접근성 카테고리의 자잘한 항목, 점수 영향 작아서 미착수.
 
-## 5. 참고
+## 5. 배포 후 재측정에서 발견 — `next/image`의 `priority` prop deprecated (Next 16)
+
+머지·배포 후 `/dagym`을 모바일 Lighthouse로 다시 돌리자, 4-1에서 고친 배너 이미지에서
+`fetchpriority=high should be applied to the image preload request` 경고가 계속 떴다.
+
+**원인:** `node_modules/next/dist/shared/lib/get-img-props.js` 확인 결과, Next 16부터 `next/image`의
+`priority` prop이 deprecated됨. 예전엔 `priority={true}` 하나로 `<link rel="preload">` 삽입과
+`fetchPriority="high"` 자동 설정이 같이 됐지만, 지금은 `fetchPriority`가 완전히 분리된 별도 prop이라
+`priority`만 줘서는 더 이상 자동으로 붙지 않는다 (`preload: preload || priority`로 preload 플래그만 켜짐).
+`AGENTS.md`가 경고한 "이 버전은 알고 있는 Next.js와 다르다"의 실제 사례.
+
+**수정:** deprecated `priority` 대신 새 `preload` prop + 명시적 `fetchPriority="high"`를 함께 사용하도록 변경.
+
+| 파일 | 변경 |
+| --- | --- |
+| `src/page/dagym/page.tsx` | 배너 `<Image>`: `priority={true}` → `preload` + `fetchPriority="high"` |
+| `src/shared/ui/feed-card/FeedCardImage.tsx` | 3장 HotPostSection 작업 때 추가한 `priority` prop이 동일한 문제를 갖고 있어 같이 수정. 외부 API(`priority` prop 이름)는 유지하고 내부에서 `preload`/`fetchPriority`로 매핑 |
+| `src/shared/ui/header/Header.tsx` | 로고 이미지 2곳도 동일하게 정리 (LCP 후보일 가능성은 낮지만 일관성 차원) |
+
+> 이 프로젝트에서 `priority`/`fetchPriority`로 LCP 이미지를 다룰 일이 또 생기면, `preload` + `fetchPriority="high"` 조합을 기본으로 쓸 것.
+
+## 6. 참고
 
 - 청크 크기 확인은 `npm run build` 후 `.next/diagnostics/route-bundle-stats.json`의 `firstLoadChunkPaths` / `firstLoadUncompressedJsBytes`로 검증했다 (Turbopack 빌드라 webpack의 "First Load JS" 표 대신 이 파일을 봐야 함).
