@@ -94,4 +94,5 @@ export interface HotPostCardProps {
   likeCount: number;
   createdAt: string | null;
   commentCount: number;
+  priority?: boolean;
 }

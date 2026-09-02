@@ -1,14 +1,16 @@
 "use client";
 
-import HotPostCard, { HotPostCardSkeleton } from "@/features/post/components/HotPostCard";
-import { PostDTO, PostListResponse } from "@/features/post/types";
-import { clientFetcher } from "@/shared/api/clientFetcher";
-import emptyImage from "@/shared/assets/images/empty.svg";
-import { ErrorModal, useModal } from "@/shared/ui/modal";
-import { postQueries } from "@/shared/lib/queryKeys";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { useEffect } from "react";
+import HotPostCard, {
+  HotPostCardSkeleton,
+} from "@/features/post/components/HotPostCard";
+import { PostDTO, PostListResponse } from "@/features/post/types";
+import { clientFetcher } from "@/shared/api/clientFetcher";
+import emptyImage from "@/shared/assets/images/empty.svg";
+import { postQueries } from "@/shared/lib/queryKeys";
+import { ErrorModal, useModal } from "@/shared/ui/modal";
 
 export default function HotPostSection() {
   const errorModal = useModal();
@@ -16,7 +18,7 @@ export default function HotPostSection() {
     queryKey: postQueries.hot,
     queryFn: () =>
       clientFetcher.get<PostListResponse>(
-        "/api/posts?type=best&offset=0&limit=4",
+        "/api/posts?type=best&offset=0&limit=4"
       ),
   });
 
@@ -46,7 +48,7 @@ export default function HotPostSection() {
         </div>
       ) : (
         <div className="flex gap-3 overflow-x-auto pb-2 md:gap-6">
-          {posts.map((post: PostDTO) => (
+          {posts.map((post: PostDTO, index: number) => (
             <HotPostCard
               key={post.id}
               id={post.id}
@@ -55,6 +57,7 @@ export default function HotPostSection() {
               likeCount={post.likeCount}
               commentCount={post._count.comments}
               createdAt={post.createdAt}
+              priority={index < 2}
             />
           ))}
         </div>
