@@ -1,16 +1,25 @@
 "use client";
 
 import { type UseQueryOptions, useQuery } from "@tanstack/react-query";
-import { fetchJoinedMeetings, type JoinedMeetingsResponse } from "../api";
+import {
+  fetchJoinedMeetings,
+  JOINED_MEETINGS_QUERY_KEY,
+  type JoinedMeetingsResponse,
+} from "../api";
 
-export const JOINED_MEETINGS_QUERY_KEY = ["joinedDagyms"] as const;
+export { JOINED_MEETINGS_QUERY_KEY };
 
 type JoinedMeetingsQueryKey = typeof JOINED_MEETINGS_QUERY_KEY;
 
 export function useJoinedMeetings<TData = JoinedMeetingsResponse>(
   enabled = true,
   options?: Omit<
-    UseQueryOptions<JoinedMeetingsResponse, Error, TData, JoinedMeetingsQueryKey>,
+    UseQueryOptions<
+      JoinedMeetingsResponse,
+      Error,
+      TData,
+      JoinedMeetingsQueryKey
+    >,
     "queryKey" | "queryFn" | "enabled"
   >
 ) {

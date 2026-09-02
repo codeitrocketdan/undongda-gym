@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import { getNextDagym } from "@/entities/meeting/lib/getNextDagym";
 import { useJoinedMeetings } from "@/entities/meeting/lib/useJoinedMeetings";
 import bgCharacter from "@/shared/assets/images/bg_character.png";
@@ -22,10 +23,16 @@ export default function ReservationCard({ isLogin }: { isLogin: boolean }) {
 
   return (
     <div className="inner">
-      <div
-        style={{ backgroundImage: `url(${bgCharacter.src})` }}
-        className="bg-image w-full rounded-xl bg-white bg-[size:81px_80px] bg-[position:right_bottom] bg-no-repeat p-6 pr-18 shadow-lg"
-      >
+      <div className="relative w-full rounded-xl bg-white p-6 pr-18 shadow-lg">
+        <Image
+          src={bgCharacter}
+          alt=""
+          width={81}
+          height={80}
+          preload
+          fetchPriority="high"
+          className="pointer-events-none absolute right-0 bottom-0 rounded-br-xl"
+        />
         <div className="mb-2 flex items-center gap-2">
           <span className="text-sm font-black text-gray-800">예약된 다짐</span>
           <span className="color-slate-800 rounded-xl bg-slate-200 px-2 py-1 text-sm">
