@@ -1,8 +1,8 @@
-import logo from "@/shared/assets/images/logo.png";
 import { cookies } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
 import { twMerge } from "tailwind-merge";
+import logo from "@/shared/assets/images/logo.png";
 import { buttonVariants } from "../button/Button";
 import MobileMenu from "./MobileMenu";
 import NavLinks from "./NavLinks";
@@ -30,13 +30,25 @@ export default async function Header() {
             </div>
           )}
           <Link href="/" className="hidden md:block">
-            <Image src={logo} alt="운동다짐 로고" width={100} priority />
+            <Image
+              src={logo}
+              alt="운동다짐 로고"
+              width={100}
+              preload
+              fetchPriority="high"
+            />
           </Link>
           <NavLinks navItems={NAV_ITEMS} />
         </div>
 
         <Link href="/" className="absolute left-1/2 -translate-x-1/2 md:hidden">
-          <Image src={logo} alt="운동다짐 로고" width={100} priority />
+          <Image
+            src={logo}
+            alt="운동다짐 로고"
+            width={100}
+            preload
+            fetchPriority="high"
+          />
         </Link>
 
         <div className="flex items-center gap-2">

@@ -23,7 +23,8 @@ export default function FeedCardImage({
           src={src}
           alt={alt}
           fill
-          priority={priority}
+          preload={priority}
+          fetchPriority={priority ? "high" : undefined}
           className="object-cover transition-transform duration-300 group-hover:scale-110"
         />
       )}
