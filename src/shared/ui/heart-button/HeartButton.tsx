@@ -9,6 +9,7 @@ interface HeartButtonProps {
   onClick: () => void;
   size?: "sm" | "md" | "lg";
   className?: string;
+  ariaLabel?: string;
 }
 
 export function HeartButton({
@@ -16,6 +17,7 @@ export function HeartButton({
   onClick,
   size = "md",
   className,
+  ariaLabel,
 }: HeartButtonProps) {
   return (
     <IconButton
@@ -34,6 +36,7 @@ export function HeartButton({
           ? "fill-blue-500 stroke-blue-500"
           : "stroke-slate-400 fill-none"
       }
+      ariaLabel={ariaLabel ?? (isFavorited ? "찜 해제" : "찜하기")}
     >
       <Heart />
     </IconButton>

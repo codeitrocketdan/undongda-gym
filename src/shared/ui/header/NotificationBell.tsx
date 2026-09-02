@@ -54,6 +54,7 @@ export default function NotificationBell() {
       <button
         className="relative cursor-pointer p-1"
         onClick={() => setIsOpen((prev) => !prev)}
+        aria-label="알림"
       >
         <Bell size={22} />
         {count > 0 && (
