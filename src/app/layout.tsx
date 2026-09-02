@@ -1,8 +1,7 @@
-import { Header } from "@/shared/ui/header";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import Script from "next/script";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
+import { Header } from "@/shared/ui/header";
 import "./globals.css";
 import AppShell from "./providers/AppShell";
 import AuthHydration from "./providers/AuthHydration";
@@ -35,11 +34,6 @@ export default async function RootLayout({
             <AuthHydration>
               <AuthProvider>
                 <AppShell header={<Header />}>{children}</AppShell>
-                <Script src="https://accounts.google.com/gsi/client" />
-                <Script
-                  type="text/javascript"
-                  src={`https://dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_MAP_JS_KEY}&libraries=services,clusterer&autoload=false`}
-                />
               </AuthProvider>
             </AuthHydration>
           </QueryProvider>

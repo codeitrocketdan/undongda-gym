@@ -1,8 +1,16 @@
 "use client";
-import { CreateDagymForm } from "@/features/create-dagym";
+import dynamic from "next/dynamic";
 import { useMeetingCategoryTab } from "@/shared/hooks/useMeetingCategoryTab";
 import CreateButton from "@/shared/ui/button/CreateButton";
-import { LoginModal, useModal } from "@/shared/ui/modal";
+import { useModal } from "@/shared/ui/modal";
+
+const CreateDagymForm = dynamic(
+  () => import("@/features/create-dagym/ui/CreateDagymForm"),
+  { ssr: false }
+);
+const LoginModal = dynamic(() => import("@/shared/ui/modal/LoginModal"), {
+  ssr: false,
+});
 
 export default function CreateDagym({ isLogin }: { isLogin: boolean }) {
   const modal = useModal();

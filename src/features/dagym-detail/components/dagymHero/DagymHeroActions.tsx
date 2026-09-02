@@ -1,13 +1,18 @@
 "use client";
 
-import Button from "@/shared/ui/button/Button";
-import { HeartButton } from "@/shared/ui/heart-button/HeartButton";
+import dynamic from "next/dynamic";
+import { useState } from "react";
 
 import { useRequireAuth } from "@/shared/hooks/useRequireAuth";
-import { CopyModal, LoginModal, useModal } from "@/shared/ui/modal";
-import { useState } from "react";
+import Button from "@/shared/ui/button/Button";
+import { HeartButton } from "@/shared/ui/heart-button/HeartButton";
+import { CopyModal, useModal } from "@/shared/ui/modal";
 import { useFavoriteMutation } from "../../api/useFavoriteMutation";
 import { useJoinMutation } from "../../api/useJoinMutation";
+
+const LoginModal = dynamic(() => import("@/shared/ui/modal/LoginModal"), {
+  ssr: false,
+});
 
 interface Props {
   id: string;
@@ -52,7 +57,9 @@ export default function DagymHeroActions({
       await navigator.clipboard.writeText(window.location.href);
       setCopyMessage("링크가 클립보드에 복사되었습니다.");
     } catch {
-      setCopyMessage("링크 복사에 실패했습니다. \n주소창의 링크를 복사해주세요.");
+      setCopyMessage(
+        "링크 복사에 실패했습니다. \n주소창의 링크를 복사해주세요."
+      );
     }
     copyModal.open();
   };

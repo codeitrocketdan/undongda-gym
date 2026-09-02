@@ -1,4 +1,5 @@
 "use client";
+import Script from "next/script";
 import SocialLoginButton from "@/shared/ui/button/SocialLoginButton";
 import { useGoogleLogin } from "../model/useGoogleLogin";
 import { useKakaoLogin } from "../model/useKakaoLogin";
@@ -9,6 +10,11 @@ export const SocialLoginButtons = () => {
 
   return (
     <div className="mb-8 flex flex-col gap-3 md:mb-10 md:flex-row">
+      <Script
+        src="https://accounts.google.com/gsi/client"
+        strategy="afterInteractive"
+      />
+
       <SocialLoginButton variant="google" onClick={loginWithGoogle}>
         구글로 계속하기
       </SocialLoginButton>

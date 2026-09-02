@@ -1,8 +1,8 @@
+import { Camera } from "lucide-react";
+import Link from "next/link";
 import FeedCard from "@/shared/ui/feed-card/FeedCard";
 import PostStats from "@/shared/ui/post-stats/PostStats";
 import Skeleton from "@/shared/ui/skeleton/Skeleton";
-import { Camera } from "lucide-react";
-import Link from "next/link";
 import { HotPostCardProps } from "../types";
 
 export default function HotPostCard({
@@ -12,6 +12,7 @@ export default function HotPostCard({
   likeCount,
   commentCount,
   createdAt,
+  priority = false,
 }: HotPostCardProps) {
   return (
     <Link href={`/post/${id}`}>
@@ -19,6 +20,7 @@ export default function HotPostCard({
         <div className="relative h-40.5 w-full rounded-xl md:h-45 md:rounded-3xl">
           <FeedCard.Image
             src={image}
+            priority={priority}
             className="h-full w-full rounded-xl md:rounded-3xl"
           />
           {!image && (

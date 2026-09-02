@@ -1,10 +1,15 @@
 "use client";
-import headerPost from "@/page/post/assets/images/header_post.svg";
-import CreateButton from "@/shared/ui/button/CreateButton";
-import SubPageHeader from "@/shared/ui/subPageHeader/SubPageHeader";
-import { useUser } from "@/shared/hooks/useUser";
-import { LoginModal, useModal } from "@/shared/ui/modal";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
+import headerPost from "@/page/post/assets/images/header_post.svg";
+import { useUser } from "@/shared/hooks/useUser";
+import CreateButton from "@/shared/ui/button/CreateButton";
+import { useModal } from "@/shared/ui/modal";
+import SubPageHeader from "@/shared/ui/subPageHeader/SubPageHeader";
+
+const LoginModal = dynamic(() => import("@/shared/ui/modal/LoginModal"), {
+  ssr: false,
+});
 
 export default function PostHeader() {
   const router = useRouter();

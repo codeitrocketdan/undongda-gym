@@ -1,12 +1,12 @@
 "use client";
 
-import { CENTER_INFO } from "@/shared/constants/centers";
-import Input from "@/shared/ui/input/Input";
-import InputField from "@/shared/ui/input/InputFiled";
 import clsx from "clsx";
 import { MapPin } from "lucide-react";
 import Script from "next/script";
 import { useFormContext } from "react-hook-form";
+import { CENTER_INFO } from "@/shared/constants/centers";
+import Input from "@/shared/ui/input/Input";
+import InputField from "@/shared/ui/input/InputFiled";
 import { useKakaoPostcodePopup } from "../../lib/useKakaoPostcodePopup";
 import UploadImage from "./UploadImage";
 
@@ -16,7 +16,6 @@ export default function DagymBasicInfo() {
   const { register, setValue, watch } = useFormContext();
 
   const region = watch("region");
-  const address = watch("address");
 
   const { isPostcodeOpen, postcodeContainerRef, openPostcode, closePostcode } =
     useKakaoPostcodePopup({
@@ -50,6 +49,10 @@ export default function DagymBasicInfo() {
     <>
       <Script
         src="//t1.kakaocdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"
+        strategy="lazyOnload"
+      />
+      <Script
+        src={`https://dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_MAP_JS_KEY}&libraries=services&autoload=false`}
         strategy="lazyOnload"
       />
       <InputField label="다짐 이름" htmlFor="dagymName">
