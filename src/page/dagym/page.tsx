@@ -5,8 +5,10 @@ import {
 } from "@tanstack/react-query";
 import { cookies } from "next/headers";
 import Image from "next/image";
-import { fetchJoinedMeetings } from "@/entities/meeting/api";
-import { JOINED_MEETINGS_QUERY_KEY } from "@/entities/meeting/lib/useJoinedMeetings";
+import {
+  fetchJoinedMeetings,
+  JOINED_MEETINGS_QUERY_KEY,
+} from "@/entities/meeting/api";
 import {
   CreateDagym,
   DagymLogSection,
