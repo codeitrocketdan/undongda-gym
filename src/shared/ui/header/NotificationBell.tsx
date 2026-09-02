@@ -1,12 +1,20 @@
 "use client";
 
-import NotificationContent from "@/features/notification/ui/NotificationContent";
-import NotificationPanel from "@/features/notification/ui/NotificationPanel";
-import { useUnreadCount } from "@/features/notification/model/useNotifications";
 import { AnimatePresence } from "framer-motion";
 import { Bell } from "lucide-react";
+import dynamic from "next/dynamic";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useUnreadCount } from "@/features/notification/model/useNotifications";
 import { XS_BREAKPOINT } from "@/shared/constants/breakpoints";
+
+const NotificationContent = dynamic(
+  () => import("@/features/notification/ui/NotificationContent"),
+  { ssr: false }
+);
+const NotificationPanel = dynamic(
+  () => import("@/features/notification/ui/NotificationPanel"),
+  { ssr: false }
+);
 
 function subscribeToMediaQuery(callback: () => void) {
   const mq = window.matchMedia(XS_BREAKPOINT);
@@ -28,7 +36,10 @@ export default function NotificationBell() {
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
+      if (
+        wrapperRef.current &&
+        !wrapperRef.current.contains(e.target as Node)
+      ) {
         setIsOpen(false);
       }
     };

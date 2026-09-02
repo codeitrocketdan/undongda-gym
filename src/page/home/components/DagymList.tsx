@@ -1,13 +1,18 @@
 "use client";
 
+import dynamic from "next/dynamic";
+import Image from "next/image";
 import DagymCard, {
   DagymCardSkeleton,
 } from "@/features/dagym/components/DagymCard";
 import emptyImage from "@/shared/assets/images/empty.svg";
 import { useUser } from "@/shared/hooks/useUser";
-import { ErrorModal, LoginModal, useModal } from "@/shared/ui/modal";
-import Image from "next/image";
+import { ErrorModal, useModal } from "@/shared/ui/modal";
 import { useDagymListViewModel } from "../model/useDagymListViewModel";
+
+const LoginModal = dynamic(() => import("@/shared/ui/modal/LoginModal"), {
+  ssr: false,
+});
 
 export function DagymListSkeleton() {
   return (

@@ -1,22 +1,25 @@
 "use client";
 
-import FeedCard from "@/shared/ui/feed-card/FeedCard";
-import { HeartButton } from "@/shared/ui/heart-button/HeartButton";
-import Tag from "@/shared/ui/tag/Tag";
 import { MapPin } from "lucide-react";
+import dynamic from "next/dynamic";
 import Image from "next/image";
+import Link from "next/link";
+import { useRequireAuth } from "@/shared/hooks/useRequireAuth";
 
 import {
   formatDeadline,
   formatMonthDay,
   formatTime,
 } from "@/shared/lib/formatDate";
-
-import { useRequireAuth } from "@/shared/hooks/useRequireAuth";
-import { LoginModal } from "@/shared/ui/modal";
-import Link from "next/link";
+import FeedCard from "@/shared/ui/feed-card/FeedCard";
+import { HeartButton } from "@/shared/ui/heart-button/HeartButton";
+import Tag from "@/shared/ui/tag/Tag";
 import { useFavoriteMutation } from "../../api/useFavoriteMutation";
 import { Meeting } from "../../model/types";
+
+const LoginModal = dynamic(() => import("@/shared/ui/modal/LoginModal"), {
+  ssr: false,
+});
 
 interface Props {
   meeting: Meeting;

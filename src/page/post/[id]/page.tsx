@@ -1,6 +1,7 @@
 "use client";
 
-import { useUser } from "@/shared/hooks/useUser";
+import dynamic from "next/dynamic";
+import { useParams, useRouter } from "next/navigation";
 import { useCommentActions } from "@/features/post/model/useCommentActions";
 import {
   useDeletePost,
@@ -13,16 +14,25 @@ import CommentList, {
 import PostDetailSection, {
   PostDetailSectionSkeleton,
 } from "@/features/post/ui/PostDetailSection";
-import { LoginModal, ErrorModal, useModal } from "@/shared/ui/modal";
 import { ApiError } from "@/shared/api/types";
-import { useParams, useRouter } from "next/navigation";
+import { useUser } from "@/shared/hooks/useUser";
+import { ErrorModal, useModal } from "@/shared/ui/modal";
+
+const LoginModal = dynamic(() => import("@/shared/ui/modal/LoginModal"), {
+  ssr: false,
+});
 
 export default function PostDetailPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
 
   const errorModal = useModal();
-  const { data: post, isLoading, isError, error } = usePostDetail(id, {
+  const {
+    data: post,
+    isLoading,
+    isError,
+    error,
+  } = usePostDetail(id, {
     onError: (err) => {
       if (!(err instanceof ApiError && err.status === 404)) errorModal.open();
     },
@@ -81,9 +91,13 @@ export default function PostDetailPage() {
       <PostDetailSection
         post={post}
         isOwner={user?.id === post.authorId}
-        onLike={() => requireLogin(() => like.mutate({ isLiked: post.isLiked }))}
+        onLike={() =>
+          requireLogin(() => like.mutate({ isLiked: post.isLiked }))
+        }
         onEdit={() => router.push(`/post/${id}/edit`)}
-        onDelete={() => del.mutate(id, { onSuccess: () => router.push("/post") })}
+        onDelete={() =>
+          del.mutate(id, { onSuccess: () => router.push("/post") })
+        }
       />
       <CommentList
         comments={post.comments}
