@@ -1,5 +1,6 @@
 "use client";
-import { useEffect, useRef } from "react";
+import Script from "next/script";
+import { useEffect, useRef, useState } from "react";
 import { Dagym } from "../../model/types";
 
 interface Props {
@@ -8,9 +9,10 @@ interface Props {
 
 const DagymLocation = ({ dagym }: Props) => {
   const mapRef = useRef<HTMLDivElement>(null);
+  const [isMapSdkReady, setIsMapSdkReady] = useState(false);
 
   useEffect(() => {
-    if (!window.kakao || !mapRef.current) return;
+    if (!isMapSdkReady || !window.kakao || !mapRef.current) return;
 
     window.kakao.maps.load(() => {
       const lat = dagym.latitude;
@@ -30,10 +32,15 @@ const DagymLocation = ({ dagym }: Props) => {
         map,
       });
     });
-  }, [dagym.latitude, dagym.longitude]);
+  }, [isMapSdkReady, dagym.latitude, dagym.longitude]);
 
   return (
     <section className="mb-20">
+      <Script
+        src={`https://dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_MAP_JS_KEY}&libraries=services&autoload=false`}
+        strategy="afterInteractive"
+        onReady={() => setIsMapSdkReady(true)}
+      />
       <h2 className="text-2xl-semibold mb-5">다짐 장소</h2>
 
       <div className="rounded-4xl border border-gray-200 bg-white px-4 py-3.5 sm:px-8 sm:py-5.5">
