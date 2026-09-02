@@ -8,6 +8,7 @@
 
 - 2026-09-02: 최초 작성 — 첫 파티 JS 청크 축소, 스크립트 지연 로딩, `/dagym` 배포 리포트 기반 LCP/접근성 수정
 - 2026-09-02: 배포 후 재측정에서 배너 이미지 `fetchpriority=high` 경고 발견 및 원인/수정 추가 (Next 16 `priority` prop deprecated 이슈)
+- 2026-09-02: 로그인 상태 재측정에서 예약 카드 LCP 재발 발견 — `background-image`는 fetchpriority를 가질 수 없는 문제. `<Image>`로 전환 도중 서버 컴포넌트에서 "use client" 상수 import 버그도 같이 발견/수정
 
 ## 0. 계기
 
@@ -105,6 +106,47 @@ Lighthouse에서 "Reduce unused JavaScript" 경고(퍼스트 파티 청크 약 7
 
 > 이 프로젝트에서 `priority`/`fetchPriority`로 LCP 이미지를 다룰 일이 또 생기면, `preload` + `fetchPriority="high"` 조합을 기본으로 쓸 것.
 
-## 6. 참고
+## 6. 로그인 상태 재측정에서 재발 — 예약 카드 배경 이미지가 애초에 fetchpriority를 가질 수 없던 문제
+
+4-1에서 `ReservationCard`를 서버 prefetch로 고친 뒤, 로그아웃 상태로만 재측정해서 "됐다"고 판단했는데
+실제로는 **로그인 상태에서만 이 카드가 보이고 LCP 요소가 됨**. 로그인해서 다시 재보니 같은 문구의
+`fetchpriority=high` 경고가 여전히 떴다.
+
+### 6-1. 원인 — CSS `background-image`는 fetchpriority를 가질 수 없음
+
+`fetchpriority`는 `<img>`나 `<link rel="preload">` 같은 **HTML 요소의 속성**이지, CSS `background-image`에는
+애초에 그런 개념이 없다. `ReservationCard.tsx`가 캐릭터 장식 이미지를 `style={{ backgroundImage: ... }}`로
+넣고 있는 한, 4-1에서 고친 "초기 HTML에 있어야 함" 체크는 통과해도 "fetchpriority=high 적용" 체크는
+구조적으로 절대 통과할 수 없었다.
+
+**수정:** `src/features/dashboard/ui/ReservationCard.tsx` — 배경 캐릭터 이미지를 CSS `background-image`
+대신 실제 `<Image>`(카드 우측 하단에 절대 위치, 원래와 동일한 81×80px)로 교체하고 `preload` +
+`fetchPriority="high"` 적용.
+
+### 6-2. 곁가지로 발견한 버그 — 서버 컴포넌트에서 "use client" 파일의 상수를 import하면 값이 깨짐
+
+위 작업과 별개로, 로컬 `npm run dev` + 로그인 테스트 중 아래 런타임 에러가 발생했다.
+
+```
+As of v4, queryKey needs to be an Array. If you are using a string like 'repoData',
+please change it to an Array, e.g. ['repoData']
+src/page/dagym/page.tsx (30:23) @ DagymPage
+```
+
+**원인:** 4-1에서 추가한 `queryClient.prefetchQuery({ queryKey: JOINED_MEETINGS_QUERY_KEY, ... })`의
+`JOINED_MEETINGS_QUERY_KEY`를, 원래 정의돼 있던 `src/entities/meeting/lib/useJoinedMeetings.ts`
+(`"use client"` 파일)에서 그대로 import해서 썼다. Next.js는 `"use client"`가 붙은 모듈을 통째로
+클라이언트 전용 경계로 취급해서, **서버 컴포넌트(`page.tsx`)가 이 모듈의 값을 import하면 실제 배열이
+아니라 클라이언트 레퍼런스로 대체된 값을 받는다.** 빌드는 문제없이 통과되고 타입도 맞아 보이지만,
+런타임에 `["joinedDagyms"]`가 아닌 다른 객체가 넘어가서 react-query가 배열이 아니라고 에러를 던짐.
+
+**수정:** `JOINED_MEETINGS_QUERY_KEY`를 `"use client"`가 없는 `src/entities/meeting/api.ts`
+(원래 `fetchJoinedMeetings`가 있던, 서버/클라이언트 모두 안전한 파일)로 이동. `useJoinedMeetings.ts`는
+이제 이 값을 `api.ts`에서 가져와 재수출만 함.
+
+> **교훈:** 서버 컴포넌트에서 쓸 상수/함수는 `"use client"` 파일이 아니라 순수 모듈에 둘 것. 값처럼
+> 보여도 "use client" 경계를 넘는 import는 안전하지 않다.
+
+## 7. 참고
 
 - 청크 크기 확인은 `npm run build` 후 `.next/diagnostics/route-bundle-stats.json`의 `firstLoadChunkPaths` / `firstLoadUncompressedJsBytes`로 검증했다 (Turbopack 빌드라 webpack의 "First Load JS" 표 대신 이 파일을 봐야 함).
