@@ -58,8 +58,8 @@ const DagymPage = async () => {
                   src={bannerMobile}
                   alt="지금 다짐에 참여해보세요"
                   className="w-full"
-                  priority={true}
-                  //loading="eager" fetchpriority="high"
+                  preload
+                  fetchPriority="high"
                 />
               </picture>
               {/* 텍스트 */}
