@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
+import { SITE_URL } from "@/shared/config/site";
 import { Header } from "@/shared/ui/header";
 import "./globals.css";
 import AppShell from "./providers/AppShell";
@@ -16,7 +17,11 @@ const Pretendard = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "운동다짐",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "운동다짐",
+    template: "%s | 운동다짐",
+  },
   description:
     "다양한 그룹 운동 클래스를 만들고 찾아 예약·참여하고 후기를 남기는 운동 커뮤니티 플랫폼, 운동다짐.",
 };
@@ -27,7 +32,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${Pretendard.variable} h-full antialiased`}>
+    <html lang="ko" className={`${Pretendard.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col">
         <NuqsAdapter>
           <QueryProvider>
