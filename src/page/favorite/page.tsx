@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import headerWishlist from "@/page/favorite/assets/images/header_wishlist.svg";
 import SubPageHeader from "@/shared/ui/subPageHeader/SubPageHeader";
 import FavoriteSection from "./components/FavoriteSection";
@@ -11,7 +12,9 @@ export default function FavoritePage() {
         description="마감되기 전에 지금 바로 참여해보세요 (☞ﾟヮﾟ)☞"
       />
 
-      <FavoriteSection />
+      <Suspense>
+        <FavoriteSection />
+      </Suspense>
     </main>
   );
 }

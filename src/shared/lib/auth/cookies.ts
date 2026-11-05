@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import { AUTH_HINT_COOKIE, AUTH_HINT_COOKIE_OPTIONS } from "./authHint";
 
 const COOKIE_OPTIONS = {
   httpOnly: true,
@@ -31,6 +32,7 @@ export const setAuthCookies = async (
       maxAge: 60 * 60 * 24 * 7,
     });
   }
+  cookieStore.set(AUTH_HINT_COOKIE, "1", AUTH_HINT_COOKIE_OPTIONS);
 };
 
 export const clearAuthCookies = async () => {
@@ -38,4 +40,5 @@ export const clearAuthCookies = async () => {
 
   cookieStore.delete("accessToken");
   cookieStore.delete("refreshToken");
+  cookieStore.delete(AUTH_HINT_COOKIE);
 };
