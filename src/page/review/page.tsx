@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import headerReview from "@/page/review/assets/images/header_review.svg";
 import SubPageHeader from "@/shared/ui/subPageHeader/SubPageHeader";
 import ReviewSection from "./components/ReviewSection";
@@ -10,7 +11,9 @@ export default function ReviewPage() {
         title="모든 리뷰"
         description="운동다짐 이용자들은 이렇게 느꼈어요 o((>ω< ))o"
       />
-      <ReviewSection />
+      <Suspense>
+        <ReviewSection />
+      </Suspense>
     </main>
   );
 }

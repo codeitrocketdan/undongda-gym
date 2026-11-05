@@ -1,4 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
+import {
+  AUTH_HINT_COOKIE,
+  AUTH_HINT_COOKIE_OPTIONS,
+} from "@/shared/lib/auth/authHint";
 
 // 로그인해야 접근 가능한 페이지
 const PROTECTED_ROUTES = ["/mypage", "/admin"];
@@ -13,7 +17,9 @@ export async function middleware(request: NextRequest) {
   const refreshToken = request.cookies.get("refreshToken")?.value;
 
   // 현재 요청 경로가 보호 페이지인지 확인 (경로중 1개라도 포함되면 true)
-  const isProtected = PROTECTED_ROUTES.some((route) => pathname.startsWith(route));
+  const isProtected = PROTECTED_ROUTES.some((route) =>
+    pathname.startsWith(route)
+  );
 
   // 현재 요청 경로가 로그인/회원가입 페이지인지 확인 (경로중 1개라도 포함되면 true)
   const isAuth = AUTH_ROUTES.some((route) => pathname.startsWith(route));
@@ -32,7 +38,19 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 
-  return NextResponse.next();
+  const response = NextResponse.next();
+
+  // 표시용 쿠키를 토큰 상태와 맞춤 (표시용 쿠키 도입 전에 로그인한 사용자, 토큰 만료 등)
+  const hasToken = !!accessToken || !!refreshToken;
+  const hasHint = request.cookies.get(AUTH_HINT_COOKIE)?.value === "1";
+
+  if (hasToken && !hasHint) {
+    response.cookies.set(AUTH_HINT_COOKIE, "1", AUTH_HINT_COOKIE_OPTIONS);
+  } else if (!hasToken && hasHint) {
+    response.cookies.delete(AUTH_HINT_COOKIE);
+  }
+
+  return response;
 }
 
 export const config = {

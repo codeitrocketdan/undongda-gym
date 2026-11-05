@@ -1,13 +1,8 @@
-import { cookies } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
-import { twMerge } from "tailwind-merge";
 import logo from "@/shared/assets/images/logo.png";
-import { buttonVariants } from "../button/Button";
-import MobileMenu from "./MobileMenu";
+import HeaderAuth from "./HeaderAuth";
 import NavLinks from "./NavLinks";
-import NotificationBell from "./NotificationBell";
-import ProfileIcon from "./ProfileIcon";
 
 const NAV_ITEMS = [
   { label: "다짐 보기", href: "/dagym" },
@@ -16,19 +11,16 @@ const NAV_ITEMS = [
   { label: "다짐 토크", href: "/post" },
 ];
 
-export default async function Header() {
-  const cookieStore = await cookies();
-  const isLogin = !!cookieStore.get("accessToken")?.value;
-
+export default function Header() {
   return (
     <header className="fixed top-0 left-0 z-50 w-full bg-[var(--color-background)]">
       <div className="relative mx-auto flex w-full max-w-7xl items-center justify-between p-6">
         <div className="flex items-center gap-4">
-          {isLogin && (
-            <div className="md:hidden">
-              <ProfileIcon asLink />
-            </div>
-          )}
+          {/* 모바일 로그인 상태일 때 왼쪽 프로필 */}
+          <div className="md:hidden">
+            <HeaderAuth variant="mobile-profile" />
+          </div>
+
           <Link href="/" className="hidden md:block">
             <Image
               src={logo}
@@ -38,6 +30,7 @@ export default async function Header() {
               fetchPriority="high"
             />
           </Link>
+
           <NavLinks navItems={NAV_ITEMS} />
         </div>
 
@@ -53,41 +46,12 @@ export default async function Header() {
 
         <div className="flex items-center gap-2">
           <div className="hidden items-center gap-3 md:flex">
-            <DesktopAuthSection isLogin={isLogin} />
+            <HeaderAuth variant="desktop" />
           </div>
-          <MobileMenu navItems={NAV_ITEMS} isLogin={isLogin} />
+
+          <HeaderAuth variant="mobile-menu" navItems={NAV_ITEMS} />
         </div>
       </div>
     </header>
-  );
-}
-
-function DesktopAuthSection({ isLogin }: { isLogin: boolean }) {
-  if (!isLogin)
-    return (
-      <>
-        <Link
-          href="/signup"
-          className="text-sm font-medium whitespace-nowrap text-gray-600 hover:text-gray-900"
-        >
-          회원가입
-        </Link>
-        <Link
-          href="/login"
-          className={twMerge(
-            buttonVariants({ variant: "primary", size: "md" }),
-            "rounded-xl px-5"
-          )}
-        >
-          로그인
-        </Link>
-      </>
-    );
-
-  return (
-    <>
-      <NotificationBell />
-      <ProfileIcon />
-    </>
   );
 }

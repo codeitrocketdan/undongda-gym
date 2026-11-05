@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import ProfileSection from "@/features/my-page/ui/ProfileSection";
 import Test from "./components/Test";
 
@@ -13,7 +14,9 @@ export default function MyPage() {
           </span>
           <ProfileSection />
         </div>
-        <Test />
+        <Suspense>
+          <Test />
+        </Suspense>
       </div>
       {/* {errorModal.isOpen && <ErrorModal onClose={errorModal.close} />} */}
     </>

@@ -303,3 +303,9 @@ select:-webkit-autofill {
 .animate-fadeInUp {
   animation: fadeInUp 1s ease-out forwards;
 }
+
+/* 유저 조회 전, <head> 스크립트가 붙인 data-auth로 헤더 상태를 먼저 맞춤 */
+html[data-auth="in"] .auth-out-only,
+html:not([data-auth="in"]) .auth-in-only {
+  display: none !important;
+}

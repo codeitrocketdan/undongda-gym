@@ -1,8 +1,10 @@
 "use client";
 import Script from "next/script";
+import { Suspense } from "react";
 import SocialLoginButton from "@/shared/ui/button/SocialLoginButton";
 import { useGoogleLogin } from "../model/useGoogleLogin";
 import { useKakaoLogin } from "../model/useKakaoLogin";
+import { KakaoLoginCallback } from "./KakaoLoginCallback";
 
 export const SocialLoginButtons = () => {
   const { loginWithGoogle } = useGoogleLogin();
@@ -14,6 +16,10 @@ export const SocialLoginButtons = () => {
         src="https://accounts.google.com/gsi/client"
         strategy="afterInteractive"
       />
+
+      <Suspense>
+        <KakaoLoginCallback />
+      </Suspense>
 
       <SocialLoginButton variant="google" onClick={loginWithGoogle}>
         구글로 계속하기

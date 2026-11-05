@@ -1,15 +1,15 @@
 "use client";
 
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { Pencil } from "lucide-react";
+import Image from "next/image";
+import { useRef, useState } from "react";
 import { PublicUserDTO } from "@/features/my-page/types";
 import { clientFetcher } from "@/shared/api/clientFetcher";
 import avatar from "@/shared/assets/images/avatar.svg";
 import { maskEmail } from "@/shared/lib/maskEmail";
 import { publicUserQueries } from "@/shared/lib/queryKeys";
 import Button from "@/shared/ui/button/Button";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Pencil } from "lucide-react";
-import Image from "next/image";
-import { useRef, useState } from "react";
 import Modal from "./Modal";
 
 interface PresignedUrlResponse {
@@ -110,7 +110,7 @@ export default function ProfileModal(props: ProfileModalProps) {
         }
       );
 
-      await queryClient.invalidateQueries({ queryKey: ["users/me"] });
+      await queryClient.invalidateQueries({ queryKey: ["user"] });
       props.onSuccess?.();
       onClose();
     } catch (err) {

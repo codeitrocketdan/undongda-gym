@@ -2,6 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu } from "lucide-react";
+import BellPlaceholder from "./BellPlaceholder";
 import { MobileMenuContent } from "./MobileMenuContent";
 import NotificationBell from "./NotificationBell";
 import { NavItem } from "./types";
@@ -10,14 +11,24 @@ import { useMobileMenu } from "./useMobileMenu";
 interface MobileMenuProps {
   navItems: NavItem[];
   isLogin: boolean;
+  isLoading?: boolean;
 }
 
-export default function MobileMenu({ navItems, isLogin }: MobileMenuProps) {
+export default function MobileMenu({
+  navItems,
+  isLogin,
+  isLoading = false,
+}: MobileMenuProps) {
   const { isOpen, open, close } = useMobileMenu();
 
   return (
     <div className="flex items-center md:hidden">
-      {isLogin && <NotificationBell />}
+      {isLogin ? (
+        <NotificationBell />
+      ) : (
+        // 조회 전: 표시용 쿠키 기준으로 CSS가 벨 자리 표시 노출 여부를 결정
+        isLoading && <BellPlaceholder className="auth-in-only" />
+      )}
       <button
         onClick={open}
         className="cursor-pointer p-1"
