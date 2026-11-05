@@ -8,6 +8,7 @@ import AppShell from "./providers/AppShell";
 import AuthHydration from "./providers/AuthHydration";
 import AuthProvider from "./providers/AuthProvider";
 import QueryProvider from "./providers/QueryProvider";
+import { WebVitals } from "./providers/WebVital";
 
 const Pretendard = localFont({
   src: "../shared/fonts/PretendardVariable.woff2",
@@ -34,6 +35,7 @@ export default async function RootLayout({
   return (
     <html lang="ko" className={`${Pretendard.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col">
+        <WebVitals />
         <NuqsAdapter>
           <QueryProvider>
             <AuthHydration>
