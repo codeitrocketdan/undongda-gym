@@ -1,5 +1,5 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { twMerge } from "tailwind-merge";
+import { cn } from "@/shared/lib/cn";
 
 interface PaginationProps {
   currentPage: number;
@@ -27,13 +27,13 @@ export function Pagination({
   if (totalPages <= 1) return null;
 
   return (
-    <div className={twMerge("flex items-center gap-1 text-sm", className)}>
+    <div className={cn("flex items-center gap-1 text-sm", className)}>
       {/* 이전 버튼 */}
       <button
         type="button"
         aria-label="이전 페이지"
         onClick={goPrev}
-        className={twMerge(
+        className={cn(
           "flex h-8 w-8 cursor-pointer items-center justify-center rounded text-slate-400 hover:bg-slate-200",
           !hasPrev && "pointer-events-none invisible"
         )}
@@ -49,7 +49,7 @@ export function Pagination({
           onClick={() => goTo(page)}
           aria-label={`${page}페이지`}
           aria-current={currentPage === page ? "page" : undefined}
-          className={twMerge(
+          className={cn(
             "flex h-8 w-8 cursor-pointer items-center justify-center rounded text-sm font-medium transition-colors",
             currentPage === page
               ? "bg-blue-200 text-blue-600"
@@ -65,7 +65,7 @@ export function Pagination({
         type="button"
         aria-label="다음 페이지"
         onClick={goNext}
-        className={twMerge(
+        className={cn(
           "flex h-8 w-8 cursor-pointer items-center justify-center rounded text-slate-400 hover:bg-slate-200",
           !hasNext && "pointer-events-none invisible"
         )}

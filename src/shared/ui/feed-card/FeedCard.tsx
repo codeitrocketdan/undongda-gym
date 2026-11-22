@@ -1,5 +1,5 @@
 import React from "react";
-import { twMerge } from "tailwind-merge";
+import { cn } from "@/shared/lib/cn";
 import FeedCardImage from "./FeedCardImage";
 import FeedCardTitle from "./FeedCardTitle";
 
@@ -11,7 +11,7 @@ interface FeedCardProps {
 function FeedCard({ children, className }: FeedCardProps) {
   return (
     <div
-      className={twMerge(
+      className={cn(
         "group bg-white transition-all duration-300 hover:-translate-y-0.5",
         className
       )}

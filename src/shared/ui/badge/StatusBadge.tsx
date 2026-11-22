@@ -1,5 +1,5 @@
+import { cn } from "@/shared/lib/cn";
 import { MeetingStatus } from "@/shared/lib/getMeetingStatus";
-import { twMerge } from "tailwind-merge";
 
 type Status = MeetingStatus;
 
@@ -23,7 +23,7 @@ export default function StatusBadge({ status }: StatusBadgeProps) {
 
   return (
     <div
-      className={twMerge(
+      className={cn(
         "flex min-w-max items-center justify-center rounded-3xl px-3 py-1.5 text-sm",
         className
       )}

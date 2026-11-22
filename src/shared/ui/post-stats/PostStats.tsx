@@ -1,6 +1,6 @@
-import { formatRelativeDate } from "@/shared/lib/formatDate";
 import { MessageCircle, ThumbsUp } from "lucide-react";
-import { twMerge } from "tailwind-merge";
+import { cn } from "@/shared/lib/cn";
+import { formatRelativeDate } from "@/shared/lib/formatDate";
 
 interface PostStatsProps {
   likeCount: number;
@@ -17,7 +17,7 @@ export default function PostStats({
 }: PostStatsProps) {
   return (
     <div
-      className={twMerge(
+      className={cn(
         "flex items-center gap-2 text-xs text-slate-500 md:gap-3 md:text-sm",
         className
       )}

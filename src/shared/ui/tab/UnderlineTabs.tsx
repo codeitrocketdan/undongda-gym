@@ -1,5 +1,5 @@
 "use client";
-import { useTabs } from "@/shared/hooks/useTabs";
+
 import {
   useCallback,
   useEffect,
@@ -7,7 +7,8 @@ import {
   useRef,
   useState,
 } from "react";
-import { twMerge } from "tailwind-merge";
+import { useTabs } from "@/shared/hooks/useTabs";
+import { cn } from "@/shared/lib/cn";
 import { Tab } from "./types";
 
 interface UnderlineTabsProps {
@@ -65,7 +66,7 @@ export default function UnderlineTabs({
             btnRefs.current[i] = el;
           }}
           type="button"
-          className={twMerge(
+          className={cn(
             "text-sm-semibold flex-1 cursor-pointer px-8 py-2 whitespace-nowrap transition-colors duration-200 md:flex-none",
             isActive(type.name)
               ? "text-blue-600"

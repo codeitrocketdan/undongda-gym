@@ -1,10 +1,13 @@
 import { TextareaHTMLAttributes } from "react";
-import { twMerge } from "tailwind-merge";
+import { cn } from "@/shared/lib/cn";
 
-const Textarea = ({ className, ...props }: TextareaHTMLAttributes<HTMLTextAreaElement>) => {
+const Textarea = ({
+  className,
+  ...props
+}: TextareaHTMLAttributes<HTMLTextAreaElement>) => {
   return (
     <textarea
-      className={twMerge(
+      className={cn(
         "custom-scrollbar h-30 w-full resize-none rounded-xl bg-gray-50 p-3 outline-none",
         "placeholder:text-gray-400",
         className

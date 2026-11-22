@@ -1,7 +1,7 @@
 "use client";
 
 import { Heart } from "lucide-react";
-import { twMerge } from "tailwind-merge";
+import { cn } from "@/shared/lib/cn";
 import IconButton from "../button/IconButton";
 
 interface HeartButtonProps {
@@ -27,7 +27,7 @@ export function HeartButton({
         e.stopPropagation();
         onClick();
       }}
-      className={twMerge(
+      className={cn(
         "shrink-0 bg-white transition-transform duration-200 hover:scale-110 active:scale-95",
         className
       )}

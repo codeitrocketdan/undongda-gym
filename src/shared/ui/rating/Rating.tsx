@@ -1,5 +1,5 @@
 import { Heart } from "lucide-react";
-import { twMerge } from "tailwind-merge";
+import { cn } from "@/shared/lib/cn";
 
 interface RatingProps {
   score: number;
@@ -9,7 +9,7 @@ interface RatingProps {
 
 export default function Rating({ score, size = 20, className }: RatingProps) {
   return (
-    <div className={twMerge("flex items-center gap-0.5", className)}>
+    <div className={cn("flex items-center gap-0.5", className)}>
       {Array.from({ length: 5 }).map((_, index) => (
         <Heart
           key={index}

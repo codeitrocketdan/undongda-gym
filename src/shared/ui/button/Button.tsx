@@ -1,22 +1,12 @@
-import { cva } from "class-variance-authority";
-import clsx from "clsx";
+import { cva, type VariantProps } from "class-variance-authority";
 import React from "react";
-import { twMerge } from "tailwind-merge";
-
-// 버튼 디자인 종류
-// primary   : 브랜드 컬러 배경 버튼
-// secondary : 브랜드 컬러 border 버튼
-// tertiary  : 회색 border 버튼
-type VariantType = "primary" | "secondary" | "tertiary";
+import { cn } from "@/shared/lib/cn";
 
 // 버튼 기본 사이즈
 // sm : 작은 버튼
 // md : 중간 버튼
 // lg : 큰 버튼
-type SizeType = "sm" | "md" | "lg";
-
-// 기본 버튼 스타일 정의
-export const sizes: Record<SizeType, string> = {
+export const sizes = {
   sm: "rounded-[10px] px-6 py-2 text-sm font-semibold",
   md: "rounded-xl px-7.5 py-4 text-base font-semibold",
   lg: "rounded-2xl px-10 py-5 text-xl font-semibold",
@@ -28,6 +18,9 @@ export const buttonVariants = cva(
   {
     variants: {
       // 버튼 디자인
+      // primary   : 브랜드 컬러 배경 버튼
+      // secondary : 브랜드 컬러 border 버튼
+      // tertiary  : 회색 border 버튼
       variant: {
         primary: "bg-blue-500 text-white",
         secondary: "border border-blue-500 bg-white text-blue-500",
@@ -54,42 +47,33 @@ export const buttonVariants = cva(
   }
 );
 
-interface PropsType {
-  type?: "button" | "submit" | "reset";
-  children: React.ReactNode;
-  variant?: VariantType;
-  size?: SizeType;
-  isDisabled?: boolean;
-  onClick?: (e?: React.MouseEvent<HTMLButtonElement>) => void;
-  className?: string;
-  ariaLabel?: string;
-  form?: string;
-}
+// 네이티브 button 속성 + cva variant 타입
+type ButtonProps = React.ComponentProps<"button"> &
+  VariantProps<typeof buttonVariants> & {
+    isDisabled?: boolean;
+  };
 
 const Button = ({
   type = "button",
-  children,
   variant = "primary",
   size = "md",
   isDisabled = false,
-  onClick,
   className,
-  ariaLabel,
-  form,
-}: PropsType) => {
+  children,
+  ...props
+}: ButtonProps) => {
   // 버튼 클래스 병합
-  const buttonClasses = twMerge(
-    clsx(buttonVariants({ variant, size, disabled: isDisabled }), className)
+  const buttonClasses = cn(
+    buttonVariants({ variant, size, disabled: isDisabled }),
+    className
   );
 
   return (
     <button
+      {...props}
       type={type}
       className={buttonClasses}
-      onClick={onClick}
       disabled={isDisabled}
-      aria-label={ariaLabel}
-      form={form}
     >
       {children}
     </button>

@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { twMerge } from "tailwind-merge";
 import { useAuth } from "@/app/providers/AuthClientProvider";
+import { cn } from "@/shared/lib/cn";
 import { buttonVariants } from "../button/Button";
 import BellPlaceholder from "./BellPlaceholder";
 import MobileMenu from "./MobileMenu";
@@ -97,7 +97,7 @@ function GuestLinks() {
 
       <Link
         href="/login"
-        className={twMerge(
+        className={cn(
           buttonVariants({ variant: "primary", size: "md" }),
           "rounded-xl px-5"
         )}

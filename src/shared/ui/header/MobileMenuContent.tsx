@@ -1,12 +1,12 @@
 "use client";
 
-import { useNewFavoritesCount } from "@/shared/hooks/useNewFavoritesCount";
-import { useFocusTrap } from "@/shared/lib/useFocusTrap";
 import { motion } from "framer-motion";
 import { X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { twMerge } from "tailwind-merge";
+import { useNewFavoritesCount } from "@/shared/hooks/useNewFavoritesCount";
+import { cn } from "@/shared/lib/cn";
+import { useFocusTrap } from "@/shared/lib/useFocusTrap";
 import { buttonVariants } from "../button/Button";
 import { isNavItemActive } from "./isNavItemActive";
 import { NavItem } from "./types";
@@ -75,7 +75,7 @@ export function MobileMenuContent({
                 <span className="relative inline-block">
                   {item.label}
                   {item.href === "/favorite" && newCount > 0 && (
-                    <span className="absolute top-1/2 left-full ml-1 -translate-y-1/2 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-0.5 text-[10px] font-bold text-white">
+                    <span className="absolute top-1/2 left-full ml-1 flex h-4 min-w-4 -translate-y-1/2 items-center justify-center rounded-full bg-red-500 px-0.5 text-[10px] font-bold text-white">
                       {newCount > 9 ? "9+" : newCount}
                     </span>
                   )}
@@ -90,7 +90,10 @@ export function MobileMenuContent({
         {isLogin ? (
           <button
             type="button"
-            onClick={async () => { onClose(); await logout(); }}
+            onClick={async () => {
+              onClose();
+              await logout();
+            }}
             className="p-3 text-sm text-slate-400 underline hover:cursor-pointer hover:text-slate-600"
           >
             로그아웃
@@ -100,7 +103,7 @@ export function MobileMenuContent({
             <Link
               href="/login"
               onClick={onClose}
-              className={twMerge(
+              className={cn(
                 buttonVariants({ variant: "primary", size: "md" }),
                 "w-full justify-center rounded-xl"
               )}

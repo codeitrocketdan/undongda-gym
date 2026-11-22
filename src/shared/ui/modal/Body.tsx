@@ -1,7 +1,7 @@
 "use client";
 
 import { ReactNode, useEffect, useRef, useState } from "react";
-import { twMerge } from "tailwind-merge";
+import { cn } from "@/shared/lib/cn";
 
 interface BodyProps {
   children: ReactNode;
@@ -32,7 +32,7 @@ export default function ModalBody({ children, className }: BodyProps) {
     <div
       ref={bodyRef}
       style={{ paddingRight: hasScroll ? 10 : 0 }}
-      className={twMerge(
+      className={cn(
         "modal-body custom-scrollbar min-h-0 min-w-0 flex-1 overflow-x-hidden overflow-y-auto break-keep",
         className
       )}

@@ -1,9 +1,11 @@
-import { twMerge } from "tailwind-merge";
+import { cn } from "@/shared/lib/cn";
 
 interface SkeletonProps {
   className?: string;
 }
 
 export default function Skeleton({ className }: SkeletonProps) {
-  return <div className={twMerge("animate-pulse rounded bg-slate-200", className)}></div>;
+  return (
+    <div className={cn("animate-pulse rounded bg-slate-200", className)}></div>
+  );
 }
