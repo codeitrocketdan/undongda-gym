@@ -1,7 +1,6 @@
 import { cva } from "class-variance-authority";
-import clsx from "clsx";
 import React, { cloneElement } from "react";
-import { twMerge } from "tailwind-merge";
+import { cn } from "@/shared/lib/cn";
 
 // 버튼 기본 사이즈
 type SizeType = "sm" | "md" | "lg";
@@ -55,14 +54,12 @@ const IconButton = ({
   ariaLabel,
 }: PropsType) => {
   // 아이콘 버튼 클래스 병합
-  const iconButtonClasses = twMerge(
-    clsx(iconVariants({ size, isDisabled }), className)
-  );
+  const iconButtonClasses = cn(iconVariants({ size, isDisabled }), className);
 
   // 아이콘 크기 적용
   const icon = React.isValidElement(children)
     ? cloneElement(children, {
-        className: twMerge(iconSizes[size], iconClassName),
+        className: cn(iconSizes[size], iconClassName),
       })
     : children;
 

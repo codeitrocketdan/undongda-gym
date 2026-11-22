@@ -1,5 +1,5 @@
 import { AlarmClock } from "lucide-react";
-import { twMerge } from "tailwind-merge";
+import { cn } from "@/shared/lib/cn";
 
 interface TagProps {
   label: string;
@@ -16,7 +16,7 @@ const variantConfig = {
 export default function Tag({ label, variant = "default" }: TagProps) {
   return (
     <div
-      className={twMerge(
+      className={cn(
         "flex items-center justify-center gap-1 rounded-md px-1.5 py-0.5 md:rounded-lg",
         variantConfig[variant]
       )}

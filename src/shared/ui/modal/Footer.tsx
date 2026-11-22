@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { twMerge } from "tailwind-merge";
+import { cn } from "@/shared/lib/cn";
 import { useModalContext } from "./Modal";
 
 export default function ModalFooter({ children }: { children: ReactNode }) {
@@ -7,7 +7,7 @@ export default function ModalFooter({ children }: { children: ReactNode }) {
 
   return (
     <div
-      className={twMerge(
+      className={cn(
         "modal-footer flex justify-between gap-2",
         size === "sm" ? "mt-8" : "mt-14"
       )}

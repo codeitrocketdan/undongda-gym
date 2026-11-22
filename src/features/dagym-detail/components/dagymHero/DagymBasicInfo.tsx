@@ -1,10 +1,10 @@
 "use client";
 
-import clsx from "clsx";
 import { MapPin } from "lucide-react";
 import Script from "next/script";
 import { useFormContext } from "react-hook-form";
 import { CENTER_INFO } from "@/shared/constants/centers";
+import { cn } from "@/shared/lib/cn";
 import Input from "@/shared/ui/input/Input";
 import InputField from "@/shared/ui/input/InputFiled";
 import { useKakaoPostcodePopup } from "../../lib/useKakaoPostcodePopup";
@@ -66,7 +66,7 @@ export default function DagymBasicInfo() {
         <select
           value={region || "default"}
           onChange={handleRegionChange}
-          className={clsx(
+          className={cn(
             "w-full rounded-xl border bg-gray-50 p-3 outline-none focus:border-blue-500",
             region === "default" ? "text-gray-400" : "text-inherit"
           )}

@@ -1,5 +1,5 @@
 import React from "react";
-import { twMerge } from "tailwind-merge";
+import { cn } from "@/shared/lib/cn";
 
 interface PropsType {
   label: string;
@@ -10,13 +10,20 @@ interface PropsType {
   className?: string;
 }
 
-const InputField = ({ label, htmlFor, error, children, required = true, className }: PropsType) => {
+const InputField = ({
+  label,
+  htmlFor,
+  error,
+  children,
+  required = true,
+  className,
+}: PropsType) => {
   return (
-    <div className={twMerge("mb-5 flex flex-col gap-1", className)}>
+    <div className={cn("mb-5 flex flex-col gap-1", className)}>
       {label && (
         <label
           htmlFor={htmlFor}
-          className={twMerge(
+          className={cn(
             "text-sm-medium ml-1 text-gray-800",
             required && "after:ml-1 after:text-blue-500 after:content-['*']"
           )}

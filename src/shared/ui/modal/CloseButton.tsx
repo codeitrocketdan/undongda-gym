@@ -1,5 +1,5 @@
 import { X } from "lucide-react";
-import { twMerge } from "tailwind-merge";
+import { cn } from "@/shared/lib/cn";
 import { useModalContext } from "./Modal";
 
 interface Props {
@@ -11,7 +11,7 @@ export default function CloseButton({ className }: Props) {
   return (
     <button
       type="button"
-      className={twMerge("cursor-pointer", className)}
+      className={cn("cursor-pointer", className)}
       onClick={onClose}
     >
       <X />

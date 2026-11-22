@@ -1,5 +1,5 @@
 import { InputHTMLAttributes } from "react";
-import { twMerge } from "tailwind-merge";
+import { cn } from "@/shared/lib/cn";
 
 // InputHTMLAttributes<HTMLInputElement>를 사용해서 input의 속성을 받습니다.
 interface PropsType extends InputHTMLAttributes<HTMLInputElement> {
@@ -22,7 +22,7 @@ const Input = ({
       id={id}
       aria-describedby={error ? `${id}-error` : undefined}
       aria-invalid={error}
-      className={twMerge(
+      className={cn(
         "w-full rounded-xl bg-gray-50 p-3 outline-none",
         "border border-transparent",
         !error && "focus:border-blue-500",

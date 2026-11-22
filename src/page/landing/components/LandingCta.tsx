@@ -1,9 +1,10 @@
 "use client";
 
-import { useInView } from "@/shared/hooks/useInView";
-import { buttonVariants } from "@/shared/ui/button/Button";
 import Link from "next/link";
-import { twMerge } from "tailwind-merge";
+
+import { useInView } from "@/shared/hooks/useInView";
+import { cn } from "@/shared/lib/cn";
+import { buttonVariants } from "@/shared/ui/button/Button";
 
 export default function LandingCta() {
   const { ref, isInView } = useInView();
@@ -22,9 +23,9 @@ export default function LandingCta() {
       </h2>
       <Link
         href="/dagym"
-        className={twMerge(
+        className={cn(
           buttonVariants({ variant: "primary", size: "md" }),
-          "w-fit hover:bg-blue-700 mx-auto"
+          "mx-auto w-fit hover:bg-blue-700"
         )}
       >
         지금 다짐하기

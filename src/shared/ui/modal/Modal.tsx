@@ -1,8 +1,9 @@
 "use client";
-import useScrollLock from "@/shared/hooks/useScrollLock";
+
 import { createContext, ReactNode, useContext } from "react";
 import { createPortal } from "react-dom";
-import { twMerge } from "tailwind-merge";
+import useScrollLock from "@/shared/hooks/useScrollLock";
+import { cn } from "@/shared/lib/cn";
 import { useMounted } from "../../hooks/useMounted";
 import { useFocusTrap } from "../../lib/useFocusTrap";
 import ModalBackground from "./Background";
@@ -67,7 +68,7 @@ const Modal = ({
             if (e.key === "Escape") onClose();
           }}
           onClick={(e) => e.stopPropagation()}
-          className={twMerge(
+          className={cn(
             "flex max-h-[90vh] w-full flex-col overflow-hidden rounded-xl bg-white",
             SIZE_CLASSES[size]
           )}

@@ -1,12 +1,12 @@
-import Input from "@/shared/ui/input/Input";
-import InputField from "@/shared/ui/input/InputFiled";
-import clsx from "clsx";
 import { MapPin } from "lucide-react";
 import Script from "next/script";
 import { useFormContext } from "react-hook-form";
+import { cn } from "@/shared/lib/cn";
+import Input from "@/shared/ui/input/Input";
+import InputField from "@/shared/ui/input/InputFiled";
 import { CENTER_INFO, centerLists } from "../constants";
-import { useKakaoMap } from "../lib/useKakaoMap";
 import { useKakaoPostcode } from "../lib/useKaKaoPostcode";
+import { useKakaoMap } from "../lib/useKakaoMap";
 import UploadImage from "./UploadImage";
 
 interface SetInfoProps {
@@ -74,7 +74,7 @@ export default function SetInfo({ imagePreview }: SetInfoProps) {
           id="dagymCenter"
           value={currentRegion}
           onChange={handleRegionChange}
-          className={clsx(
+          className={cn(
             "w-full rounded-xl border border-transparent bg-gray-50 p-3 outline-none focus:border-blue-500",
             currentRegion === "default" ? "text-gray-400" : "text-inherit"
           )}

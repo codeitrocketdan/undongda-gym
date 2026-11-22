@@ -1,6 +1,6 @@
-import avatarImage from "@/shared/assets/images/avatar.svg";
 import Image from "next/image";
-import { twMerge } from "tailwind-merge";
+import avatarImage from "@/shared/assets/images/avatar.svg";
+import { cn } from "@/shared/lib/cn";
 
 interface AuthorProps {
   name: string;
@@ -9,8 +9,13 @@ interface AuthorProps {
   onClick?: () => void;
 }
 
-export default function Author({ image, name, className, onClick }: AuthorProps) {
-  const classNames = twMerge(
+export default function Author({
+  image,
+  name,
+  className,
+  onClick,
+}: AuthorProps) {
+  const classNames = cn(
     "flex items-center gap-1.5 text-xs text-slate-500 md:gap-2 md:text-sm",
     onClick && "cursor-pointer hover:text-slate-700",
     className

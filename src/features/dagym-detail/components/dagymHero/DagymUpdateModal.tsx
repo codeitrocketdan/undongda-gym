@@ -1,13 +1,12 @@
 "use client";
 
-import Button from "@/shared/ui/button/Button";
-import { Modal, useModal } from "@/shared/ui/modal";
 import { parseAsString, useQueryState } from "nuqs";
 import { useFormContext } from "react-hook-form";
-import { twMerge } from "tailwind-merge";
-
 import { uploadImageToStorage } from "@/features/create-dagym/lib/uploadImage";
 import { combineAddress } from "@/shared/lib/address";
+import { cn } from "@/shared/lib/cn";
+import Button from "@/shared/ui/button/Button";
+import { Modal, useModal } from "@/shared/ui/modal";
 import UpdateSuccessModal from "@/shared/ui/modal/UpdateSuccessModal";
 import { useUpdateDagymMutation } from "../../api/useUpdateDagymMutation";
 import { DagymUpdateForm } from "../../model/types";
@@ -88,7 +87,7 @@ export default function DagymUpdateModal({ id, onClose }: PropsType) {
                 key={tab.id}
                 type="button"
                 onClick={() => setActiveTab(tab.name)}
-                className={twMerge(
+                className={cn(
                   "-mb-0.5 w-1/2 flex-1 cursor-pointer border-b-2 px-8 py-2",
                   activeTab === tab.name
                     ? "border-blue-500 text-blue-600"

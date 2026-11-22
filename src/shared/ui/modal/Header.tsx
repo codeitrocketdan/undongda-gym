@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { twMerge } from "tailwind-merge";
+import { cn } from "@/shared/lib/cn";
 import { useModalContext } from "./Modal";
 
 interface HeaderProps {
@@ -12,7 +12,7 @@ export default function ModalHeader({ children, className }: HeaderProps) {
 
   return (
     <div
-      className={twMerge(
+      className={cn(
         "modal-header flex flex-col",
         size === "sm" ? "mb-5" : "mb-12",
         className

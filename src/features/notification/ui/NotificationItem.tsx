@@ -1,13 +1,13 @@
 "use client";
 
-import { EnrichedNotification } from "@/features/notification/types";
-import avatarImage from "@/shared/assets/images/avatar.svg";
-import { formatRelativeDate } from "@/shared/lib/formatDate";
 import { Dumbbell, X } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { twMerge } from "tailwind-merge";
+import { EnrichedNotification } from "@/features/notification/types";
+import avatarImage from "@/shared/assets/images/avatar.svg";
+import { cn } from "@/shared/lib/cn";
+import { formatRelativeDate } from "@/shared/lib/formatDate";
 
 interface Props {
   notification: EnrichedNotification;
@@ -43,7 +43,7 @@ export default function NotificationItem({
     <div
       role="button"
       tabIndex={0}
-      className={twMerge(
+      className={cn(
         "flex cursor-pointer items-start gap-3 px-4 py-3 transition-colors hover:bg-slate-50",
         !notification.isRead && "bg-blue-50/40 hover:bg-blue-50"
       )}
@@ -89,9 +89,7 @@ export default function NotificationItem({
               {notification.actorLoading ? (
                 <span className="inline-block h-3.5 w-16 animate-pulse rounded bg-slate-200 align-middle" />
               ) : (
-                <span
-                  className={twMerge(!notification.isRead && "font-semibold")}
-                >
+                <span className={cn(!notification.isRead && "font-semibold")}>
                   {notification.actorName ?? "알 수 없음"}
                 </span>
               )}
@@ -105,7 +103,7 @@ export default function NotificationItem({
           </>
         ) : (
           <p
-            className={twMerge(
+            className={cn(
               "text-sm leading-snug",
               !notification.isRead && "font-semibold"
             )}

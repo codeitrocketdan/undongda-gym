@@ -1,10 +1,11 @@
 "use client";
-import avatar from "@/shared/assets/images/avatar.svg";
-import { useUser } from "@/shared/hooks/useUser";
+
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { twMerge } from "tailwind-merge";
+import avatar from "@/shared/assets/images/avatar.svg";
+import { useUser } from "@/shared/hooks/useUser";
+import { cn } from "@/shared/lib/cn";
 import ProfileMenu from "./ProfileMenu";
 import { useLogout } from "./useLogout";
 
@@ -46,7 +47,7 @@ export default function ProfileIcon({ className, asLink }: Props) {
       className="h-10 w-10 object-cover"
     />
   ) : (
-    <Image src={avatar} alt="기본 이미지" className={twMerge(className)} />
+    <Image src={avatar} alt="기본 이미지" className={cn(className)} />
   );
 
   if (asLink) {

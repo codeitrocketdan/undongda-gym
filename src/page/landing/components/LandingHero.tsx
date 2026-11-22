@@ -1,8 +1,5 @@
 "use client";
 
-import bgCharacter from "@/shared/assets/images/bg_character.png";
-import Button from "@/shared/ui/button/Button";
-import { useInView } from "@/shared/hooks/useInView";
 import {
   Calendar,
   CalendarCheck,
@@ -13,7 +10,10 @@ import {
   Users,
 } from "lucide-react";
 import Link from "next/link";
-import { twMerge } from "tailwind-merge";
+import bgCharacter from "@/shared/assets/images/bg_character.png";
+import { useInView } from "@/shared/hooks/useInView";
+import { cn } from "@/shared/lib/cn";
+import Button from "@/shared/ui/button/Button";
 
 const WEEKDAYS = ["일", "월", "화", "수", "목", "금", "토"];
 const DATES = [
@@ -93,7 +93,7 @@ function PhoneMock() {
                   <span className="absolute top-0 h-1 w-1 rounded-full bg-blue-700" />
                 )}
                 <span
-                  className={twMerge(
+                  className={cn(
                     "text-xs-medium flex h-6 w-6 items-center justify-center rounded-full text-gray-600",
                     date.done && "bg-blue-500 font-bold text-white"
                   )}
@@ -112,7 +112,7 @@ function PhoneMock() {
               className="flex flex-1 flex-col items-center gap-1.5 rounded-2xl bg-white p-2.5 shadow-sm"
             >
               <span
-                className={twMerge(
+                className={cn(
                   "flex h-7 w-7 items-center justify-center rounded-lg",
                   stat.iconClass
                 )}
@@ -121,7 +121,7 @@ function PhoneMock() {
               </span>
               <span className="text-xs-medium text-gray-700">{stat.label}</span>
               <p className="flex items-baseline gap-0.5">
-                <span className={twMerge("text-base-bold", stat.valueClass)}>
+                <span className={cn("text-base-bold", stat.valueClass)}>
                   {stat.value}
                 </span>
                 <span className="text-xs-regular text-gray-500">
@@ -142,7 +142,7 @@ export default function LandingHero() {
   return (
     <div
       ref={ref}
-      className={`mx-auto flex max-w-7xl flex-col items-center gap-8 px-6 py-16 md:gap-12 md:flex-row md:py-24 ${
+      className={`mx-auto flex max-w-7xl flex-col items-center gap-8 px-6 py-16 md:flex-row md:gap-12 md:py-24 ${
         isInView ? "animate-fadeInUp" : "opacity-0"
       }`}
     >
